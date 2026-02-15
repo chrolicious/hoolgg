@@ -1,0 +1,50 @@
+/* Arrow selector specific styles */
+
+.arrowSection {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-width: 180px;
+}
+
+.arrowButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  color: #1a1a1a;
+  font-weight: 700;
+  transition: color 0.2s ease, transform 0.1s ease;
+  outline: none;
+}
+
+.arrowButton:hover:not(:disabled) {
+  transform: scale(1.2);
+}
+
+.arrowButton:active:not(:disabled) {
+  transform: scale(0.95);
+}
+
+.arrowButton:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.valueDisplay {
+  flex: 1;
+  text-align: center;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  user-select: none;
+}
+
+.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}

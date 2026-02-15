@@ -1,0 +1,386 @@
+/* ==========================================================================
+   Input — Mario Wonder style form inputs
+
+   Simple pill: Fully rounded ends, clean minimal style
+   Hero variant: Asymmetric chamfered pill (sharp top-left, bottom-right)
+   ========================================================================== */
+
+/* --- Base wrapper --- */
+
+.wrapper {
+  position: relative;
+  display: inline-flex;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-weight: 600;
+  cursor: text;
+  filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.9));
+}
+
+.wrapper.disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+  filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.5));
+}
+
+.wrapper.fullWidth {
+  width: 100%;
+}
+
+/* White outline for sticker effect (default and simple variants) */
+.wrapper.default::before,
+.wrapper.simple::before {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 9999px;
+  border: 3px solid #FFFFFF;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* --- Container (holds input + icons) --- */
+
+.container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  gap: var(--input-gap, 8px);
+  padding: var(--input-padding-v, 10px) var(--input-padding-h, 20px);
+  background: #FFFFFF;
+  border: 3px solid #1d2119;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.wrapper:focus-within .container {
+  border-color: #E8B82A;
+  border-width: 4px;
+  padding: calc(var(--input-padding-v, 10px) - 1px) calc(var(--input-padding-h, 20px) - 1px);
+}
+
+.wrapper.error .container {
+  border-color: #EF4444;
+}
+
+.wrapper.error:focus-within .container {
+  border-color: #DC2626;
+}
+
+/* --- Default variant: Simple pill --- */
+
+.default .container {
+  border-radius: 9999px;
+}
+
+/* --- Simple variant: Drop shadow only, no thick border --- */
+
+.simple .container {
+  border-radius: 9999px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.simple:focus-within .container {
+  border-width: 2px;
+  border-color: #E8B82A;
+  padding: calc(var(--input-padding-v, 10px) - 1px) calc(var(--input-padding-h, 20px) - 1px);
+  box-shadow: 0 4px 8px rgba(232, 184, 42, 0.2);
+}
+
+.simple.error .container {
+  border-color: rgba(239, 68, 68, 0.3);
+  box-shadow: 0 2px 4px rgba(239, 68, 68, 0.15);
+}
+
+.simple.error:focus-within .container {
+  border-color: #EF4444;
+  box-shadow: 0 4px 8px rgba(239, 68, 68, 0.25);
+}
+
+/* Connected state (used by InputWithLabel) */
+.connected {
+  filter: none;
+}
+
+.connected .container {
+  border-radius: 0 9999px 9999px 0;
+  border-left: none;
+  box-shadow: none;
+}
+
+.connected:focus-within .container {
+  box-shadow: none;
+  border-left: none;
+}
+
+/* --- Hero variant: Chamfered pill (asymmetric sharp corners) --- */
+/* Copied from button, modified for 90° corners on top-left and bottom-right */
+
+.hero {
+  --bevel: 8px; /* Chamfer size for rounded corners */
+  --bw: 3px; /* Border width */
+  position: relative;
+  filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.9));
+}
+
+/* Layer 1: White outline */
+.hero .outline {
+  --b1: calc((var(--bevel) + var(--bw) * 2) - (var(--bw) * 0.4142) * 2);
+  --b2: calc(var(--b1) + var(--bw));
+  --b3: calc(var(--b2) + var(--bw));
+  display: block;
+  margin-top: calc(var(--bw) * -1);
+  margin-left: calc(var(--bw) * -1);
+  padding: var(--bw);
+  background-color: #FFFFFF;
+  clip-path: polygon(
+    var(--bw) var(--bw), /* top-left: inset at rest */
+    calc(100% - var(--b2)) var(--bw),
+    100% var(--b3),
+    100% 100%, /* bottom-right: stays full extent */
+    var(--b3) 100%,
+    var(--bw) calc(100% - var(--b2))
+  );
+  transition: clip-path 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hero:hover:not(:focus-within) .outline,
+.hero:focus-within .outline {
+  clip-path: polygon(
+    0 0, /* top-left: expands to corner */
+    calc(100% - var(--b3)) 0,
+    100% var(--b3),
+    100% 100%, /* bottom-right: expands to corner */
+    var(--b3) 100%,
+    0 calc(100% - var(--b3))
+  );
+  transition: clip-path 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Layer 2: Dark border + shadow */
+.hero .darkLayer {
+  --b1: calc((var(--bevel) + var(--bw)) - var(--bw) * 0.4142);
+  --b2: calc(var(--b1) + var(--bw));
+  --b3: calc(var(--b2) + var(--bw));
+  display: block;
+  padding: calc(var(--bw) * 2);
+  background-color: #1d2119;
+  /* Animated halftone pattern - brighter for visibility */
+  background-image:
+    radial-gradient(rgba(255, 255, 255, 0.25) 1px, transparent 0),
+    radial-gradient(rgba(255, 255, 255, 0.25) 1px, transparent 0);
+  background-size: 6px 6px, 6px 6px;
+  background-position: 0 0, 3px 3px;
+  animation: scrollDarkHalftone 1s linear infinite;
+  clip-path: polygon(
+    var(--bw) var(--bw), /* top-left: inset at rest */
+    calc(100% - var(--b2)) var(--bw),
+    100% var(--b3),
+    100% 100%, /* bottom-right: stays full extent */
+    var(--b3) 100%,
+    var(--bw) calc(100% - var(--b2))
+  );
+  transition: clip-path 0.3s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.2s ease;
+}
+
+.hero:hover:not(:focus-within) .darkLayer {
+  clip-path: polygon(
+    0 0, /* top-left: expands to corner */
+    calc(100% - var(--b3)) 0,
+    100% var(--b3),
+    100% 100%, /* bottom-right: expands to corner */
+    var(--b3) 100%,
+    0 calc(100% - var(--b3))
+  );
+  transition: clip-path 0.2s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.2s ease;
+}
+
+.hero:focus-within .darkLayer {
+  background-color: #E8B82A;
+  /* Super sparkly animated pattern on focus */
+  background-image:
+    radial-gradient(rgba(255, 255, 255, 0.4) 1px, transparent 0),
+    radial-gradient(rgba(255, 255, 255, 0.4) 1px, transparent 0);
+  background-size: 6px 6px, 6px 6px;
+  background-position: 0 0, 3px 3px;
+  animation: scrollDarkHalftone 0.8s linear infinite; /* Faster for sparkle effect */
+  clip-path: polygon(
+    0 0, /* top-left: expands to corner */
+    calc(100% - var(--b3)) 0,
+    100% var(--b3),
+    100% 100%, /* bottom-right: expands to corner */
+    var(--b3) 100%,
+    0 calc(100% - var(--b3))
+  );
+  transition: clip-path 0.2s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.2s ease;
+}
+
+/* Error state - red border */
+.hero.error .darkLayer {
+  background-color: #EF4444;
+}
+
+.hero.error:focus-within .darkLayer {
+  background-color: #DC2626;
+}
+
+@keyframes scrollDarkHalftone {
+  to {
+    background-position: -6px 0, -3px 3px;
+  }
+}
+
+/* Layer 3: Inside fill */
+.hero .inside {
+  position: relative;
+  display: flex;
+  background-color: #FFFFFF;
+  clip-path: polygon(
+    0 0, /* top-left: 90° corner */
+    calc(100% - var(--bevel)) 0,
+    100% var(--bevel),
+    100% 100%, /* bottom-right: 90° corner */
+    var(--bevel) 100%,
+    0 calc(100% - var(--bevel)),
+    0 0 /* close path at top-left */
+  );
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Hover lift: translate up-left to reveal shadow */
+.hero:hover:not(:focus-within) .inside {
+  transform: translate(calc(var(--bw) * -1), calc(var(--bw) * -1));
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hero:focus-within .inside {
+  transform: translate(calc(var(--bw) * -1), calc(var(--bw) * -1));
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hero .container {
+  border: none;
+  background: transparent;
+  padding: calc(var(--input-padding-v, 10px)) calc(var(--input-padding-h, 20px));
+}
+
+/* --- Input element --- */
+
+.input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: inherit;
+  font-size: var(--input-font-size, 0.875rem);
+  font-weight: 500;
+  color: #1a1a1a;
+  text-align: center;
+}
+
+.input::placeholder {
+  color: #9CA3AF;
+}
+
+/* Bold text when input has a value */
+.input:not(:placeholder-shown) {
+  font-weight: 700;
+}
+
+.input:disabled {
+  cursor: not-allowed;
+  color: #6B7280;
+}
+
+/* --- Icon slots --- */
+
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: #6B7280;
+}
+
+/* --- Halftone overlay (hover/focus) --- */
+
+.halftone {
+  position: absolute;
+  inset: 3px;
+  border-radius: 9999px;
+  pointer-events: none;
+  opacity: 0;
+  animation: fadeInHalftone 0.2s ease forwards, scrollHalftone 1s linear infinite;
+  background-image:
+    linear-gradient(to right, transparent, var(--halftone-color, rgba(232, 184, 42, 0.15))),
+    radial-gradient(var(--halftone-dots, rgba(0, 0, 0, 0.08)) 1px, transparent 0),
+    radial-gradient(var(--halftone-dots, rgba(0, 0, 0, 0.08)) 1px, transparent 0);
+  background-size: auto, 6px 6px, 6px 6px;
+  background-position: 0 0, 0 0, 3px 3px;
+}
+
+/* Default variant halftone */
+.default .halftone {
+  --halftone-color: rgba(232, 184, 42, 0.15);
+  --halftone-dots: rgba(0, 0, 0, 0.08);
+}
+
+/* Error state halftone */
+.error .halftone {
+  --halftone-color: rgba(239, 68, 68, 0.15);
+  --halftone-dots: rgba(220, 38, 38, 0.1);
+}
+
+/* Hero variant halftone */
+.hero .halftone {
+  --halftone-color: rgba(232, 184, 42, 0.2);
+  --halftone-dots: rgba(0, 0, 0, 0.08);
+  border-radius: 14px;
+  border-top-left-radius: 0;
+  border-bottom-right-radius: 0;
+  inset: 5px;
+}
+
+.hero.error .halftone {
+  --halftone-color: rgba(239, 68, 68, 0.2);
+  --halftone-dots: rgba(220, 38, 38, 0.1);
+}
+
+@keyframes fadeInHalftone {
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scrollHalftone {
+  to {
+    background-position-x: 0, -6px, -3px;
+  }
+}
+
+/* --- Sizes --- */
+
+.sm {
+  --input-font-size: 0.8125rem;
+  --input-padding-v: 7px;
+  --input-padding-h: 16px;
+  --input-gap: 6px;
+}
+
+.md {
+  --input-font-size: 0.875rem;
+  --input-padding-v: 10px;
+  --input-padding-h: 20px;
+  --input-gap: 8px;
+}
+
+.lg {
+  --input-font-size: 1rem;
+  --input-padding-v: 14px;
+  --input-padding-h: 24px;
+  --input-gap: 10px;
+}

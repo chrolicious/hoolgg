@@ -1,0 +1,37 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(done)",
+      "Bash(git init:*)",
+      "Bash(pnpm install:*)",
+      "Bash(pnpm approve-builds:*)",
+      "Bash(pnpm turbo build:*)",
+      "Bash(pnpm --filter @hool/design-system typecheck:*)",
+      "Bash(npx storybook@latest init:*)",
+      "Bash(pnpm storybook:*)",
+      "Bash(where:*)",
+      "Bash(ls:*)",
+      "Bash(ffprobe:*)",
+      "Bash(/c/Users/Chro/AppData/Local/Microsoft/WinGet/Links/ffprobe.exe -version)",
+      "WebSearch",
+      "WebFetch(domain:pictogrammers.com)",
+      "WebFetch(domain:www.flaticon.com)",
+      "Bash(pnpm --filter @hool/design-system exec tsc:*)",
+      "Bash(python3:*)",
+      "Bash(pnpm add:*)",
+      "Bash(taskkill:*)",
+      "WebFetch(domain:lordicon.com)",
+      "Bash(npm install:*)",
+      "Bash(curl:*)",
+      "Bash(node -e:*)",
+      "WebFetch(domain:animatedicons.co)",
+      "WebFetch(domain:loading.io)",
+      "WebFetch(domain:useanimations.com)",
+      "WebFetch(domain:creattie.com)",
+      "WebFetch(domain:lottiefiles.com)",
+      "Bash(pnpm remove:*)",
+      "WebFetch(domain:github.com)",
+      "Bash(git add:*)"
+    ]
+  }
+}

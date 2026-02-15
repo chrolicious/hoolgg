@@ -1,0 +1,46 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build
+dist/
+.next/
+out/
+*.tsbuildinfo
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Turbo
+.turbo/
+
+# Storybook
+storybook-static/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Testing
+coverage/
+.nyc_output/
+
+# Docker
+.docker/
+
+# Sentry
+.sentryclirc

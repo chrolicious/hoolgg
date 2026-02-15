@@ -1,0 +1,321 @@
+/* ==========================================================================
+   Toggle — Starts from Button structure, rectangular sticker frame
+   ========================================================================== */
+
+.container {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 12px;
+  cursor: pointer;
+  user-select: none;
+}
+
+/* --- Toggle track (button-like frame) --- */
+
+.toggle {
+  --bevel: 3px;
+  --bw: 3px;
+  cursor: pointer;
+  outline: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.9));
+  position: relative;
+}
+
+.toggle.disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+  filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.5));
+}
+
+/* --- Layer 1: White outline --- */
+
+.outline {
+  --b1: calc((var(--bevel) + var(--bw) * 2) - (var(--bw) * 0.4142) * 2);
+  --b2: calc(var(--b1) + var(--bw));
+  --b3: calc(var(--b2) + var(--bw));
+  display: block;
+  margin-top: calc(var(--bw) * -1);
+  margin-left: calc(var(--bw) * -1);
+  padding: var(--bw);
+  background-color: var(--btn-outline-color, #fff);
+  clip-path: polygon(
+    var(--b2) var(--bw),
+    calc(100% - var(--b2)) var(--bw),
+    100% var(--b3),
+    100% calc(100% - var(--b1)),
+    calc(100% - var(--b1)) 100%,
+    var(--b3) 100%,
+    var(--bw) calc(100% - var(--b2)),
+    var(--bw) var(--b2)
+  );
+  transition: clip-path 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Expand on hover */
+.toggle:hover:not(.disabled) .outline {
+  clip-path: polygon(
+    var(--b1) 0,
+    calc(100% - var(--b3)) 0,
+    100% var(--b3),
+    100% calc(100% - var(--b1)),
+    calc(100% - var(--b1)) 100%,
+    var(--b3) 100%,
+    0 calc(100% - var(--b3)),
+    0 var(--b1)
+  );
+  transition: clip-path 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* --- Layer 2: Dark border + shadow --- */
+
+.darkLayer {
+  --b1: calc((var(--bevel) + var(--bw)) - var(--bw) * 0.4142);
+  --b2: calc(var(--b1) + var(--bw));
+  --b3: calc(var(--b2) + var(--bw));
+  display: block;
+  padding: calc(var(--bw) * 2);
+  background-color: var(--btn-border-color, #1d2119);
+  clip-path: polygon(
+    var(--b2) var(--bw),
+    calc(100% - var(--b2)) var(--bw),
+    100% var(--b3),
+    100% calc(100% - var(--b1)),
+    calc(100% - var(--b1)) 100%,
+    var(--b3) 100%,
+    var(--bw) calc(100% - var(--b2)),
+    var(--bw) var(--b2)
+  );
+  transition: clip-path 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Expand on hover */
+.toggle:hover:not(.disabled) .darkLayer {
+  clip-path: polygon(
+    var(--b1) 0,
+    calc(100% - var(--b3)) 0,
+    100% var(--b3),
+    100% calc(100% - var(--b1)),
+    calc(100% - var(--b1)) 100%,
+    var(--b3) 100%,
+    0 calc(100% - var(--b3)),
+    0 var(--b1)
+  );
+  transition: clip-path 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* --- Layer 3: Inside fill --- */
+
+.inside {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: var(--toggle-padding, 4px);
+  background-color: var(--btn-bg);
+  clip-path: polygon(
+    var(--bevel) 0,
+    calc(100% - var(--bevel)) 0,
+    100% var(--bevel),
+    100% calc(100% - var(--bevel)),
+    calc(100% - var(--bevel)) 100%,
+    var(--bevel) 100%,
+    0 calc(100% - var(--bevel)),
+    0 var(--bevel)
+  );
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Faster transition on hover */
+.toggle:hover:not(.disabled) .inside {
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Lift on hover */
+.toggle:hover:not(.disabled) .inside {
+  transform: translate(calc(var(--bw) * -1), calc(var(--bw) * -1));
+}
+
+/* Texture overlay for checked state */
+.inside::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  background-image:
+    url("data:image/svg+xml,%3Csvg width='12' height='12' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 2l0.8 2.4h2.5l-2 1.2 0.8 2.4-2-1.2-2 1.2 0.8-2.4-2-1.2h2.5z' fill='none' stroke='rgba(255,255,255,0.4)' stroke-width='0.8'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg width='12' height='12' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 2l0.8 2.4h2.5l-2 1.2 0.8 2.4-2-1.2-2 1.2 0.8-2.4-2-1.2h2.5z' fill='none' stroke='rgba(255,255,255,0.4)' stroke-width='0.8'/%3E%3C/svg%3E");
+  background-size: 26px 26px;
+  background-position: 0 0, 13px 13px;
+  background-repeat: repeat;
+  transition: opacity 0.2s ease;
+}
+
+.checked .inside::after {
+  opacity: 1;
+  animation: slideStars 2s linear infinite, rotateStars 20s linear infinite;
+}
+
+@keyframes slideStars {
+  from {
+    background-position: 0 0, 13px 13px;
+  }
+  to {
+    background-position: -26px 26px, -13px 39px;
+  }
+}
+
+@keyframes rotateStars {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(15deg);
+  }
+}
+
+/* --- Sliding knob (pill) --- */
+
+.knob {
+  width: var(--knob-size, 20px);
+  height: var(--knob-size, 20px);
+  background: #ffffff;
+  border-radius: 999px;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+/* --- Sizes --- */
+
+.sm {
+  --bevel: 2px;
+  --bw: 2.5px;
+  --toggle-padding: 3px;
+  --toggle-width: 54px;
+  --toggle-height: 24px;
+  --knob-size: 18px;
+  width: var(--toggle-width);
+  height: var(--toggle-height);
+}
+
+.md {
+  --bevel: 3px;
+  --bw: 3px;
+  --toggle-padding: 4px;
+  --toggle-width: 64px;
+  --toggle-height: 28px;
+  --knob-size: 20px;
+  width: var(--toggle-width);
+  height: var(--toggle-height);
+}
+
+.lg {
+  --bevel: 4px;
+  --bw: 3.5px;
+  --toggle-padding: 5px;
+  --toggle-width: 72px;
+  --toggle-height: 32px;
+  --knob-size: 22px;
+  width: var(--toggle-width);
+  height: var(--toggle-height);
+}
+
+/* --- State: Unchecked (muted) --- */
+
+.unchecked .inside {
+  filter: saturate(0.3) brightness(1.1) opacity(0.5);
+}
+
+.unchecked:hover .inside {
+  filter: saturate(0.5) brightness(1.05) opacity(0.7);
+}
+
+/* --- State: Checked (saturated + extended) --- */
+
+.checked .inside {
+  background-color: var(--btn-hover-bg);
+  filter: none;
+}
+
+/* Keep frame extended when checked */
+.checked .outline {
+  clip-path: polygon(
+    var(--b1) 0,
+    calc(100% - var(--b3)) 0,
+    100% var(--b3),
+    100% calc(100% - var(--b1)),
+    calc(100% - var(--b1)) 100%,
+    var(--b3) 100%,
+    0 calc(100% - var(--b3)),
+    0 var(--b1)
+  );
+}
+
+.checked .darkLayer {
+  clip-path: polygon(
+    var(--b1) 0,
+    calc(100% - var(--b3)) 0,
+    100% var(--b3),
+    100% calc(100% - var(--b1)),
+    calc(100% - var(--b1)) 100%,
+    var(--b3) 100%,
+    0 calc(100% - var(--b3)),
+    0 var(--b1)
+  );
+}
+
+/* Keep inside lifted when checked */
+.checked .inside {
+  transform: translate(calc(var(--bw) * -1), calc(var(--bw) * -1));
+}
+
+/* --- Soft variants: color flip --- */
+
+.soft.checked .inside {
+  color: var(--btn-hover-color, #fff);
+}
+
+/* --- Hidden input --- */
+
+.hiddenInput {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+/* --- Label and description --- */
+
+.labelWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-top: 2px;
+}
+
+.label {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  line-height: 1.4;
+  cursor: pointer;
+}
+
+.labelDisabled {
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+
+.description {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #6b7280;
+  line-height: 1.3;
+}
+
+.descriptionDisabled {
+  color: #d1d5db;
+}

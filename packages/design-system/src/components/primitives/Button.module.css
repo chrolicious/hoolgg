@@ -1,0 +1,347 @@
+/* ==========================================================================
+   Button — Mario Wonder "sticker" style.
+   Based on: https://codepen.io/nicolasjesenberger/pen/XWOpQMw
+
+   Structure: .button > .outline > .shadow > .inside > content
+   Each layer is a clip-path octagon. The dark ".shadow" layer shows through
+   as both the border AND the solid shadow. On hover, clip-paths expand and
+   the inside translates up-left, revealing the shadow at bottom-right.
+   ========================================================================== */
+
+/* --- Container --- */
+
+.button {
+  --bevel: 3px;
+  --bw: 3px; /* border-width */
+  font-family: 'Inter', system-ui, sans-serif;
+  font-weight: 700;
+  font-size: var(--btn-font-size, 0.875rem);
+  color: var(--btn-color);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  outline: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  min-width: var(--btn-min-width, 0);
+  filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.9));
+}
+
+.button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+  filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.5));
+}
+
+/* --- Layer 1: White outline --- */
+
+.outline {
+  --b1: calc((var(--bevel) + var(--bw) * 2) - (var(--bw) * 0.4142) * 2);
+  --b2: calc(var(--b1) + var(--bw));
+  --b3: calc(var(--b2) + var(--bw));
+  display: block;
+  margin-top: calc(var(--bw) * -1);
+  margin-left: calc(var(--bw) * -1);
+  padding: var(--bw);
+  background-color: var(--btn-outline-color, #fff);
+  clip-path: polygon(
+    var(--b2) var(--bw),
+    calc(100% - var(--b2)) var(--bw),
+    100% var(--b3),
+    100% calc(100% - var(--b1)),
+    calc(100% - var(--b1)) 100%,
+    var(--b3) 100%,
+    var(--bw) calc(100% - var(--b2)),
+    var(--bw) var(--b2)
+  );
+  transition: clip-path 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.button:hover:not(:active):not(:disabled) .outline,
+.button:focus-visible:not(:active) .outline {
+  clip-path: polygon(
+    var(--b1) 0,
+    calc(100% - var(--b3)) 0,
+    100% var(--b3),
+    100% calc(100% - var(--b1)),
+    calc(100% - var(--b1)) 100%,
+    var(--b3) 100%,
+    0 calc(100% - var(--b3)),
+    0 var(--b1)
+  );
+  transition: clip-path 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* --- Layer 2: Dark border + shadow --- */
+
+.darkLayer {
+  --b1: calc((var(--bevel) + var(--bw)) - var(--bw) * 0.4142);
+  --b2: calc(var(--b1) + var(--bw));
+  --b3: calc(var(--b2) + var(--bw));
+  display: block;
+  padding: calc(var(--bw) * 2);
+  background-color: var(--btn-border-color, #1d2119);
+  clip-path: polygon(
+    var(--b2) var(--bw),
+    calc(100% - var(--b2)) var(--bw),
+    100% var(--b3),
+    100% calc(100% - var(--b1)),
+    calc(100% - var(--b1)) 100%,
+    var(--b3) 100%,
+    var(--bw) calc(100% - var(--b2)),
+    var(--bw) var(--b2)
+  );
+  transition: clip-path 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.button:hover:not(:active):not(:disabled) .darkLayer,
+.button:focus-visible:not(:active) .darkLayer {
+  clip-path: polygon(
+    var(--b1) 0,
+    calc(100% - var(--b3)) 0,
+    100% var(--b3),
+    100% calc(100% - var(--b1)),
+    calc(100% - var(--b1)) 100%,
+    var(--b3) 100%,
+    0 calc(100% - var(--b3)),
+    0 var(--b1)
+  );
+  transition: clip-path 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* --- Layer 3: Fill (inside) --- */
+
+.inside {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--btn-gap, 8px);
+  padding: var(--btn-padding-v, 10px) var(--btn-padding-h, 28px) calc(var(--btn-padding-v, 10px) - 0.125em);
+  background-color: var(--btn-bg);
+  clip-path: polygon(
+    var(--bevel) 0,
+    calc(100% - var(--bevel)) 0,
+    100% var(--bevel),
+    100% calc(100% - var(--bevel)),
+    calc(100% - var(--bevel)) 100%,
+    var(--bevel) 100%,
+    0 calc(100% - var(--bevel)),
+    0 var(--bevel)
+  );
+  text-align: center;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Faster transition in (hover), slower out (return) */
+.button:hover:not(:disabled) .inside {
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Halftone overlay — separate pseudo-element so it can fade in/out */
+.inside::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right, transparent, var(--btn-hover-bg-fade)),
+    radial-gradient(var(--btn-dot-color) 1px, transparent 0),
+    radial-gradient(var(--btn-dot-color) 1px, transparent 0);
+  background-size: auto, 6px 6px, 6px 6px;
+  background-position: 0 0, 0 0, 3px 3px;
+}
+
+.button:hover:not(:disabled) .inside::after,
+.button:focus-visible .inside::after {
+  opacity: 1;
+  animation: scrollHalftone 1s linear infinite;
+}
+
+/* Hover lift: translate up-left to reveal shadow */
+.button:hover:not(:active):not(:disabled) .inside,
+.button:focus-visible:not(:active) .inside {
+  transform: translate(calc(var(--bw) * -1), calc(var(--bw) * -1));
+}
+
+/* Hover: colored fill */
+.button:hover:not(:disabled) .inside,
+.button:focus-visible .inside {
+  background-color: var(--btn-hover-bg);
+}
+
+@keyframes scrollHalftone {
+  to {
+    background-position-x: 0, -6px, -3px;
+  }
+}
+
+/* --- Soft variants: text color flips on hover --- */
+
+.soft .inside {
+  transition: transform 0.2s, color 0.2s;
+}
+
+.button.soft:hover:not(:disabled) .inside {
+  color: var(--btn-hover-color, #fff);
+}
+
+/* --- Selected state: colored + extended, no halftone --- */
+
+/* Colored fill */
+.button.selected .inside {
+  background-color: var(--btn-hover-bg);
+}
+
+/* Extended clip-paths (same as hover) */
+.button.selected .outline {
+  clip-path: polygon(
+    var(--b1) 0,
+    calc(100% - var(--b3)) 0,
+    100% var(--b3),
+    100% calc(100% - var(--b1)),
+    calc(100% - var(--b1)) 100%,
+    var(--b3) 100%,
+    0 calc(100% - var(--b3)),
+    0 var(--b1)
+  );
+}
+
+.button.selected .darkLayer {
+  clip-path: polygon(
+    var(--b1) 0,
+    calc(100% - var(--b3)) 0,
+    100% var(--b3),
+    100% calc(100% - var(--b1)),
+    calc(100% - var(--b1)) 100%,
+    var(--b3) 100%,
+    0 calc(100% - var(--b3)),
+    0 var(--b1)
+  );
+}
+
+/* Inside lifted */
+.button.selected .inside {
+  transform: translate(calc(var(--bw) * -1), calc(var(--bw) * -1));
+}
+
+/* No halftone when selected (only on hover) */
+
+/* Text color flip for soft variants */
+.button.selected.soft .inside {
+  color: var(--btn-hover-color, #fff);
+}
+
+/* --- Content --- */
+
+.content {
+  position: relative;
+  z-index: 1;
+  line-height: 1;
+}
+
+.icon {
+  display: flex;
+  position: relative;
+  z-index: 1;
+}
+
+/* --- Sizes --- */
+
+.sm {
+  --bevel: 2px;
+  --bw: 2.5px;
+  --btn-font-size: 0.8125rem;
+  --btn-padding-v: 7px;
+  --btn-padding-h: 18px;
+  --btn-gap: 6px;
+}
+
+.md {
+  --bevel: 3px;
+  --bw: 3px;
+  --btn-font-size: 0.875rem;
+  --btn-padding-v: 10px;
+  --btn-padding-h: 28px;
+  --btn-gap: 8px;
+}
+
+.lg {
+  --bevel: 4px;
+  --bw: 3.5px;
+  --btn-font-size: 1rem;
+  --btn-padding-v: 14px;
+  --btn-padding-h: 36px;
+  --btn-gap: 10px;
+}
+
+.xl {
+  --bevel: 5px;
+  --bw: 4px;
+  --btn-font-size: 1rem;
+  --btn-padding-v: 24px;
+  --btn-padding-h: 36px;
+  --btn-gap: 12px;
+}
+
+.xl .inside {
+  flex-direction: column;
+}
+
+/* --- Shape: Square --- */
+
+.square {
+  --btn-padding-h: var(--btn-padding-v, 10px);
+}
+
+.square .inside {
+  flex-direction: column;
+  aspect-ratio: 1;
+  min-width: 64px;
+}
+
+/* --- Shape: Circle ---
+   Uses border-radius for true circles. Asymmetric padding on outline
+   and darkLayer creates the perspective/shadow depth effect: thinner
+   on top-left, thicker on bottom-right.
+*/
+
+/* --- Shape: Circle (octagonal approximation) ---
+   Uses the same clip-path octagon system as default but with a large
+   bevel and square aspect ratio to approximate a circle. Gets the
+   same perspective/shadow behaviour for free.
+*/
+
+.circle {
+  --bevel: 14px;
+  --bw: 3px;
+}
+
+.circle .inside {
+  flex-direction: column;
+  aspect-ratio: 1;
+  justify-content: center;
+  padding: 20px;
+  min-width: 64px;
+}
+
+/* --- Icon-only mode --- */
+
+.iconOnly .inside {
+  padding: var(--btn-padding-v, 10px);
+  aspect-ratio: 1;
+}
+
+/* --- Full width --- */
+
+.fullWidthWrapper {
+  width: 100%;
+  display: flex;
+}
+
+.fullWidth {
+  flex: 1;
+}

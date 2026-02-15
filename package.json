@@ -1,0 +1,21 @@
+{
+  "name": "hoolgg",
+  "private": true,
+  "packageManager": "pnpm@10.29.3",
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
+    "test:e2e": "turbo run test:e2e",
+    "storybook": "pnpm --filter @hool/design-system storybook",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "devDependencies": {
+    "turbo": "^2",
+    "prettier": "^3",
+    "@changesets/cli": "^2"
+  }
+}
