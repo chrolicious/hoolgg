@@ -53,12 +53,12 @@
   inset: 2px;
   border-radius: 4px;
   background-image:
-    radial-gradient(circle at 20% 50%, rgba(168, 85, 247, 0.05) 1px, transparent 1px),
-    radial-gradient(circle at 60% 70%, rgba(212, 160, 23, 0.05) 1px, transparent 1px),
-    radial-gradient(circle at 80% 10%, rgba(248, 113, 113, 0.05) 1px, transparent 1px);
+    radial-gradient(circle at 20% 50%, rgba(168, 85, 247, 0.12) 1.5px, transparent 1.5px),
+    radial-gradient(circle at 60% 70%, rgba(212, 160, 23, 0.12) 1.5px, transparent 1.5px),
+    radial-gradient(circle at 80% 10%, rgba(248, 113, 113, 0.12) 1.5px, transparent 1.5px);
   background-size: 150px 150px, 200px 200px, 180px 180px;
   background-position: 0 0, 40px 60px, 130px 270px;
-  animation: textureShift 20s ease-in-out infinite;
+  animation: textureShift 45s ease-in-out infinite;
   pointer-events: none;
   z-index: 1;
 }
@@ -141,6 +141,7 @@
   color: #fff;
   margin: 0;
   letter-spacing: -0.5px;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5), 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
 .subtitle {
@@ -148,6 +149,7 @@
   font-size: 0.875rem;
   color: rgba(255, 255, 255, 0.6);
   margin: 4px 0 0 0;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
 }
 
 /* Close button - now using Button component with animation */
