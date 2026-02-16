@@ -1,0 +1,157 @@
+/* Backdrop */
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(2px);
+  z-index: 1000;
+}
+
+/* Container for centering */
+.container {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1001;
+  padding: 16px;
+  pointer-events: none;
+}
+
+/* Modal itself */
+.modal {
+  position: relative;
+  pointer-events: auto;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+/* Size variants */
+.size-sm {
+  width: 100%;
+  max-width: 320px;
+}
+
+.size-md {
+  width: 100%;
+  max-width: 480px;
+}
+
+.size-lg {
+  width: 100%;
+  max-width: 640px;
+}
+
+.size-xl {
+  width: 100%;
+  max-width: 800px;
+}
+
+/* Outline layer (white border) */
+.outline {
+  position: absolute;
+  inset: 0;
+  border-radius: 6px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  pointer-events: none;
+}
+
+/* Dark border layer (shadow effect) */
+.darkLayer {
+  position: absolute;
+  inset: 0;
+  border-radius: 6px;
+  border: 2px solid #1d2119;
+  box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.2);
+  pointer-events: none;
+}
+
+/* Inside fill */
+.inside {
+  position: relative;
+  border-radius: 6px;
+  z-index: 1;
+  background: rgba(255, 255, 255, 0.02);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header section */
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.title {
+  font-family: 'Inter', 'system-ui', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #fff;
+  margin: 0;
+}
+
+.subtitle {
+  font-family: 'Inter', 'system-ui', sans-serif;
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin: 4px 0 0 0;
+}
+
+/* Close button */
+.closeButton {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0;
+  min-width: 32px;
+  min-height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease;
+  flex-shrink: 0;
+}
+
+.closeButton:hover {
+  color: #fff;
+}
+
+/* Body section */
+.body {
+  flex: 1;
+}
+
+/* Footer section */
+.footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+/* Divider */
+.divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Padding variants */
+.padding-sm {
+  padding: 12px;
+}
+
+.padding-md {
+  padding: 16px;
+}
+
+.padding-lg {
+  padding: 24px;
+}
