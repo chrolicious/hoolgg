@@ -27,7 +27,26 @@ export const Playground: Story = {
 export const AllVariants: Story = {
   render: () => (
     <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap' }}>
-      {(['primary', 'secondary', 'purple', 'warning', 'destructive'] as const).map((v) => (
+      {([
+        'primary',
+        'secondary',
+        'purple',
+        'warning',
+        'destructive',
+        'deathknight',
+        'demonhunter',
+        'druid',
+        'evoker',
+        'hunter',
+        'mage',
+        'monk',
+        'paladin',
+        'priest',
+        'rogue',
+        'shaman',
+        'warlock',
+        'warrior',
+      ] as const).map((v) => (
         <Badge key={v} variant={v} profileIcon={<Icon name="user" size={32} animation="none" />}>
           <BadgeHeader>{v}</BadgeHeader>
           <BadgeBody>Character</BadgeBody>
