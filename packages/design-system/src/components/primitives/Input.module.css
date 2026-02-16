@@ -83,8 +83,7 @@
 .simple .container {
   border-radius: 9999px;
   border: 1px solid rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(10px);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), inset 0 1px 2px rgba(255, 255, 255, 0.4);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .simple:focus-within .container {
@@ -241,8 +240,7 @@
 .hero .inside {
   position: relative;
   display: flex;
-  background-color: rgba(217, 215, 209, 0.5);
-  backdrop-filter: blur(12px);
+  background-color: rgba(217, 215, 209, 0.85);
   clip-path: polygon(
     0 0, /* top-left: 90° corner */
     calc(100% - var(--bevel)) 0,
@@ -252,7 +250,7 @@
     0 calc(100% - var(--bevel)),
     0 0 /* close path at top-left */
   );
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), backdrop-filter 0.2s ease;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Hover lift: translate up-left to reveal shadow */
