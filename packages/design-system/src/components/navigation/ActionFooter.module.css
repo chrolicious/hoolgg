@@ -6,25 +6,34 @@
 .darkOverlay {
   position: fixed;
   bottom: 0;
-  left: 0;
   right: 0;
-  height: 120px;
-  background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.8));
+  width: 500px;
+  height: 180px;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.9) 100%);
   pointer-events: none;
   z-index: 45;
+  clip-path: polygon(100% 0%, 100% 100%, 0% 100%, 20% 0%);
 }
 
-/* Footer container */
+/* Footer container - DARK SECTION */
 .footer {
   position: fixed;
   display: flex;
   align-items: center;
   gap: 16px;
-  padding: 24px;
+  padding: 24px 32px;
   z-index: 50;
   bottom: 0;
+  right: 0;
   transform: skewY(2deg) skewX(3deg);
   transform-origin: bottom right;
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.6) 100%);
+  border-left: 8px solid rgba(0, 0, 0, 0.9);
+  border-top: 8px solid rgba(0, 0, 0, 0.9);
+  box-shadow:
+    -12px -12px 40px rgba(0, 0, 0, 0.8),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  min-width: 300px;
 }
 
 /* Position variants */

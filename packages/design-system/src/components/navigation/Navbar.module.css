@@ -7,30 +7,46 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  padding: 16px 24px;
+  padding: 20px 24px;
   gap: 0;
   transform: skewY(-3deg) skewX(-2deg);
   transform-origin: top left;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.5) 100%);
+  border-top: 8px solid rgba(0, 0, 0, 0.9);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
 }
 
-/* Rainbow accent bar */
+/* Rainbow accent bar - ANIMATED */
 .accentBar {
   position: absolute;
-  top: 0;
+  bottom: 0;
   left: 0;
   right: 0;
-  height: 6px;
+  height: 12px;
   background: linear-gradient(
     90deg,
     #ff0000 0%,
-    #ff7f00 16.66%,
-    #ffff00 33.33%,
-    #00ff00 50%,
-    #0000ff 66.66%,
-    #4b0082 83.33%,
-    #9400d3 100%
+    #ff7f00 14.28%,
+    #ffff00 28.57%,
+    #00ff00 42.85%,
+    #0000ff 57.14%,
+    #4b0082 71.42%,
+    #9400d3 85.71%,
+    #ff0000 100%
   );
-  border-radius: 3px;
+  background-size: 200% 100%;
+  animation: rainbowFlow 3s linear infinite;
+  border-radius: 0;
+  box-shadow: 0 0 20px rgba(255, 0, 0, 0.5), inset 0 2px 8px rgba(255, 255, 255, 0.2);
+}
+
+@keyframes rainbowFlow {
+  0% {
+    background-position: 0% 0%;
+  }
+  100% {
+    background-position: 200% 0%;
+  }
 }
 
 /* Content wrapper */
@@ -39,6 +55,9 @@
   align-items: center;
   gap: 16px;
   padding-top: 12px;
+  padding-bottom: 20px;
+  position: relative;
+  z-index: 2;
 }
 
 /* Badge with icon */
