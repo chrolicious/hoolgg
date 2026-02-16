@@ -47,16 +47,9 @@ export const Modal = React.forwardRef<HTMLDivElement, ModalProps>(
     },
     ref,
   ) => {
-    const [isClosing, setIsClosing] = React.useState(false);
-
     // Handle close button click
     const handleClose = () => {
-      setIsClosing(true);
-      // Wait for spin animation to complete before closing
-      setTimeout(() => {
-        onClose?.();
-        setIsClosing(false);
-      }, 600);
+      onClose?.();
     };
 
     // Handle escape key
@@ -141,26 +134,18 @@ export const Modal = React.forwardRef<HTMLDivElement, ModalProps>(
                               onClick={handleClose}
                               aria-label="Close modal"
                               icon={
-                                <motion.div
-                                  animate={{ rotate: isClosing ? 360 : 0 }}
-                                  transition={{
-                                    duration: isClosing ? 0.6 : 0,
-                                    ease: 'easeInOut',
-                                  }}
+                                <svg
+                                  width="12"
+                                  height="12"
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  strokeWidth="3"
+                                  strokeLinecap="round"
                                 >
-                                  <svg
-                                    width="12"
-                                    height="12"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth="3"
-                                    strokeLinecap="round"
-                                  >
-                                    <line x1="18" y1="6" x2="6" y2="18" />
-                                    <line x1="6" y1="6" x2="18" y2="18" />
-                                  </svg>
-                                </motion.div>
+                                  <line x1="18" y1="6" x2="6" y2="18" />
+                                  <line x1="6" y1="6" x2="18" y2="18" />
+                                </svg>
                               }
                             />
                           )}
