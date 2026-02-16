@@ -1,7 +1,8 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Button } from './Button';
+import styles from './StatusIndicator.module.css';
 
 export type StatusType = 'online' | 'away' | 'offline';
 
@@ -56,6 +57,7 @@ const statusColorMap: Record<StatusType, { bg: string; color: string; border: st
 export const StatusIndicator = React.forwardRef<HTMLButtonElement, StatusIndicatorProps>(
   ({ status, icon, onClick, title }, ref) => {
     const colors = statusColorMap[status];
+    const isOnline = status === 'online';
 
     return (
       <Button
@@ -66,6 +68,7 @@ export const StatusIndicator = React.forwardRef<HTMLButtonElement, StatusIndicat
         icon={icon}
         onClick={onClick}
         title={title}
+        className={isOnline ? styles.online : ''}
         style={{
           '--btn-bg': colors.bg,
           '--btn-hover-bg': colors.hover,
