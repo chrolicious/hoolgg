@@ -69,7 +69,7 @@ export const Default: Story = {
   },
   render: (args) => (
     <Container padding="lg">
-      <StaggerGroup {...args}>
+      <StaggerGroup {...args} style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
         <Item label="Item 1" />
         <Item label="Item 2" />
         <Item label="Item 3" />
@@ -136,7 +136,7 @@ export const FastStagger: Story = {
         <div style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: '0.75rem' }}>
           Fast stagger (0.08s between items)
         </div>
-        <StaggerGroup direction="vertical" staggerDelay={0.08} duration={0.4}>
+        <StaggerGroup direction="vertical" staggerDelay={0.08} duration={0.4} style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
           <Badge variant="primary">Badge 1</Badge>
           <Badge variant="purple">Badge 2</Badge>
           <Badge variant="destructive">Badge 3</Badge>
@@ -153,7 +153,7 @@ export const SlowStagger: Story = {
         <div style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: '0.75rem' }}>
           Slow stagger (0.3s between items)
         </div>
-        <StaggerGroup direction="vertical" staggerDelay={0.3} duration={0.8}>
+        <StaggerGroup direction="vertical" staggerDelay={0.3} duration={0.8} style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
           <Item label="Item 1" />
           <Item label="Item 2" />
           <Item label="Item 3" />
@@ -175,6 +175,7 @@ export const WithDelay: Story = {
           staggerDelay={0.15}
           delayStart={0.5}
           duration={0.6}
+          style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}
         >
           <Item label="Item 1" />
           <Item label="Item 2" />
@@ -198,7 +199,7 @@ export const GridStagger: Story = {
           style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(3, 1fr)',
-            gap: '12px',
+            gap: '24px',
           }}
         >
           {Array.from({ length: 9 }).map((_, i) => (
