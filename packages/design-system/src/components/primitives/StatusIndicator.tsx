@@ -48,12 +48,10 @@ const statusColorMap: Record<StatusType, { bg: string; hover: string }> = {
 export const StatusIndicator = React.forwardRef<HTMLDivElement, StatusIndicatorProps>(
   ({ status, onClick, title }, ref) => {
     const colors = statusColorMap[status];
-    const isOnline = status === 'online';
 
     return (
       <div
         ref={ref}
-        className={isOnline ? styles.online : ''}
         onClick={onClick}
         title={title}
         style={{
