@@ -4,7 +4,6 @@ import React from 'react';
 import styles from './Avatar.module.css';
 
 export type AvatarSize = 'sm' | 'md' | 'lg' | 'xl';
-export type AvatarStatus = 'online' | 'offline' | 'away';
 
 export interface AvatarProps {
   /** Image URL */
@@ -15,8 +14,6 @@ export interface AvatarProps {
   alt?: string;
   /** Avatar size */
   size?: AvatarSize;
-  /** Online status indicator */
-  status?: AvatarStatus;
   /** Custom class name */
   className?: string;
   /** Custom style */
@@ -28,7 +25,7 @@ export interface AvatarProps {
  *
  * Usage:
  * <Avatar src="https://..." alt="John Doe" />
- * <Avatar fallback="JD" size="lg" status="online" />
+ * <Avatar fallback="JD" size="lg" />
  */
 export const Avatar = React.forwardRef<HTMLDivElement, AvatarProps>(
   (
@@ -37,7 +34,6 @@ export const Avatar = React.forwardRef<HTMLDivElement, AvatarProps>(
       fallback,
       alt = 'avatar',
       size = 'md',
-      status,
       className,
       style,
     },
@@ -60,11 +56,6 @@ export const Avatar = React.forwardRef<HTMLDivElement, AvatarProps>(
           <div className={styles.fallback}>
             {fallback}
           </div>
-        )}
-
-        {/* Status indicator */}
-        {status && (
-          <div className={`${styles.status} ${styles[`status_${status}`]}`} />
         )}
       </div>
     );

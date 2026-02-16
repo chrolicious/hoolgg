@@ -7,12 +7,50 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
-  border-radius: var(--hool-radius-full);
+  overflow: visible;
   background-color: #E5E7EB;
   border: var(--hool-border-medium) solid var(--hool-ui-white);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: var(--hool-radius-full);
+  /* Sticker-style drop shadow */
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.25),
+    inset 1px 1px 0 rgba(255, 255, 255, 0.5);
   flex-shrink: 0;
+}
+
+/* Animated texture overlay */
+.avatar::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--hool-radius-full);
+  background-image:
+    repeating-linear-gradient(
+      45deg,
+      rgba(255, 255, 255, 0.1) 0px,
+      rgba(255, 255, 255, 0.1) 2px,
+      transparent 2px,
+      transparent 4px
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      rgba(255, 255, 255, 0.05) 0px,
+      rgba(255, 255, 255, 0.05) 1px,
+      transparent 1px,
+      transparent 2px
+    );
+  pointer-events: none;
+  animation: shimmerTexture 8s linear infinite;
+  opacity: 0.4;
+}
+
+@keyframes shimmerTexture {
+  0% {
+    background-position: 0 0, 0 0;
+  }
+  100% {
+    background-position: 8px 8px, 4px 4px;
+  }
 }
 
 /* Sizes */
@@ -44,16 +82,20 @@
   font-weight: var(--font-weight-bold);
 }
 
-/* Image */
+/* Image — clipped to circle */
 .image {
+  position: relative;
   width: 100%;
   height: 100%;
   object-fit: cover;
   object-position: center;
+  z-index: 0;
+  border-radius: var(--hool-radius-full);
 }
 
-/* Fallback initials */
+/* Fallback initials — clipped to circle */
 .fallback {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -65,48 +107,8 @@
   font-weight: var(--font-weight-bold);
   text-transform: uppercase;
   user-select: none;
-}
-
-/* Status indicator */
-.status {
-  position: absolute;
-  bottom: 0;
-  right: 0;
+  z-index: 0;
   border-radius: var(--hool-radius-full);
-  border: var(--hool-border-medium) solid var(--hool-ui-white);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
 }
 
-.sm .status,
-.sm .status {
-  width: 10px;
-  height: 10px;
-}
-
-.md .status {
-  width: 12px;
-  height: 12px;
-}
-
-.lg .status {
-  width: 16px;
-  height: 16px;
-}
-
-.xl .status {
-  width: 20px;
-  height: 20px;
-}
-
-/* Status colors */
-.status_online {
-  background-color: var(--hool-rarity-uncommon);
-}
-
-.status_away {
-  background-color: var(--hool-warning);
-}
-
-.status_offline {
-  background-color: #6B7280;
-}
