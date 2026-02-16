@@ -10,21 +10,15 @@ const meta: Meta<typeof ParallaxScroll> = {
     layout: 'padded',
   },
   argTypes: {
-    offset: {
-      control: 'number',
-      min: 10,
-      max: 200,
-      step: 10,
-    },
-    direction: {
-      control: 'select',
-      options: ['up', 'down'],
-    },
     speed: {
       control: 'number',
       min: 0.1,
       max: 1,
       step: 0.1,
+    },
+    direction: {
+      control: 'select',
+      options: ['up', 'down'],
     },
     enableOnScroll: {
       control: 'boolean',
@@ -58,9 +52,8 @@ const ScrollPlaceholder = ({ label }: { label: string }) => (
 
 export const Default: Story = {
   args: {
-    offset: 50,
-    direction: 'up',
     speed: 0.5,
+    direction: 'up',
     enableOnScroll: true,
   },
   render: () => (
@@ -68,22 +61,26 @@ export const Default: Story = {
       <Container padding="lg">
         <Stack direction="vertical" gap="xl">
           <div style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: '0.75rem' }}>
-            Scroll down to see parallax effect (scrolls slower than page)
+            Scroll to see smooth parallax effect
           </div>
 
-          <ParallaxScroll offset={50} direction="up" speed={0.5}>
-            <ScrollPlaceholder label="Item 1 - Parallax Moving Up" />
+          <ParallaxScroll speed={0.3}>
+            <ScrollPlaceholder label="Moving slower (0.3x)" />
           </ParallaxScroll>
 
-          <div style={{ height: '300px' }} />
+          <div style={{ height: '400px' }} />
 
-          <ParallaxScroll offset={50} direction="down" speed={0.5}>
-            <ScrollPlaceholder label="Item 2 - Parallax Moving Down" />
+          <ParallaxScroll speed={0.5}>
+            <ScrollPlaceholder label="Medium speed (0.5x)" />
           </ParallaxScroll>
 
-          <div style={{ height: '300px' }} />
+          <div style={{ height: '400px' }} />
 
-          <ScrollPlaceholder label="End of scroll area" />
+          <ParallaxScroll speed={0.7}>
+            <ScrollPlaceholder label="Faster speed (0.7x)" />
+          </ParallaxScroll>
+
+          <div style={{ height: '200px' }} />
         </Stack>
       </Container>
     </div>
@@ -96,17 +93,17 @@ export const UpDirection: Story = {
       <Container padding="lg">
         <Stack direction="vertical" gap="xl">
           <div style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: '0.75rem' }}>
-            Parallax moving upward with scroll
+            Parallax moves upward with scroll
           </div>
 
-          <ParallaxScroll direction="up" speed={0.3}>
-            <ScrollPlaceholder label="Moving Up (Slow)" />
+          <ParallaxScroll direction="up" speed={0.4}>
+            <ScrollPlaceholder label="Moving up - Slow (0.4x)" />
           </ParallaxScroll>
 
           <div style={{ height: '300px' }} />
 
           <ParallaxScroll direction="up" speed={0.6}>
-            <ScrollPlaceholder label="Moving Up (Fast)" />
+            <ScrollPlaceholder label="Moving up - Fast (0.6x)" />
           </ParallaxScroll>
 
           <div style={{ height: '300px' }} />
@@ -124,17 +121,17 @@ export const DownDirection: Story = {
       <Container padding="lg">
         <Stack direction="vertical" gap="xl">
           <div style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: '0.75rem' }}>
-            Parallax moving downward with scroll
+            Parallax moves downward with scroll
           </div>
 
-          <ParallaxScroll direction="down" speed={0.3}>
-            <ScrollPlaceholder label="Moving Down (Slow)" />
+          <ParallaxScroll direction="down" speed={0.4}>
+            <ScrollPlaceholder label="Moving down - Slow (0.4x)" />
           </ParallaxScroll>
 
           <div style={{ height: '300px' }} />
 
           <ParallaxScroll direction="down" speed={0.6}>
-            <ScrollPlaceholder label="Moving Down (Fast)" />
+            <ScrollPlaceholder label="Moving down - Fast (0.6x)" />
           </ParallaxScroll>
 
           <div style={{ height: '300px' }} />
@@ -152,88 +149,128 @@ export const SpeedVariants: Story = {
       <Container padding="lg">
         <Stack direction="vertical" gap="xl">
           <div style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: '0.75rem' }}>
-            Different parallax speeds (0.2, 0.5, 0.8)
+            Different parallax speeds for comparison
           </div>
 
-          <ParallaxScroll direction="up" speed={0.2}>
-            <ScrollPlaceholder label="Speed: 0.2 (Very Slow)" />
+          <ParallaxScroll speed={0.2}>
+            <ScrollPlaceholder label="Slowest (0.2x speed)" />
           </ParallaxScroll>
 
-          <div style={{ height: '300px' }} />
+          <div style={{ height: '250px' }} />
 
-          <ParallaxScroll direction="up" speed={0.5}>
-            <ScrollPlaceholder label="Speed: 0.5 (Medium)" />
+          <ParallaxScroll speed={0.4}>
+            <ScrollPlaceholder label="Slow (0.4x speed)" />
           </ParallaxScroll>
 
-          <div style={{ height: '300px' }} />
+          <div style={{ height: '250px' }} />
 
-          <ParallaxScroll direction="up" speed={0.8}>
-            <ScrollPlaceholder label="Speed: 0.8 (Fast)" />
+          <ParallaxScroll speed={0.6}>
+            <ScrollPlaceholder label="Medium (0.6x speed)" />
           </ParallaxScroll>
 
-          <div style={{ height: '300px' }} />
+          <div style={{ height: '250px' }} />
 
-          <ScrollPlaceholder label="End of scroll area" />
+          <ParallaxScroll speed={0.8}>
+            <ScrollPlaceholder label="Fast (0.8x speed)" />
+          </ParallaxScroll>
+
+          <div style={{ height: '250px' }} />
+
+          <ScrollPlaceholder label="End of parallax demo" />
         </Stack>
       </Container>
     </div>
   ),
 };
 
-export const DisabledEffect: Story = {
-  render: () => (
-    <div style={{ minHeight: '200vh', paddingTop: '100px' }}>
-      <Container padding="lg">
-        <Stack direction="vertical" gap="xl">
-          <div style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: '0.75rem' }}>
-            Parallax effect disabled (stays fixed)
-          </div>
-
-          <ParallaxScroll enableOnScroll={false} direction="up" speed={0.5}>
-            <ScrollPlaceholder label="Parallax Disabled - Stays Still" />
-          </ParallaxScroll>
-
-          <div style={{ height: '300px' }} />
-
-          <ScrollPlaceholder label="End of content" />
-        </Stack>
-      </Container>
-    </div>
-  ),
-};
-
-export const MultipleElements: Story = {
+export const LayeredParallax: Story = {
   render: () => (
     <div style={{ minHeight: '300vh', paddingTop: '100px' }}>
       <Container padding="lg">
         <Stack direction="vertical" gap="xl">
           <div style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: '0.75rem' }}>
-            Multiple parallax elements at different speeds
+            Multiple layers with different speeds create depth
           </div>
 
-          <ParallaxScroll direction="up" speed={0.2}>
-            <ScrollPlaceholder label="Layer 1 - Speed 0.2" />
+          <ParallaxScroll direction="up" speed={0.15}>
+            <ScrollPlaceholder label="Background layer (0.15x) - moves slowest" />
           </ParallaxScroll>
+
+          <ParallaxScroll direction="up" speed={0.35}>
+            <ScrollPlaceholder label="Middle layer (0.35x)" />
+          </ParallaxScroll>
+
+          <div style={{ height: '200px' }} />
+
+          <ParallaxScroll direction="up" speed={0.55}>
+            <ScrollPlaceholder label="Foreground layer (0.55x) - moves fastest" />
+          </ParallaxScroll>
+
+          <div style={{ height: '200px' }} />
 
           <ParallaxScroll direction="down" speed={0.4}>
-            <ScrollPlaceholder label="Layer 2 - Speed 0.4 Down" />
-          </ParallaxScroll>
-
-          <div style={{ height: '200px' }} />
-
-          <ParallaxScroll direction="up" speed={0.6}>
-            <ScrollPlaceholder label="Layer 3 - Speed 0.6" />
-          </ParallaxScroll>
-
-          <div style={{ height: '200px' }} />
-
-          <ParallaxScroll direction="down" speed={0.3}>
-            <ScrollPlaceholder label="Layer 4 - Speed 0.3 Down" />
+            <ScrollPlaceholder label="Opposite direction (0.4x down)" />
           </ParallaxScroll>
 
           <div style={{ height: '300px' }} />
 
-          <ScrollPlaceholder label="End of parallax demo" />
+          <ScrollPlaceholder label="End of layered parallax" />
+        </Stack>
+      </Container>
+    </div>
+  ),
+};
+
+export const SubtleEffect: Story = {
+  render: () => (
+    <div style={{ minHeight: '200vh', paddingTop: '100px' }}>
+      <Container padding="lg">
+        <Stack direction="vertical" gap="xl">
+          <div style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: '0.75rem' }}>
+            Subtle parallax for refined effect
+          </div>
+
+          <ParallaxScroll speed={0.15}>
+            <ScrollPlaceholder label="Very subtle (0.15x)" />
+          </ParallaxScroll>
+
+          <div style={{ height: '400px' }} />
+
+          <ParallaxScroll speed={0.2}>
+            <ScrollPlaceholder label="Subtle (0.2x)" />
+          </ParallaxScroll>
+
+          <div style={{ height: '400px' }} />
+
+          <ScrollPlaceholder label="End of subtle parallax" />
+        </Stack>
+      </Container>
+    </div>
+  ),
+};
+
+export const DramaticEffect: Story = {
+  render: () => (
+    <div style={{ minHeight: '200vh', paddingTop: '100px' }}>
+      <Container padding="lg">
+        <Stack direction="vertical" gap="xl">
+          <div style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: '0.75rem' }}>
+            Dramatic parallax for high impact
+          </div>
+
+          <ParallaxScroll speed={0.8}>
+            <ScrollPlaceholder label="Dramatic (0.8x)" />
+          </ParallaxScroll>
+
+          <div style={{ height: '300px' }} />
+
+          <ParallaxScroll speed={0.9}>
+            <ScrollPlaceholder label="Very dramatic (0.9x)" />
+          </ParallaxScroll>
+
+          <div style={{ height: '300px' }} />
+
+          <ScrollPlaceholder label="End of dramatic parallax" />
         </Stack>
       </Container>
     </div>

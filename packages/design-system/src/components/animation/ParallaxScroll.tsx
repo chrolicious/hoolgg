@@ -1,22 +1,21 @@
 'use client';
 
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 
 export interface ParallaxScrollProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
-  offset?: number;
-  direction?: 'up' | 'down';
   speed?: number;
+  direction?: 'up' | 'down';
   enableOnScroll?: boolean;
 }
 
 /**
  * ParallaxScroll — Move element based on scroll position
- * Creates a parallax effect where movement speed is different from scroll speed
+ * Creates a smooth parallax effect where movement speed is different from scroll speed
  *
  * Usage:
- * <ParallaxScroll offset={50} direction="up">
+ * <ParallaxScroll speed={0.5} direction="up">
  *   <Image src="..." />
  * </ParallaxScroll>
  */
@@ -27,50 +26,34 @@ export const ParallaxScroll = React.forwardRef<
   (
     {
       children,
-      offset = 50,
-      direction = 'up',
       speed = 0.5,
+      direction = 'up',
       enableOnScroll = true,
       className,
-      ...props
     },
     ref,
   ) => {
     const elementRef = useRef<HTMLDivElement>(null);
     const { scrollY } = useScroll();
-    const [isVisible, setIsVisible] = useState(false);
 
-    // Parallax transformation based on scroll
-    const y = useTransform(scrollY, (value) => {
-      if (!enableOnScroll || !isVisible) return 0;
-
-      const moveAmount = value * speed;
-      return direction === 'up' ? -moveAmount : moveAmount;
-    });
-
-    // Intersection Observer to only animate when visible
-    useEffect(() => {
-      const observer = new IntersectionObserver(
-        ([entry]) => {
-          setIsVisible(entry.isIntersecting);
-        },
-        { threshold: 0.1 },
-      );
-
-      if (elementRef.current) {
-        observer.observe(elementRef.current);
-      }
-
-      return () => {
-        observer.disconnect();
-      };
-    }, []);
+    // Simple, smooth parallax using useTransform with input/output ranges
+    // This avoids recalculating on every scroll and creates smooth GPU-accelerated movement
+    const y = useTransform(
+      scrollY,
+      (latest) => {
+        if (!enableOnScroll) return 0;
+        const moveAmount = latest * speed;
+        return direction === 'up' ? -moveAmount : moveAmount;
+      },
+    );
 
     return (
       <motion.div
         ref={ref || elementRef}
-        style={{ y }}
-        initial={{ y: 0 }}
+        style={{
+          y,
+          willChange: 'transform', // Hint to browser to optimize this transform
+        }}
         className={className}
       >
         {children}
