@@ -3,9 +3,8 @@
 import React from 'react';
 import styles from './Container.module.css';
 
-export interface ContainerProps {
+export interface ContainerProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
-  className?: string;
   padding?: 'sm' | 'md' | 'lg';
   animated?: boolean;
 }
@@ -25,6 +24,7 @@ export const Container = React.forwardRef<HTMLDivElement, ContainerProps>(
       className,
       padding = 'md',
       animated = true,
+      ...props
     },
     ref,
   ) => {
@@ -32,6 +32,7 @@ export const Container = React.forwardRef<HTMLDivElement, ContainerProps>(
       <div
         ref={ref}
         className={`${styles.container} ${styles[padding]} ${animated ? styles.animated : ''} ${className || ''}`.trim()}
+        {...props}
       >
         {children}
       </div>

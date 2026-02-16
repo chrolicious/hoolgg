@@ -1,0 +1,68 @@
+/* ==========================================================================
+   Divider — Visual separator line
+   ========================================================================== */
+
+.divider {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* Direction variants */
+.horizontal {
+  height: 1px;
+  width: 100%;
+}
+
+.vertical {
+  width: 1px;
+  height: 100%;
+}
+
+/* Spacing variants (margin) */
+.spacing-sm {
+  margin: 8px 0;
+}
+
+.spacing-md {
+  margin: 16px 0;
+}
+
+.spacing-lg {
+  margin: 24px 0;
+}
+
+/* Divider with label */
+.dividerWithLabel {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  margin: 16px 0;
+}
+
+.dividerWithLabel.spacing-sm {
+  margin: 8px 0;
+}
+
+.dividerWithLabel.spacing-md {
+  margin: 16px 0;
+}
+
+.dividerWithLabel.spacing-lg {
+  margin: 24px 0;
+}
+
+.line {
+  flex: 1;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.labelText {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.75rem;
+  font-weight: 500;
+  font-family: 'Inter', system-ui, sans-serif;
+  white-space: nowrap;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
