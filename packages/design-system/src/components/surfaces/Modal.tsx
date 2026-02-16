@@ -47,13 +47,23 @@ export const Modal = React.forwardRef<HTMLDivElement, ModalProps>(
     },
     ref,
   ) => {
+    const [isClosing, setIsClosing] = React.useState(false);
+
+    // Handle close button click
+    const handleClose = () => {
+      setIsClosing(true);
+      onClose?.();
+      // Reset spinning state after animation
+      setTimeout(() => setIsClosing(false), 600);
+    };
+
     // Handle escape key
     useEffect(() => {
       if (!closeOnEscapeKey || !isOpen) return;
 
       const handleKeyDown = (e: KeyboardEvent) => {
         if (e.key === 'Escape') {
-          onClose?.();
+          handleClose();
         }
       };
 
@@ -124,23 +134,22 @@ export const Modal = React.forwardRef<HTMLDivElement, ModalProps>(
                           </div>
                           {onClose && (
                             <motion.div
-                              animate={{ rotate: 360 }}
+                              animate={{ rotate: isClosing ? 360 : 0 }}
                               transition={{
-                                duration: 20,
-                                repeat: Infinity,
-                                ease: 'linear',
+                                duration: isClosing ? 0.6 : 0,
+                                ease: 'easeInOut',
                               }}
                             >
                               <Button
                                 variant="destructive"
-                                size="md"
+                                size="sm"
                                 shape="circle"
-                                onClick={onClose}
+                                onClick={handleClose}
                                 aria-label="Close modal"
                                 icon={
                                   <svg
-                                    width="20"
-                                    height="20"
+                                    width="18"
+                                    height="18"
                                     viewBox="0 0 24 24"
                                     fill="none"
                                     stroke="currentColor"
