@@ -1,0 +1,208 @@
+/* ==========================================================================
+   AchievementGrid — Grid display of achievements/badges
+   ========================================================================== */
+
+.achievementGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #ffffff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+/* Grid */
+.grid {
+  display: grid;
+  gap: 20px;
+}
+
+/* Achievement item */
+.achievement {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  position: relative;
+}
+
+/* Badge */
+.badge {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    inset 0 1px 3px rgba(255, 255, 255, 0.2),
+    0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+
+.badge::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 100%);
+  border-radius: 10px;
+  pointer-events: none;
+}
+
+/* Earned state */
+.earned .badge {
+  border-color: rgba(232, 184, 42, 0.4);
+  background: linear-gradient(135deg, rgba(232, 184, 42, 0.15), rgba(232, 184, 42, 0.05));
+  box-shadow:
+    inset 0 1px 3px rgba(255, 255, 255, 0.2),
+    0 0 12px rgba(232, 184, 42, 0.2),
+    0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.earned .badge:hover {
+  border-color: rgba(232, 184, 42, 0.6);
+  box-shadow:
+    inset 0 1px 3px rgba(255, 255, 255, 0.3),
+    0 0 16px rgba(232, 184, 42, 0.3),
+    0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Locked state */
+.locked .badge {
+  border-color: rgba(255, 255, 255, 0.1);
+  opacity: 0.6;
+}
+
+.locked .badge:hover {
+  opacity: 0.7;
+}
+
+/* Icon */
+.icon {
+  font-size: 3rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+}
+
+.placeholder {
+  font-size: 3rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+}
+
+/* Locked overlay */
+.lockedOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.3));
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+
+.lockIcon {
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Name */
+.name {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.8);
+  text-align: center;
+  line-height: 1.3;
+  word-break: break-word;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.locked .name {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* Tooltip */
+.tooltip {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-bottom: 12px;
+  z-index: 100;
+  pointer-events: none;
+}
+
+.tooltipContent {
+  padding: 12px 14px;
+  background: rgba(0, 0, 0, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  box-shadow:
+    0 12px 24px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  min-width: 180px;
+  max-width: 240px;
+  backdrop-filter: blur(10px);
+}
+
+.tooltipName {
+  margin: 0 0 6px 0;
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.tooltipDescription {
+  margin: 0 0 6px 0;
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.4;
+}
+
+.tooltipDate {
+  margin: 0;
+  font-family: var(--font-mono, 'Monaco', 'Courier New', monospace);
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: rgba(232, 184, 42, 0.8);
+}
+
+.tooltipLocked {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: rgba(239, 68, 68, 0.8);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
