@@ -14,7 +14,7 @@
   gap: 0;
   width: 100%;
   min-height: 300px;
-  transform: rotate(-3deg) translateY(-150px);
+  transform: rotate(-3deg) translateY(150px);
   transform-origin: bottom right;
   background: linear-gradient(180deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.7) 100%);
   box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.6);
