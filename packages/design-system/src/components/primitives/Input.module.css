@@ -48,11 +48,14 @@
   width: 100%;
   gap: var(--input-gap, 8px);
   padding: var(--input-padding-v, 10px) var(--input-padding-h, 20px);
-  background: rgba(217, 215, 209, 0.85);
-  border: 3px solid #1d2119;
+  background: rgba(217, 215, 209, 0.7);
+  border: 3px solid rgba(29, 33, 25, 0.3);
+  backdrop-filter: blur(8px);
   transition:
     background-color 0.2s ease,
-    border-color 0.2s ease;
+    border-color 0.2s ease,
+    backdrop-filter 0.2s ease;
+  box-shadow: inset 0 1px 3px rgba(255, 255, 255, 0.4);
 }
 
 .wrapper:focus-within .container {
@@ -80,7 +83,8 @@
 .simple .container {
   border-radius: 9999px;
   border: 1px solid rgba(0, 0, 0, 0.1);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), inset 0 1px 2px rgba(255, 255, 255, 0.3);
 }
 
 .simple:focus-within .container {
@@ -237,7 +241,8 @@
 .hero .inside {
   position: relative;
   display: flex;
-  background-color: rgba(217, 215, 209, 0.85);
+  background-color: rgba(217, 215, 209, 0.7);
+  backdrop-filter: blur(8px);
   clip-path: polygon(
     0 0, /* top-left: 90° corner */
     calc(100% - var(--bevel)) 0,
@@ -247,7 +252,7 @@
     0 calc(100% - var(--bevel)),
     0 0 /* close path at top-left */
   );
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), backdrop-filter 0.2s ease;
 }
 
 /* Hover lift: translate up-left to reveal shadow */
