@@ -48,7 +48,7 @@
   width: 100%;
   gap: var(--input-gap, 8px);
   padding: var(--input-padding-v, 10px) var(--input-padding-h, 20px);
-  background: rgba(217, 215, 209, 0.75);
+  background: rgba(217, 215, 209, 0.85);
   border: 3px solid #1d2119;
   transition:
     background-color 0.2s ease,
@@ -237,7 +237,7 @@
 .hero .inside {
   position: relative;
   display: flex;
-  background-color: rgba(217, 215, 209, 0.75);
+  background-color: rgba(217, 215, 209, 0.85);
   clip-path: polygon(
     0 0, /* top-left: 90° corner */
     calc(100% - var(--bevel)) 0,
