@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Navbar, TextureOverlay, ActionFooter, ScreenLayout } from '../components/navigation';
+import { Navbar, TextureOverlay, ScreenLayout } from '../components/navigation';
 
 // ============================================================================
 // Navbar Stories
@@ -132,62 +132,6 @@ export const DotsTexture: StoryObj<typeof TextureOverlay> = {
       <div style={{ position: 'relative', zIndex: 20, color: '#fff', fontSize: '2rem' }}>
         Dots Texture
       </div>
-    </div>
-  ),
-};
-
-// ============================================================================
-// ActionFooter Stories
-// ============================================================================
-
-const ActionFooterMeta: Meta<typeof ActionFooter> = {
-  title: 'Navigation/ActionFooter',
-  component: ActionFooter,
-  parameters: {
-    layout: 'fullscreen',
-  },
-};
-
-export const BottomRight: StoryObj<typeof ActionFooter> = {
-  render: () => (
-    <div style={{ width: '100%', height: '100vh', position: 'relative', background: '#1a1a1a' }}>
-      <ActionFooter
-        position="bottom-right"
-        actions={[
-          { key: 'back', label: 'Back', variant: 'secondary' },
-          { key: 'select', label: 'Select', variant: 'primary' },
-        ]}
-      />
-    </div>
-  ),
-};
-
-export const BottomCenter: StoryObj<typeof ActionFooter> = {
-  render: () => (
-    <div style={{ width: '100%', height: '100vh', position: 'relative', background: '#1a1a1a' }}>
-      <ActionFooter
-        position="bottom-center"
-        actions={[
-          { key: 'cancel', label: 'Cancel', variant: 'secondary' },
-          { key: 'confirm', label: 'Confirm', variant: 'primary' },
-        ]}
-      />
-    </div>
-  ),
-};
-
-export const WithIcons: StoryObj<typeof ActionFooter> = {
-  render: () => (
-    <div style={{ width: '100%', height: '100vh', position: 'relative', background: '#1a1a1a' }}>
-      <ActionFooter
-        position="bottom-right"
-        showDarkOverlay={true}
-        actions={[
-          { key: 'back', label: 'Back', icon: '←', variant: 'secondary' },
-          { key: 'delete', label: 'Delete', icon: '🗑️', variant: 'danger' },
-          { key: 'confirm', label: 'Confirm', icon: '✓', variant: 'primary' },
-        ]}
-      />
     </div>
   ),
 };
