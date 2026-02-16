@@ -224,10 +224,16 @@
 
 @keyframes shimmer {
   0% {
-    background-position: -200% 0;
+    opacity: 0;
+  }
+  25% {
+    opacity: 1;
+  }
+  75% {
+    opacity: 1;
   }
   100% {
-    background-position: 200% 0;
+    opacity: 0;
   }
 }
 
@@ -463,12 +469,13 @@
 [data-variant="deathknight"] .inside::after {
   background: linear-gradient(135deg,
     transparent 0%,
-    transparent 40%,
-    rgba(255, 255, 255, 0.15) 50%,
-    transparent 60%,
+    transparent 30%,
+    rgba(255, 255, 255, 0.2) 50%,
+    transparent 70%,
     transparent 100%);
-  background-size: 200% 200%;
-  animation: shimmer 3s ease-in-out infinite;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  animation: shimmer 4s ease-in-out infinite;
   pointer-events: none;
 }
 
@@ -480,12 +487,13 @@
 [data-variant="demonhunter"] .inside::after {
   background: linear-gradient(135deg,
     transparent 0%,
-    transparent 40%,
-    rgba(255, 255, 255, 0.15) 50%,
-    transparent 60%,
+    transparent 30%,
+    rgba(255, 255, 255, 0.2) 50%,
+    transparent 70%,
     transparent 100%);
-  background-size: 200% 200%;
-  animation: shimmer 3s ease-in-out infinite;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  animation: shimmer 4s ease-in-out infinite;
   pointer-events: none;
 }
 
@@ -497,12 +505,13 @@
 [data-variant="druid"] .inside::after {
   background: linear-gradient(135deg,
     transparent 0%,
-    transparent 40%,
-    rgba(255, 255, 255, 0.15) 50%,
-    transparent 60%,
+    transparent 30%,
+    rgba(255, 255, 255, 0.2) 50%,
+    transparent 70%,
     transparent 100%);
-  background-size: 200% 200%;
-  animation: shimmer 3s ease-in-out infinite;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  animation: shimmer 4s ease-in-out infinite;
   pointer-events: none;
 }
 
@@ -514,12 +523,13 @@
 [data-variant="evoker"] .inside::after {
   background: linear-gradient(135deg,
     transparent 0%,
-    transparent 40%,
-    rgba(255, 255, 255, 0.15) 50%,
-    transparent 60%,
+    transparent 30%,
+    rgba(255, 255, 255, 0.2) 50%,
+    transparent 70%,
     transparent 100%);
-  background-size: 200% 200%;
-  animation: shimmer 3s ease-in-out infinite;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  animation: shimmer 4s ease-in-out infinite;
   pointer-events: none;
 }
 
@@ -531,12 +541,13 @@
 [data-variant="hunter"] .inside::after {
   background: linear-gradient(135deg,
     transparent 0%,
-    transparent 40%,
-    rgba(255, 255, 255, 0.15) 50%,
-    transparent 60%,
+    transparent 30%,
+    rgba(255, 255, 255, 0.2) 50%,
+    transparent 70%,
     transparent 100%);
-  background-size: 200% 200%;
-  animation: shimmer 3s ease-in-out infinite;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  animation: shimmer 4s ease-in-out infinite;
   pointer-events: none;
 }
 
@@ -548,12 +559,13 @@
 [data-variant="mage"] .inside::after {
   background: linear-gradient(135deg,
     transparent 0%,
-    transparent 40%,
-    rgba(255, 255, 255, 0.15) 50%,
-    transparent 60%,
+    transparent 30%,
+    rgba(255, 255, 255, 0.2) 50%,
+    transparent 70%,
     transparent 100%);
-  background-size: 200% 200%;
-  animation: shimmer 3s ease-in-out infinite;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  animation: shimmer 4s ease-in-out infinite;
   pointer-events: none;
 }
 
@@ -565,12 +577,13 @@
 [data-variant="monk"] .inside::after {
   background: linear-gradient(135deg,
     transparent 0%,
-    transparent 40%,
-    rgba(255, 255, 255, 0.15) 50%,
-    transparent 60%,
+    transparent 30%,
+    rgba(255, 255, 255, 0.2) 50%,
+    transparent 70%,
     transparent 100%);
-  background-size: 200% 200%;
-  animation: shimmer 3s ease-in-out infinite;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  animation: shimmer 4s ease-in-out infinite;
   pointer-events: none;
 }
 
@@ -582,12 +595,13 @@
 [data-variant="paladin"] .inside::after {
   background: linear-gradient(135deg,
     transparent 0%,
-    transparent 40%,
-    rgba(255, 255, 255, 0.15) 50%,
-    transparent 60%,
+    transparent 30%,
+    rgba(255, 255, 255, 0.2) 50%,
+    transparent 70%,
     transparent 100%);
-  background-size: 200% 200%;
-  animation: shimmer 3s ease-in-out infinite;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  animation: shimmer 4s ease-in-out infinite;
   pointer-events: none;
 }
 
@@ -599,12 +613,13 @@
 [data-variant="priest"] .inside::after {
   background: linear-gradient(135deg,
     transparent 0%,
-    transparent 40%,
-    rgba(255, 255, 255, 0.15) 50%,
-    transparent 60%,
+    transparent 30%,
+    rgba(255, 255, 255, 0.2) 50%,
+    transparent 70%,
     transparent 100%);
-  background-size: 200% 200%;
-  animation: shimmer 3s ease-in-out infinite;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  animation: shimmer 4s ease-in-out infinite;
   pointer-events: none;
 }
 
@@ -616,12 +631,13 @@
 [data-variant="rogue"] .inside::after {
   background: linear-gradient(135deg,
     transparent 0%,
-    transparent 40%,
-    rgba(255, 255, 255, 0.15) 50%,
-    transparent 60%,
+    transparent 30%,
+    rgba(255, 255, 255, 0.2) 50%,
+    transparent 70%,
     transparent 100%);
-  background-size: 200% 200%;
-  animation: shimmer 3s ease-in-out infinite;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  animation: shimmer 4s ease-in-out infinite;
   pointer-events: none;
 }
 
@@ -633,12 +649,13 @@
 [data-variant="shaman"] .inside::after {
   background: linear-gradient(135deg,
     transparent 0%,
-    transparent 40%,
-    rgba(255, 255, 255, 0.15) 50%,
-    transparent 60%,
+    transparent 30%,
+    rgba(255, 255, 255, 0.2) 50%,
+    transparent 70%,
     transparent 100%);
-  background-size: 200% 200%;
-  animation: shimmer 3s ease-in-out infinite;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  animation: shimmer 4s ease-in-out infinite;
   pointer-events: none;
 }
 
@@ -650,12 +667,13 @@
 [data-variant="warlock"] .inside::after {
   background: linear-gradient(135deg,
     transparent 0%,
-    transparent 40%,
-    rgba(255, 255, 255, 0.15) 50%,
-    transparent 60%,
+    transparent 30%,
+    rgba(255, 255, 255, 0.2) 50%,
+    transparent 70%,
     transparent 100%);
-  background-size: 200% 200%;
-  animation: shimmer 3s ease-in-out infinite;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  animation: shimmer 4s ease-in-out infinite;
   pointer-events: none;
 }
 
@@ -667,12 +685,13 @@
 [data-variant="warrior"] .inside::after {
   background: linear-gradient(135deg,
     transparent 0%,
-    transparent 40%,
-    rgba(255, 255, 255, 0.15) 50%,
-    transparent 60%,
+    transparent 30%,
+    rgba(255, 255, 255, 0.2) 50%,
+    transparent 70%,
     transparent 100%);
-  background-size: 200% 200%;
-  animation: shimmer 3s ease-in-out infinite;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  animation: shimmer 4s ease-in-out infinite;
   pointer-events: none;
 }
 
