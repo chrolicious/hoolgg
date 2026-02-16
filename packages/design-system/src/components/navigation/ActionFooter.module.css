@@ -17,19 +17,18 @@
 
 /* Footer container - DARK SECTION WITH RAINBOW BAR */
 .footer {
-  position: fixed;
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 0;
   padding: 24px 32px 32px 32px;
   z-index: 50;
-  bottom: 0;
-  right: 0;
-  transform: skewY(3deg) skewX(-2deg);
+  margin-left: auto;
+  transform: skewY(3deg) skewX(2deg);
   transform-origin: bottom right;
-  background: linear-gradient(135deg, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.6) 100%);
-  border-left: 8px solid rgba(0, 0, 0, 0.9);
-  border-top: 8px solid rgba(0, 0, 0, 0.9);
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.7) 100%);
+  border-left: 8px solid #000000;
+  border-top: 8px solid #000000;
   box-shadow:
     -12px 12px 40px rgba(0, 0, 0, 0.8),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
@@ -79,7 +78,7 @@
 
 /* Position variants */
 .bottom-right {
-  right: 0;
+  margin-left: auto;
   justify-content: flex-end;
   flex-direction: row;
   align-items: center;
@@ -87,9 +86,8 @@
 }
 
 .bottom-center {
-  left: 50%;
-  right: auto;
-  transform: translateX(-50%);
+  margin-left: auto;
+  margin-right: auto;
   justify-content: center;
   flex-direction: row;
   align-items: center;
@@ -97,7 +95,7 @@
 }
 
 .bottom-left {
-  left: 0;
+  margin-right: auto;
   justify-content: flex-start;
   flex-direction: row;
   align-items: center;
@@ -213,18 +211,14 @@
     width: 100%;
     padding-left: 16px;
     padding-right: 16px;
-  }
-
-  .action {
-    width: 100%;
-    justify-content: center;
+    transform: none;
   }
 
   .bottom-right,
   .bottom-center,
   .bottom-left {
-    left: 0;
-    right: 0;
-    transform: none;
+    margin-left: auto;
+    margin-right: auto;
+    justify-content: center;
   }
 }

@@ -1,7 +1,8 @@
 'use client';
 
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Button } from '../primitives/Button';
 import styles from './ActionFooter.module.css';
 
 export interface ActionFooterProps {
@@ -16,6 +17,8 @@ export interface ActionFooterProps {
   showDarkOverlay?: boolean;
   className?: string;
 }
+
+const MotionButton = motion(Button);
 
 /**
  * ActionFooter — Bottom action buttons with optional dark overlay
@@ -40,6 +43,21 @@ export const ActionFooter = React.forwardRef<HTMLDivElement, ActionFooterProps>(
     },
     ref,
   ) => {
+    const mapVariant = (
+      variant?: 'primary' | 'secondary' | 'danger',
+    ): 'primary' | 'secondary' | 'destructive' => {
+      switch (variant) {
+        case 'primary':
+          return 'primary';
+        case 'secondary':
+          return 'secondary';
+        case 'danger':
+          return 'destructive';
+        default:
+          return 'secondary';
+      }
+    };
+
     return (
       <>
         {/* Dark overlay behind actions */}
@@ -60,21 +78,23 @@ export const ActionFooter = React.forwardRef<HTMLDivElement, ActionFooterProps>(
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: 0.1 }}
         >
-          {actions.map((action, index) => (
-            <motion.button
-              key={action.key}
-              className={`${styles.action} ${styles[action.variant || 'secondary']}`}
-              onClick={action.onClick}
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.15 + index * 0.05, duration: 0.2 }}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              {action.icon && <span className={styles.icon}>{action.icon}</span>}
-              <span className={styles.label}>{action.label}</span>
-            </motion.button>
-          ))}
+          <AnimatePresence>
+            {actions.map((action, index) => (
+              <MotionButton
+                key={action.key}
+                variant={mapVariant(action.variant)}
+                onClick={action.onClick}
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.15 + index * 0.05, duration: 0.2 }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                {action.icon}
+                {action.label}
+              </MotionButton>
+            ))}
+          </AnimatePresence>
         </motion.div>
       </>
     );
