@@ -31,7 +31,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 40px 20px 160px 20px;
+  padding: var(--hool-space-10) var(--hool-space-5) 160px var(--hool-space-5);
 }
 
 /* Responsive */
@@ -41,12 +41,12 @@
   }
 
   .main {
-    padding: 30px 16px 140px 16px;
+    padding: var(--hool-space-8) var(--hool-space-4) 140px var(--hool-space-4);
   }
 }
 
 @media (max-width: 480px) {
   .main {
-    padding: 24px 12px 120px 12px;
+    padding: var(--hool-space-6) var(--hool-space-3) 120px var(--hool-space-3);
   }
 }

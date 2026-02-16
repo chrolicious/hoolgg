@@ -17,23 +17,23 @@
 
 /* Gap variants */
 .gap-xs {
-  gap: 4px;
+  gap: var(--hool-space-1);
 }
 
 .gap-sm {
-  gap: 8px;
+  gap: var(--hool-space-2);
 }
 
 .gap-md {
-  gap: 16px;
+  gap: var(--hool-space-4);
 }
 
 .gap-lg {
-  gap: 24px;
+  gap: var(--hool-space-6);
 }
 
 .gap-xl {
-  gap: 32px;
+  gap: var(--hool-space-8);
 }
 
 /* Align variants */

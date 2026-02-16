@@ -14,8 +14,8 @@
 
 .container {
   position: relative;
-  border-radius: 6px;
-  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--hool-radius-sm);
+  border: var(--hool-border-medium) solid rgba(255, 255, 255, 0.2);
   border-right-color: rgba(255, 255, 255, 0.1);
   border-bottom-color: rgba(255, 255, 255, 0.1);
   background: rgba(255, 255, 255, 0.05);
@@ -39,7 +39,7 @@
   background-size: 30px 30px;
   background-position: 0 0;
   pointer-events: none;
-  border-radius: 6px;
+  border-radius: var(--hool-radius-sm);
 }
 
 /* Animated version */
@@ -61,21 +61,21 @@
     transparent 100%
   );
   pointer-events: none;
-  border-radius: 6px;
+  border-radius: var(--hool-radius-sm);
 }
 
 
 /* Padding variants */
 .sm {
-  padding: 8px;
+  padding: var(--hool-space-2);
 }
 
 .md {
-  padding: 16px;
+  padding: var(--hool-space-4);
 }
 
 .lg {
-  padding: 24px;
+  padding: var(--hool-space-6);
 }
 
 /* Content wrapper to sit above the background pattern */

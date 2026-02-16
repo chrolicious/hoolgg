@@ -26,8 +26,8 @@
 /* Grid pattern */
 .grid {
   background-image:
-    linear-gradient(0deg, rgba(0, 0, 0, 0.3) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 0, 0, 0.3) 1px, transparent 1px);
+    linear-gradient(0deg, rgba(0, 0, 0, 0.3) var(--hool-border-thin), transparent var(--hool-border-thin)),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.3) var(--hool-border-thin), transparent var(--hool-border-thin));
   background-size: 32px 32px;
 }
 
