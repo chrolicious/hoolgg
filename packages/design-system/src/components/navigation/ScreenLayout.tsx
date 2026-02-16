@@ -2,18 +2,20 @@
 
 import React from 'react';
 import { Navbar, type NavbarProps } from './Navbar';
+import { NavbarFooter, type NavbarFooterProps } from './NavbarFooter';
 import { TextureOverlay, type TextureOverlayProps } from './TextureOverlay';
 import styles from './ScreenLayout.module.css';
 
 export interface ScreenLayoutProps {
   navbar?: NavbarProps;
+  navbarFooter?: NavbarFooterProps;
   texture?: TextureOverlayProps;
   children?: React.ReactNode;
   className?: string;
 }
 
 /**
- * ScreenLayout — Complete screen layout with navbar and texture
+ * ScreenLayout — Complete screen layout with navbar, navbar footer, and texture
  * Combines navigation components for Mario Wonder-style screens
  *
  * Usage:
@@ -22,6 +24,11 @@ export interface ScreenLayoutProps {
  *     icon: "⚔️",
  *     title: "Guild Finder",
  *     subtitle: "Browse guilds",
+ *   }}
+ *   navbarFooter={{
+ *     icon: "👥",
+ *     title: "Members",
+ *     subtitle: "View roster",
  *   }}
  *   texture={{ pattern: 'checkerboard', opacity: 0.15 }}
  * >
@@ -32,6 +39,7 @@ export const ScreenLayout = React.forwardRef<HTMLDivElement, ScreenLayoutProps>(
   (
     {
       navbar,
+      navbarFooter,
       texture,
       children,
       className,
@@ -53,6 +61,9 @@ export const ScreenLayout = React.forwardRef<HTMLDivElement, ScreenLayoutProps>(
         <main className={styles.main}>
           {children}
         </main>
+
+        {/* Navbar Footer */}
+        {navbarFooter && <NavbarFooter {...navbarFooter} />}
       </div>
     );
   },

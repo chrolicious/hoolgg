@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Navbar, TextureOverlay, ScreenLayout } from '../components/navigation';
+import { Navbar, NavbarFooter, TextureOverlay, ScreenLayout } from '../components/navigation';
 
 // ============================================================================
 // Navbar Stories
@@ -57,6 +57,57 @@ export const Variants: NavbarStory = {
       <Navbar icon="🏛️" title="Guilds" subtitle="Guild management" />
       <Navbar icon="👥" title="Members" subtitle="View your roster" />
       <Navbar icon="📊" title="Statistics" subtitle="Guild analytics" />
+    </div>
+  ),
+};
+
+// ============================================================================
+// NavbarFooter Stories
+// ============================================================================
+
+const NavbarFooterMeta: Meta<typeof NavbarFooter> = {
+  title: 'Navigation/NavbarFooter',
+  component: NavbarFooter,
+  parameters: {
+    layout: 'fullscreen',
+  },
+};
+
+export const FooterDefault: StoryObj<typeof NavbarFooter> = {
+  render: () => (
+    <div style={{ width: '100%', height: '100vh', background: '#1a1a1a' }}>
+      <NavbarFooter
+        icon="👥"
+        title="Guild Info"
+        subtitle="View details"
+      />
+    </div>
+  ),
+};
+
+export const FooterWithActions: StoryObj<typeof NavbarFooter> = {
+  render: () => (
+    <div style={{ width: '100%', height: '100vh', background: '#1a1a1a' }}>
+      <NavbarFooter
+        icon="⚙️"
+        title="Settings"
+        actions={
+          <button
+            style={{
+              padding: '8px 16px',
+              background: 'rgba(255, 255, 255, 0.2)',
+              border: '1px solid rgba(255, 255, 255, 0.3)',
+              borderRadius: '6px',
+              color: '#fff',
+              cursor: 'pointer',
+              fontSize: '0.875rem',
+              fontWeight: 600,
+            }}
+          >
+            Back
+          </button>
+        }
+      />
     </div>
   ),
 };
@@ -156,6 +207,11 @@ export const Complete: StoryObj<typeof ScreenLayout> = {
         title: 'Guild Finder',
         subtitle: 'Find your next adventure',
       }}
+      navbarFooter={{
+        icon: '👥',
+        title: 'Members',
+        subtitle: 'View roster',
+      }}
       texture={{
         pattern: 'checkerboard',
         opacity: 0.15,
@@ -183,6 +239,11 @@ export const CharacterSelection: StoryObj<typeof ScreenLayout> = {
         icon: '👤',
         title: 'Characters',
         subtitle: 'Choose your character',
+      }}
+      navbarFooter={{
+        icon: '🎮',
+        title: 'Play',
+        subtitle: 'Start game',
       }}
       texture={{
         pattern: 'checkerboard',
