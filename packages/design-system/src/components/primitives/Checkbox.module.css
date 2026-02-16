@@ -5,7 +5,7 @@
 .container {
   display: inline-flex;
   align-items: flex-start;
-  gap: 12px;
+  gap: var(--hool-space-3);
   cursor: pointer;
   user-select: none;
   position: relative;
@@ -19,16 +19,16 @@
 
 /* Reduce padding to make checkboxes more compact */
 .checkboxButton :global(.inside) {
-  padding: 4px !important; /* Much smaller than button default */
+  padding: var(--hool-space-1) !important; /* Much smaller than button default */
 }
 
 /* Size-specific padding adjustments */
 .checkboxButton button[class*="sm"] :global(.inside) {
-  padding: 3px !important;
+  padding: calc(var(--hool-space-1) - 1px) !important;
 }
 
 .checkboxButton button[class*="lg"] :global(.inside) {
-  padding: 5px !important;
+  padding: calc(var(--hool-space-1) + 1px) !important;
 }
 
 /* Force colored background even when not selected */
@@ -39,7 +39,7 @@
 /* Unchecked state - apply muted filter */
 .unchecked :global(.inside) {
   filter: saturate(0.3) brightness(1.1) opacity(0.5);
-  transition: filter 0.2s ease;
+  transition: filter var(--hool-duration-fast) ease;
 }
 
 .unchecked:hover :global(.inside) {
@@ -99,8 +99,8 @@
 .focusRing {
   position: absolute;
   inset: -3px;
-  border: 3px solid #E8B82A;
-  border-radius: 6px;
+  border: 3px solid var(--hool-gold-400);
+  border-radius: var(--hool-radius-md);
   pointer-events: none;
   z-index: 10;
 }
@@ -110,28 +110,28 @@
 .labelWrapper {
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  padding-top: 2px;
+  gap: var(--hool-space-1);
+  padding-top: var(--hool-space-1);
 }
 
 .label {
   font-family: 'Inter', system-ui, sans-serif;
   font-size: 0.875rem;
-  font-weight: 700;
+  font-weight: var(--font-weight-bold);
   color: #1a1a1a;
   line-height: 1.4;
   cursor: pointer;
 }
 
 .labelDisabled {
-  color: #9CA3AF;
+  color: var(--hool-rarity-common);
   cursor: not-allowed;
 }
 
 .description {
   font-family: 'Inter', system-ui, sans-serif;
   font-size: 0.75rem;
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
   color: #6B7280;
   line-height: 1.3;
 }

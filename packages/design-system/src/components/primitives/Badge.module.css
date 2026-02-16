@@ -190,7 +190,7 @@
     radial-gradient(1.2px 1.2px at 35% 85%, rgba(255,215,0,0.48) 0.7px, transparent 0.7px);
   background-size: 100% 100%;
   background-repeat: no-repeat;
-  animation: floatParticles 8s ease-in-out infinite;
+  animation: floatParticles var(--hool-duration-slower) ease-in-out infinite;
   pointer-events: none;
   opacity: 1;
 }
@@ -430,70 +430,6 @@
     radial-gradient(1.2px 1.2px at 35% 85%, rgba(255,255,0,0.48) 0.7px, transparent 0.7px);
 }
 
-.inside-old {
-  position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(to bottom left, rgba(255,255,255,0.5), rgba(255,255,255,0.15)),
-    radial-gradient(var(--star-color, rgba(255,255,255,0.3)) 2.5px, transparent 0),
-    radial-gradient(var(--star-color, rgba(255,255,255,0.3)) 2.5px, transparent 0),
-    radial-gradient(var(--star-color, rgba(255,255,255,0.3)) 2.5px, transparent 0),
-    radial-gradient(var(--star-color, rgba(255,255,255,0.3)) 2.5px, transparent 0),
-    radial-gradient(var(--star-color, rgba(255,255,255,0.3)) 2.5px, transparent 0),
-    radial-gradient(var(--star-color, rgba(255,255,255,0.3)) 2.5px, transparent 0),
-    radial-gradient(var(--star-color, rgba(255,255,255,0.3)) 2.5px, transparent 0),
-    radial-gradient(var(--star-color, rgba(255,255,255,0.3)) 2.5px, transparent 0),
-    radial-gradient(var(--star-color, rgba(255,255,255,0.3)) 2.5px, transparent 0),
-    radial-gradient(var(--star-color, rgba(255,255,255,0.3)) 2.5px, transparent 0),
-    radial-gradient(var(--star-color, rgba(255,255,255,0.3)) 2.5px, transparent 0),
-    radial-gradient(var(--star-color, rgba(255,255,255,0.3)) 2.5px, transparent 0),
-    radial-gradient(var(--star-color, rgba(255,255,255,0.3)) 2.5px, transparent 0),
-    radial-gradient(var(--star-color, rgba(255,255,255,0.3)) 2.5px, transparent 0),
-    radial-gradient(var(--star-color, rgba(255,255,255,0.3)) 2.5px, transparent 0),
-    radial-gradient(var(--star-color, rgba(255,255,255,0.3)) 2.5px, transparent 0),
-    radial-gradient(var(--star-color, rgba(255,255,255,0.3)) 2.5px, transparent 0),
-    radial-gradient(var(--star-color, rgba(255,255,255,0.3)) 2.5px, transparent 0),
-    radial-gradient(var(--star-color, rgba(255,255,255,0.3)) 2.5px, transparent 0),
-    radial-gradient(var(--star-color, rgba(255,255,255,0.3)) 2.5px, transparent 0),
-    radial-gradient(var(--star-color, rgba(255,255,255,0.3)) 2.5px, transparent 0),
-    radial-gradient(var(--star-color, rgba(255,255,255,0.3)) 2.5px, transparent 0),
-    radial-gradient(var(--star-color, rgba(255,255,255,0.3)) 2.5px, transparent 0),
-    radial-gradient(var(--star-color, rgba(255,255,255,0.3)) 2.5px, transparent 0),
-    radial-gradient(var(--star-color, rgba(255,255,255,0.3)) 2.5px, transparent 0),
-    radial-gradient(var(--star-color, rgba(255,255,255,0.3)) 2.5px, transparent 0),
-    radial-gradient(var(--star-color, rgba(255,255,255,0.3)) 2.5px, transparent 0),
-    radial-gradient(var(--star-color, rgba(255,255,255,0.3)) 2.5px, transparent 0),
-    radial-gradient(var(--star-color, rgba(255,255,255,0.3)) 2.5px, transparent 0),
-    radial-gradient(var(--star-color, rgba(255,255,255,0.3)) 2.5px, transparent 0),
-    radial-gradient(var(--star-color, rgba(255,255,255,0.3)) 2.5px, transparent 0),
-    radial-gradient(var(--star-color, rgba(255,255,255,0.3)) 2.5px, transparent 0),
-    radial-gradient(var(--star-color, rgba(255,255,255,0.3)) 2.5px, transparent 0),
-    radial-gradient(var(--star-color, rgba(255,255,255,0.3)) 2.5px, transparent 0),
-    radial-gradient(var(--star-color, rgba(255,255,255,0.3)) 2.5px, transparent 0);
-  background-size: 100% 100%, 280px 280px;
-  background-position: 0 0, 0 0, 58px 94px, 178px 34px, 16px 238px, 106px 46px, 254px 194px, 34px 274px, 158px 122px, 82px 218px, 234px 14px, 22px 146px, 142px 274px, 46px 106px, 206px 174px, 98px 38px, 174px 254px, 28px 74px, 118px 278px, 218px 102px, 66px 194px, 182px 142px, 102px 278px, 130px 22px, 246px 222px, 54px 134px, 150px 74px, 202px 274px, 10px 194px, 94px 14px, 230px 166px, 146px 82px, 26px 270px, 166px 202px, 74px 114px, 134px 234px;
-  background-repeat: repeat;
-  animation: driftDots 20s linear infinite;
-  pointer-events: none;
-}
-
-@keyframes driftDots {
-  0% {
-    transform: translateX(140px) translateY(-140px) rotate(0deg);
-    opacity: 0;
-  }
-  25% {
-    opacity: 1;
-  }
-  75% {
-    opacity: 1;
-  }
-  100% {
-    transform: translateX(-140px) translateY(140px) rotate(-8deg);
-    opacity: 0;
-  }
-}
-
 /* --- Profile icon section --- */
 
 .profileIcon {
@@ -507,8 +443,8 @@
   background-color: #4B5563;
   position: relative;
   z-index: 2;
-  border-bottom: 1px solid var(--btn-border-color, #1d2119);
-  color: #FFFFFF;
+  border-bottom: var(--hool-border-thin) solid var(--btn-border-color, #1d2119);
+  color: var(--hool-ui-white);
 }
 
 /* --- Content sections --- */
@@ -521,15 +457,15 @@
   z-index: 2;
   font-family: var(--font-sans);
   color: var(--btn-color);
-  padding: 8px;
+  padding: var(--hool-space-2);
 }
 
 .header {
   font-size: 0.8125rem;
-  font-weight: 700;
+  font-weight: var(--font-weight-bold);
   line-height: 1.2;
-  padding-bottom: 6px;
-  margin-bottom: 6px;
+  padding-bottom: var(--hool-space-1);
+  margin-bottom: var(--hool-space-1);
   text-align: center;
   background-image: linear-gradient(to right, transparent 12.5%, rgba(29, 33, 25, 0.35) 12.5%, rgba(29, 33, 25, 0.35) 87.5%, transparent 87.5%);
   background-size: 100% 1px;
@@ -540,14 +476,14 @@
 .body {
   flex: 1;
   font-size: 0.75rem;
-  font-weight: 700;
+  font-weight: var(--font-weight-bold);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   gap: 3px;
   line-height: 1.2;
-  padding-bottom: 6px;
+  padding-bottom: var(--hool-space-1);
   text-align: center;
   background-image: linear-gradient(to right, transparent 12.5%, rgba(29, 33, 25, 0.35) 12.5%, rgba(29, 33, 25, 0.35) 87.5%, transparent 87.5%);
   background-size: 100% 1px;
@@ -557,9 +493,9 @@
 
 .footer {
   font-size: 0.6875rem;
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   opacity: 0.85;
-  margin-top: 6px;
+  margin-top: var(--hool-space-1);
   line-height: 1.1;
   text-align: center;
 }

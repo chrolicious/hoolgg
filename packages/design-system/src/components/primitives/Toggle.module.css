@@ -5,7 +5,7 @@
 .container {
   display: inline-flex;
   align-items: flex-start;
-  gap: 12px;
+  gap: var(--hool-space-3);
   cursor: pointer;
   user-select: none;
 }
@@ -50,7 +50,7 @@
     var(--bw) calc(100% - var(--b2)),
     var(--bw) var(--b2)
   );
-  transition: clip-path 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: clip-path var(--hool-duration-normal) cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Expand on hover */
@@ -65,7 +65,7 @@
     0 calc(100% - var(--b3)),
     0 var(--b1)
   );
-  transition: clip-path 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: clip-path var(--hool-duration-fast) cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* --- Layer 2: Dark border + shadow --- */
@@ -87,7 +87,7 @@
     var(--bw) calc(100% - var(--b2)),
     var(--bw) var(--b2)
   );
-  transition: clip-path 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: clip-path var(--hool-duration-normal) cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Expand on hover */
@@ -102,7 +102,7 @@
     0 calc(100% - var(--b3)),
     0 var(--b1)
   );
-  transition: clip-path 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: clip-path var(--hool-duration-fast) cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* --- Layer 3: Inside fill --- */
@@ -111,7 +111,7 @@
   position: relative;
   display: flex;
   align-items: center;
-  padding: var(--toggle-padding, 4px);
+  padding: var(--toggle-padding, var(--hool-space-1));
   background-color: var(--btn-bg);
   clip-path: polygon(
     var(--bevel) 0,
@@ -123,12 +123,12 @@
     0 calc(100% - var(--bevel)),
     0 var(--bevel)
   );
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform var(--hool-duration-normal) cubic-bezier(0.4, 0, 0.2, 1), background-color var(--hool-duration-normal) cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Faster transition on hover */
 .toggle:hover:not(.disabled) .inside {
-  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform var(--hool-duration-fast) cubic-bezier(0.4, 0, 0.2, 1), background-color var(--hool-duration-fast) cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Lift on hover */
@@ -149,12 +149,12 @@
   background-size: 26px 26px;
   background-position: 0 0, 13px 13px;
   background-repeat: repeat;
-  transition: opacity 0.2s ease;
+  transition: opacity var(--hool-duration-fast) ease;
 }
 
 .checked .inside::after {
   opacity: 1;
-  animation: slideStars 2s linear infinite, rotateStars 20s linear infinite;
+  animation: slideStars var(--hool-duration-slow) linear infinite, rotateStars var(--hool-duration-slower) linear infinite;
 }
 
 @keyframes slideStars {
@@ -180,8 +180,8 @@
 .knob {
   width: var(--knob-size, 20px);
   height: var(--knob-size, 20px);
-  background: #ffffff;
-  border-radius: 999px;
+  background: var(--hool-ui-white);
+  border-radius: var(--hool-radius-full);
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
 }
 
@@ -190,7 +190,7 @@
 .sm {
   --bevel: 2px;
   --bw: 2.5px;
-  --toggle-padding: 3px;
+  --toggle-padding: var(--hool-space-1);
   --toggle-width: 54px;
   --toggle-height: 24px;
   --knob-size: 18px;
@@ -201,7 +201,7 @@
 .md {
   --bevel: 3px;
   --bw: 3px;
-  --toggle-padding: 4px;
+  --toggle-padding: var(--hool-space-1);
   --toggle-width: 64px;
   --toggle-height: 28px;
   --knob-size: 20px;
@@ -212,7 +212,7 @@
 .lg {
   --bevel: 4px;
   --bw: 3.5px;
-  --toggle-padding: 5px;
+  --toggle-padding: var(--hool-space-1);
   --toggle-width: 72px;
   --toggle-height: 32px;
   --knob-size: 22px;
@@ -290,14 +290,14 @@
 .labelWrapper {
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  padding-top: 2px;
+  gap: var(--hool-space-1);
+  padding-top: var(--hool-space-1);
 }
 
 .label {
   font-family: 'Inter', system-ui, sans-serif;
   font-size: 0.875rem;
-  font-weight: 700;
+  font-weight: var(--font-weight-bold);
   color: #1a1a1a;
   line-height: 1.4;
   cursor: pointer;
@@ -311,7 +311,7 @@
 .description {
   font-family: 'Inter', system-ui, sans-serif;
   font-size: 0.75rem;
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
   color: #6b7280;
   line-height: 1.3;
 }

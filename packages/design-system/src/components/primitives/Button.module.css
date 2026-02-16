@@ -14,7 +14,7 @@
   --bevel: 3px;
   --bw: 3px; /* border-width */
   font-family: var(--font-sans);
-  font-weight: 700;
+  font-weight: var(--font-weight-bold);
   font-size: var(--btn-font-size, 0.875rem);
   color: var(--btn-color);
   background: none;
@@ -55,7 +55,7 @@
     var(--bw) calc(100% - var(--b2)),
     var(--bw) var(--b2)
   );
-  transition: clip-path 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: clip-path var(--hool-duration-normal) cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .button:hover:not(:active):not(:disabled) .outline,
@@ -70,7 +70,7 @@
     0 calc(100% - var(--b3)),
     0 var(--b1)
   );
-  transition: clip-path 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: clip-path var(--hool-duration-fast) cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* --- Layer 2: Dark border + shadow --- */
@@ -92,7 +92,7 @@
     var(--bw) calc(100% - var(--b2)),
     var(--bw) var(--b2)
   );
-  transition: clip-path 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: clip-path var(--hool-duration-normal) cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .button:hover:not(:active):not(:disabled) .darkLayer,
@@ -107,7 +107,7 @@
     0 calc(100% - var(--b3)),
     0 var(--b1)
   );
-  transition: clip-path 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: clip-path var(--hool-duration-fast) cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* --- Layer 3: Fill (inside) --- */
@@ -131,12 +131,12 @@
     0 var(--bevel)
   );
   text-align: center;
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform var(--hool-duration-normal) cubic-bezier(0.4, 0, 0.2, 1), background-color var(--hool-duration-normal) cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Faster transition in (hover), slower out (return) */
 .button:hover:not(:disabled) .inside {
-  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform var(--hool-duration-fast) cubic-bezier(0.4, 0, 0.2, 1), background-color var(--hool-duration-fast) cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Halftone overlay — separate pseudo-element so it can fade in/out */
@@ -145,7 +145,7 @@
   position: absolute;
   inset: 0;
   opacity: 0;
-  transition: opacity 0.2s ease;
+  transition: opacity var(--hool-duration-fast) ease;
   pointer-events: none;
   background-image:
     linear-gradient(to right, transparent, var(--btn-hover-bg-fade)),
@@ -182,7 +182,7 @@
 /* --- Soft variants: text color flips on hover --- */
 
 .soft .inside {
-  transition: transform 0.2s, color 0.2s;
+  transition: transform var(--hool-duration-fast), color var(--hool-duration-fast);
 }
 
 .button.soft:hover:not(:disabled) .inside {

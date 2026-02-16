@@ -7,7 +7,7 @@
 .outer {
   position: relative;
   filter: drop-shadow(2px 3px 4px rgba(0, 0, 0, 0.15));
-  transition: filter 0.2s ease;
+  transition: filter var(--hool-duration-fast) ease;
   z-index: 1;
 }
 
@@ -26,9 +26,9 @@
   display: flex;
   align-items: stretch;
   gap: 16px;
-  transition: gap 0.4s cubic-bezier(0.25, 1.8, 0.5, 1), box-shadow 0.2s ease;
+  transition: gap var(--hool-duration-slow) cubic-bezier(0.25, 1.8, 0.5, 1), box-shadow var(--hool-duration-fast) ease;
   z-index: 1;
-  border-radius: 9999px;
+  border-radius: var(--hool-radius-full);
 }
 
 .outer.active .wrapper {
@@ -36,7 +36,7 @@
 }
 
 .outer.focused .wrapper {
-  box-shadow: 0 0 0 3px #E8B82A;
+  box-shadow: 0 0 0 3px var(--hool-gold-400);
 }
 
 /* --- Label section --- */
@@ -45,16 +45,16 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  background: #FFFFFF;
-  padding: 10px 24px;
-  border-radius: 9999px;
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  background: var(--hool-ui-white);
+  padding: var(--hool-space-1) var(--hool-space-6);
+  border-radius: var(--hool-radius-full);
+  border: var(--hool-border-thin) solid rgba(0, 0, 0, 0.1);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition: all 0.4s cubic-bezier(0.25, 1.8, 0.5, 1);
+  transition: all var(--hool-duration-slow) cubic-bezier(0.25, 1.8, 0.5, 1);
 }
 
 .outer.active .labelSection {
-  border-radius: 9999px 0 0 9999px;
+  border-radius: var(--hool-radius-full) 0 0 var(--hool-radius-full);
   border-right: none;
   box-shadow: none;
 }
@@ -62,7 +62,7 @@
 .label {
   font-family: 'Inter', system-ui, sans-serif;
   font-size: 0.875rem;
-  font-weight: 700;
+  font-weight: var(--font-weight-bold);
   color: #1a1a1a;
   line-height: 1.2;
 }
@@ -70,9 +70,9 @@
 .description {
   font-family: 'Inter', system-ui, sans-serif;
   font-size: 0.75rem;
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
   color: #6B7280;
-  margin-top: 2px;
+  margin-top: var(--hool-space-1);
   line-height: 1.3;
 }
 
@@ -82,17 +82,17 @@
   position: relative;
   display: flex;
   align-items: center;
-  gap: 8px;
-  background: #FFFFFF;
-  padding: 10px 20px;
-  border-radius: 9999px;
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  gap: var(--hool-space-2);
+  background: var(--hool-ui-white);
+  padding: var(--hool-space-1) var(--hool-space-5);
+  border-radius: var(--hool-radius-full);
+  border: var(--hool-border-thin) solid rgba(0, 0, 0, 0.1);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition: all 0.4s cubic-bezier(0.25, 1.8, 0.5, 1);
+  transition: all var(--hool-duration-slow) cubic-bezier(0.25, 1.8, 0.5, 1);
 }
 
 .outer.active .inputSection {
-  border-radius: 0 9999px 9999px 0;
+  border-radius: 0 var(--hool-radius-full) var(--hool-radius-full) 0;
   border-left: none;
   box-shadow: none;
 }
@@ -105,13 +105,13 @@
   background: transparent;
   font-family: 'Inter', system-ui, sans-serif;
   font-size: 0.875rem;
-  font-weight: 700;
+  font-weight: var(--font-weight-bold);
   color: #1a1a1a;
   text-align: center;
 }
 
 .input::placeholder {
-  color: #9CA3AF;
+  color: var(--hool-slate-400);
 }
 
 .input:disabled {
@@ -132,10 +132,10 @@
 .connectedHalftone {
   position: absolute;
   inset: 1px;
-  border-radius: 9999px;
+  border-radius: var(--hool-radius-full);
   pointer-events: none;
   opacity: 0;
-  animation: fadeIn 0.2s ease forwards, scrollHalftone 1s linear infinite;
+  animation: fadeIn var(--hool-duration-fast) ease forwards, scrollHalftone 1s linear infinite;
   background-image:
     linear-gradient(to right, transparent, rgba(232, 184, 42, 0.15)),
     radial-gradient(rgba(0, 0, 0, 0.08) 1px, transparent 0),
