@@ -1,0 +1,128 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+/* CSS Variables for Typography */
+:root {
+  /* Font Families */
+  --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  /* Font Sizes (with line-height and letter-spacing) */
+  --text-display: clamp(2rem, 5vw, 3rem);
+  --text-display-line-height: 1.2;
+  --text-display-letter-spacing: -0.5px;
+  --text-display-font-weight: 900;
+
+  --text-h1: 2rem;
+  --text-h1-line-height: 1.2;
+  --text-h1-letter-spacing: -0.5px;
+  --text-h1-font-weight: 800;
+
+  --text-h2: 1.5rem;
+  --text-h2-line-height: 1.2;
+  --text-h2-letter-spacing: -0.3px;
+  --text-h2-font-weight: 800;
+
+  --text-h3: 1.125rem;
+  --text-h3-line-height: 1.2;
+  --text-h3-letter-spacing: -0.3px;
+  --text-h3-font-weight: 700;
+
+  --text-body: 0.875rem;
+  --text-body-line-height: 1.5;
+  --text-body-letter-spacing: 0;
+  --text-body-font-weight: 400;
+
+  --text-body-strong: 0.875rem;
+  --text-body-strong-line-height: 1.5;
+  --text-body-strong-letter-spacing: 0;
+  --text-body-strong-font-weight: 600;
+
+  --text-small: 0.75rem;
+  --text-small-line-height: 1.4;
+  --text-small-letter-spacing: 0;
+  --text-small-font-weight: 500;
+
+  --text-tiny: 0.6875rem;
+  --text-tiny-line-height: 1.4;
+  --text-tiny-letter-spacing: 0.5px;
+  --text-tiny-font-weight: 600;
+
+  /* Font Weights */
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+  --font-weight-black: 900;
+}
+
+/* Global Typography */
+html,
+body {
+  font-family: var(--font-sans);
+  font-size: var(--text-body);
+  line-height: var(--text-body-line-height);
+  font-weight: var(--text-body-font-weight);
+  color: #fff;
+}
+
+/* Headings */
+h1 {
+  font-size: var(--text-h1);
+  line-height: var(--text-h1-line-height);
+  letter-spacing: var(--text-h1-letter-spacing);
+  font-weight: var(--text-h1-font-weight);
+  margin: 0;
+}
+
+h2 {
+  font-size: var(--text-h2);
+  line-height: var(--text-h2-line-height);
+  letter-spacing: var(--text-h2-letter-spacing);
+  font-weight: var(--text-h2-font-weight);
+  margin: 0;
+}
+
+h3 {
+  font-size: var(--text-h3);
+  line-height: var(--text-h3-line-height);
+  letter-spacing: var(--text-h3-letter-spacing);
+  font-weight: var(--text-h3-font-weight);
+  margin: 0;
+}
+
+p {
+  margin: 0;
+}
+
+/* Text Utilities */
+.text-display {
+  font-size: var(--text-display);
+  line-height: var(--text-display-line-height);
+  letter-spacing: var(--text-display-letter-spacing);
+  font-weight: var(--text-display-font-weight);
+}
+
+.text-body {
+  font-size: var(--text-body);
+  line-height: var(--text-body-line-height);
+  font-weight: var(--text-body-font-weight);
+}
+
+.text-body-strong {
+  font-size: var(--text-body-strong);
+  line-height: var(--text-body-strong-line-height);
+  font-weight: var(--text-body-strong-font-weight);
+}
+
+.text-small {
+  font-size: var(--text-small);
+  line-height: var(--text-small-line-height);
+  font-weight: var(--text-small-font-weight);
+}
+
+.text-tiny {
+  font-size: var(--text-tiny);
+  line-height: var(--text-tiny-line-height);
+  letter-spacing: var(--text-tiny-letter-spacing);
+  font-weight: var(--text-tiny-font-weight);
+}

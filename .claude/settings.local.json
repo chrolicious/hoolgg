@@ -31,7 +31,19 @@
       "WebFetch(domain:lottiefiles.com)",
       "Bash(pnpm remove:*)",
       "WebFetch(domain:github.com)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git remote add:*)",
+      "Bash(git branch:*)",
+      "Bash(git push:*)",
+      "Bash(cd:*)",
+      "Bash(pnpm typecheck:*)",
+      "Bash(npx tsc:*)",
+      "Bash(unzip:*)",
+      "Bash(export PATH=\"/tmp/ffmpeg-master-latest-win64-gpl/bin:$PATH\")",
+      "Bash(ffmpeg:*)",
+      "Bash(python:*)",
+      "Bash(pnpm build:storybook:*)"
     ]
   }
 }

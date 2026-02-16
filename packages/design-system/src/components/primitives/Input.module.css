@@ -10,7 +10,7 @@
 .wrapper {
   position: relative;
   display: inline-flex;
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: var(--font-sans);
   font-weight: 600;
   cursor: text;
   filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.9));
@@ -325,20 +325,20 @@
 
 /* Default variant halftone */
 .default .halftone {
-  --halftone-color: rgba(232, 184, 42, 0.15);
-  --halftone-dots: rgba(0, 0, 0, 0.08);
+  --halftone-color: rgba(232, 184, 42, 0.08);
+  --halftone-dots: rgba(0, 0, 0, 0.04);
 }
 
 /* Error state halftone */
 .error .halftone {
-  --halftone-color: rgba(239, 68, 68, 0.15);
-  --halftone-dots: rgba(220, 38, 38, 0.1);
+  --halftone-color: rgba(239, 68, 68, 0.08);
+  --halftone-dots: rgba(220, 38, 38, 0.05);
 }
 
 /* Hero variant halftone */
 .hero .halftone {
-  --halftone-color: rgba(232, 184, 42, 0.2);
-  --halftone-dots: rgba(0, 0, 0, 0.08);
+  --halftone-color: rgba(232, 184, 42, 0.1);
+  --halftone-dots: rgba(0, 0, 0, 0.04);
   border-radius: 14px;
   border-top-left-radius: 0;
   border-bottom-right-radius: 0;
@@ -346,8 +346,8 @@
 }
 
 .hero.error .halftone {
-  --halftone-color: rgba(239, 68, 68, 0.2);
-  --halftone-dots: rgba(220, 38, 38, 0.1);
+  --halftone-color: rgba(239, 68, 68, 0.1);
+  --halftone-dots: rgba(220, 38, 38, 0.05);
 }
 
 @keyframes fadeInHalftone {

@@ -8,6 +8,7 @@
   "exports": {
     ".": "./src/index.ts",
     "./css": "./src/css/variables.css",
+    "./css/globals": "./src/css/globals.css",
     "./tailwind-preset": "./src/tailwind-preset.ts"
   },
   "scripts": {

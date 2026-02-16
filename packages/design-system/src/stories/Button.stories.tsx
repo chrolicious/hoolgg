@@ -109,7 +109,7 @@ export const WithIcons: Story = {
       <Button icon={<Icon name="plus" animation="bounce" />}>Create Guild</Button>
       <Button variant="secondary" iconRight={<Icon name="arrow-right" animation="slide" />}>Next Step</Button>
       <Button variant="purple" icon={<Icon name="user" animation="pulse" />}>Add Player</Button>
-      <Button variant="warning" icon={<Icon name="x" animation="spin" />}>Cancel</Button>
+      <Button variant="warning" icon={<Icon name="x-mark" animation="spin" />}>Cancel</Button>
     </Section>
   ),
 };
@@ -122,7 +122,7 @@ export const IconOnly: Story = {
         <Button icon={<Icon name="plus" animation="spin" />} />
         <Button variant="secondary" icon={<Icon name="pencil" animation="wiggle" />} />
         <Button variant="purple" icon={<Icon name="star" animation="pulse" />} />
-        <Button variant="destructive" icon={<Icon name="trash-2" animation="wiggle" />} />
+        <Button variant="destructive" icon={<Icon name="trash" animation="wiggle" />} />
       </Section>
       <Section title="Icon-only — sizes">
         <Button size="sm" icon={<Icon name="plus" animation="spin" />} />
@@ -202,7 +202,7 @@ function ToggleDemo() {
           selected={selected[role]}
           onClick={() => setSelected((s) => ({ ...s, [role]: !s[role] }))}
           icon={<Icon
-            name={role === 'tank' ? 'shield' : role === 'healer' ? 'heart' : role === 'mdps' ? 'swords' : 'flame'}
+            name={role === 'tank' ? 'shield' : role === 'healer' ? 'heart' : role === 'mdps' ? 'sword' : 'flame'}
             animation={role === 'tank' ? 'shake' : role === 'healer' ? 'pulse' : role === 'mdps' ? 'swing' : 'bounce'}
           />}
         >
@@ -282,13 +282,13 @@ export const LinkButtonStory: Story = {
         <LinkButton href="https://example.com" variant="secondary" iconRight={<Icon name="arrow-right" animation="slide" />}>
           Learn More
         </LinkButton>
-        <LinkButton href="https://example.com" variant="purple" icon={<Icon name="link-2" animation="wiggle" />}>
+        <LinkButton href="https://example.com" variant="purple" icon={<Icon name="link" animation="wiggle" />}>
           Open Link
         </LinkButton>
       </Section>
       <Section title="LinkButton \u2014 icon-only">
         <LinkButton href="https://example.com" icon={<Icon name="arrow-right" animation="slide" />} />
-        <LinkButton href="https://example.com" variant="secondary" icon={<Icon name="link-2" animation="wiggle" />} />
+        <LinkButton href="https://example.com" variant="secondary" icon={<Icon name="link" animation="wiggle" />} />
       </Section>
     </div>
   ),
@@ -347,7 +347,7 @@ export const FullShowcase: Story = {
         <Button icon={<Icon name="plus" animation="spin" />} />
         <Button variant="secondary" icon={<Icon name="pencil" animation="wiggle" />} />
         <Button variant="purple" icon={<Icon name="star" animation="pulse" />} />
-        <Button variant="destructive" icon={<Icon name="trash-2" animation="wiggle" />} />
+        <Button variant="destructive" icon={<Icon name="trash" animation="wiggle" />} />
       </Section>
 
       <Section title="Loading">

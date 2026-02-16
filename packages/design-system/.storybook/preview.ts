@@ -1,5 +1,6 @@
 import type { Preview } from '@storybook/react-vite';
 import '../src/css/variables.css';
+import '../src/css/globals.css';
 import '@flaticon/flaticon-uicons/css/all/all.css';
 
 const preview: Preview = {

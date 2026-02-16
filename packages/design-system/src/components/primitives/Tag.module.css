@@ -1,0 +1,125 @@
+/* ==========================================================================
+   Tag — Small sticker-style labels
+   ========================================================================== */
+
+.tag {
+  --bevel: 2px;
+  --bw: 2px;
+  display: inline-flex;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-weight: 600;
+  font-size: 0.75rem;
+  color: var(--btn-color);
+  filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.8));
+}
+
+/* Size variants */
+.sm {
+  --bevel: 1.5px;
+  --bw: 2px;
+  font-size: 0.6875rem;
+}
+
+.md {
+  --bevel: 2px;
+  --bw: 2px;
+  font-size: 0.75rem;
+}
+
+/* --- Sticker layers --- */
+
+.outline {
+  --b1: calc((var(--bevel) + var(--bw) * 2) - (var(--bw) * 0.4142) * 2);
+  --b2: calc(var(--b1) + var(--bw));
+  --b3: calc(var(--b2) + var(--bw));
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  margin-top: calc(var(--bw) * -1);
+  margin-left: calc(var(--bw) * -1);
+  padding: var(--bw);
+  background-color: var(--btn-outline-color, #fff);
+  clip-path: polygon(
+    var(--b2) var(--bw),
+    calc(100% - var(--b2)) var(--bw),
+    100% var(--b3),
+    100% calc(100% - var(--b1)),
+    calc(100% - var(--b1)) 100%,
+    var(--b3) 100%,
+    var(--bw) calc(100% - var(--b2)),
+    var(--bw) var(--b2)
+  );
+}
+
+.darkLayer {
+  --b1: calc((var(--bevel) + var(--bw)) - var(--bw) * 0.4142);
+  --b2: calc(var(--b1) + var(--bw));
+  --b3: calc(var(--b2) + var(--bw));
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: calc(var(--bw) * 2);
+  background-color: var(--btn-border-color, #1d2119);
+  clip-path: polygon(
+    var(--b2) var(--bw),
+    calc(100% - var(--b2)) var(--bw),
+    100% var(--b3),
+    100% calc(100% - var(--b1)),
+    calc(100% - var(--b1)) 100%,
+    var(--b3) 100%,
+    var(--bw) calc(100% - var(--b2)),
+    var(--bw) var(--b2)
+  );
+}
+
+.inside {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 4px 12px;
+  background-color: var(--btn-bg);
+  clip-path: polygon(
+    var(--bevel) 0,
+    calc(100% - var(--bevel)) 0,
+    100% var(--bevel),
+    100% calc(100% - var(--bevel)),
+    calc(100% - var(--bevel)) 100%,
+    var(--bevel) 100%,
+    0 calc(100% - var(--bevel)),
+    0 var(--bevel)
+  );
+}
+
+.label {
+  white-space: nowrap;
+  line-height: 1;
+}
+
+.removeButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  margin: 0;
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 700;
+  line-height: 1;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+.removeButton:hover {
+  opacity: 1;
+}
+
+.removeButton:active {
+  opacity: 0.5;
+}

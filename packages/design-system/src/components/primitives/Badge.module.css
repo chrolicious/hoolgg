@@ -1,0 +1,565 @@
+/* ==========================================================================
+   Badge — Tall card-style badge with sticker layers and animated stars
+   ========================================================================== */
+
+.badge {
+  --bevel: 3px;
+  --bw: 3px;
+  --badge-width: 200px;
+  --badge-height: 370px;
+  display: inline-flex;
+  flex-direction: column;
+  width: var(--badge-width);
+  height: var(--badge-height);
+  filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.9));
+}
+
+/* Size variants */
+.sm {
+  --bevel: 2px;
+  --bw: 3px;
+  --badge-width: 180px;
+  --badge-height: 310px;
+}
+
+.md {
+  --bevel: 3px;
+  --bw: 3.5px;
+  --badge-width: 200px;
+  --badge-height: 370px;
+}
+
+.lg {
+  --bevel: 4px;
+  --bw: 4px;
+  --badge-width: 220px;
+  --badge-height: 430px;
+}
+
+/* --- Sticker layers --- */
+
+.outline {
+  --b1: calc((var(--bevel) + var(--bw) * 2) - (var(--bw) * 0.4142) * 2);
+  --b2: calc(var(--b1) + var(--bw));
+  --b3: calc(var(--b2) + var(--bw));
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  margin-top: calc(var(--bw) * -1);
+  margin-left: calc(var(--bw) * -1);
+  padding: var(--bw);
+  background-color: var(--btn-outline-color, #fff);
+  clip-path: polygon(
+    var(--b2) var(--bw),
+    calc(100% - var(--b2)) var(--bw),
+    100% var(--b3),
+    100% calc(100% - var(--b1)),
+    calc(100% - var(--b1)) 100%,
+    var(--b3) 100%,
+    var(--bw) calc(100% - var(--b2)),
+    var(--bw) var(--b2)
+  );
+}
+
+.darkLayer {
+  --b1: calc((var(--bevel) + var(--bw)) - var(--bw) * 0.4142);
+  --b2: calc(var(--b1) + var(--bw));
+  --b3: calc(var(--b2) + var(--bw));
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: calc(var(--bw) * 2);
+  background-color: var(--btn-border-color, #1d2119);
+  clip-path: polygon(
+    var(--b2) var(--bw),
+    calc(100% - var(--b2)) var(--bw),
+    100% var(--b3),
+    100% calc(100% - var(--b1)),
+    calc(100% - var(--b1)) 100%,
+    var(--b3) 100%,
+    var(--bw) calc(100% - var(--b2)),
+    var(--bw) var(--b2)
+  );
+}
+
+.inside {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  background: linear-gradient(to bottom left, var(--btn-bg), var(--btn-hover-bg));
+  clip-path: polygon(
+    var(--bevel) 0,
+    calc(100% - var(--bevel)) 0,
+    100% var(--bevel),
+    100% calc(100% - var(--bevel)),
+    calc(100% - var(--bevel)) 100%,
+    var(--bevel) 100%,
+    0 calc(100% - var(--bevel)),
+    0 var(--bevel)
+  );
+  overflow: hidden;
+}
+
+/* Large rotating star - partially visible */
+.inside::before {
+  content: '';
+  position: absolute;
+  bottom: -120px;
+  right: -120px;
+  width: 240px;
+  height: 240px;
+  background-image: url("data:image/svg+xml,%3Csvg width='140' height='140' viewBox='0 0 70 70' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M35 5 L43 27 L67 27 L47 42 L55 64 L35 49 L15 64 L23 42 L3 27 L27 27 Z' fill='var(--btn-hover-bg, %23FFD700)'/%3E%3C/svg%3E");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  animation: rotateStar 30s linear infinite;
+  pointer-events: none;
+  opacity: 0.3;
+}
+
+@keyframes rotateStar {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Animated particles */
+.inside::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    /* Top region 0-10%: dense cluster with larger particles */
+    radial-gradient(1.5px 1.5px at 5% 2%, rgba(255,215,0,1) 0.75px, transparent 0.75px),
+    radial-gradient(1.3px 1.3px at 15% 1%, rgba(255,215,0,0.8) 0.65px, transparent 0.65px),
+    radial-gradient(1.6px 1.6px at 25% 3%, rgba(255,215,0,0.9) 0.8px, transparent 0.8px),
+    radial-gradient(1.4px 1.4px at 35% 2%, rgba(255,215,0,0.7) 0.7px, transparent 0.7px),
+    radial-gradient(1.6px 1.6px at 45% 1%, rgba(255,215,0,0.95) 0.8px, transparent 0.8px),
+    radial-gradient(1.35px 1.35px at 55% 4%, rgba(255,215,0,0.75) 0.675px, transparent 0.675px),
+    radial-gradient(1.5px 1.5px at 65% 2%, rgba(255,215,0,1) 0.75px, transparent 0.75px),
+    radial-gradient(1.45px 1.45px at 75% 3%, rgba(255,215,0,0.85) 0.725px, transparent 0.725px),
+    radial-gradient(1.7px 1.7px at 85% 1%, rgba(255,215,0,0.92) 0.85px, transparent 0.85px),
+    radial-gradient(1.4px 1.4px at 92% 4%, rgba(255,215,0,0.78) 0.7px, transparent 0.7px),
+    radial-gradient(1.5px 1.5px at 10% 5%, rgba(255,215,0,0.88) 0.75px, transparent 0.75px),
+    /* Top-mid region 10-25%: very dense */
+    radial-gradient(1.5px 1.5px at 8% 8%, rgba(255,215,0,0.88) 0.75px, transparent 0.75px),
+    radial-gradient(1.05px 1.05px at 18% 7%, rgba(255,215,0,0.7) 0.525px, transparent 0.525px),
+    radial-gradient(1.3px 1.3px at 28% 10%, rgba(255,215,0,1) 0.65px, transparent 0.65px),
+    radial-gradient(1.1px 1.1px at 38% 6%, rgba(255,215,0,0.82) 0.55px, transparent 0.55px),
+    radial-gradient(1.45px 1.45px at 48% 9%, rgba(255,215,0,0.91) 0.7px, transparent 0.7px),
+    radial-gradient(1px 1px at 58% 12%, rgba(255,215,0,0.72) 0.4px, transparent 0.4px),
+    radial-gradient(1.2px 1.2px at 68% 8%, rgba(255,215,0,0.89) 0.7px, transparent 0.7px),
+    radial-gradient(1.15px 1.15px at 78% 11%, rgba(255,215,0,0.79) 0.575px, transparent 0.575px),
+    radial-gradient(1.4px 1.4px at 88% 7%, rgba(255,215,0,0.94) 0.675px, transparent 0.675px),
+    radial-gradient(1.1px 1.1px at 12% 14%, rgba(255,215,0,0.75) 0.55px, transparent 0.55px),
+    radial-gradient(1.2px 1.2px at 32% 13%, rgba(255,215,0,0.87) 0.7px, transparent 0.7px),
+    radial-gradient(1.05px 1.05px at 52% 15%, rgba(255,215,0,0.68) 0.525px, transparent 0.525px),
+    radial-gradient(1.3px 1.3px at 72% 14%, rgba(255,215,0,0.93) 0.65px, transparent 0.65px),
+    radial-gradient(1.1px 1.1px at 42% 22%, rgba(255,215,0,0.81) 0.55px, transparent 0.55px),
+    radial-gradient(1.45px 1.45px at 62% 18%, rgba(255,215,0,0.97) 0.7px, transparent 0.7px),
+    radial-gradient(1.4px 1.4px at 14% 19%, rgba(255,215,0,0.8) 0.7px, transparent 0.7px),
+    radial-gradient(1.5px 1.5px at 36% 16%, rgba(255,215,0,0.83) 0.75px, transparent 0.75px),
+    radial-gradient(1.3px 1.3px at 56% 22%, rgba(255,215,0,0.76) 0.65px, transparent 0.65px),
+    radial-gradient(1.45px 1.45px at 78% 20%, rgba(255,215,0,0.91) 0.725px, transparent 0.725px),
+    /* Mid region 25-40%: still dense but less */
+    radial-gradient(1px 1px at 10% 28%, rgba(255,215,0,0.65) 0.4px, transparent 0.4px),
+    radial-gradient(1.2px 1.2px at 22% 32%, rgba(255,215,0,0.84) 0.7px, transparent 0.7px),
+    radial-gradient(1.15px 1.15px at 35% 26%, rgba(255,215,0,0.73) 0.575px, transparent 0.575px),
+    radial-gradient(1.4px 1.4px at 48% 30%, rgba(255,215,0,0.9) 0.675px, transparent 0.675px),
+    radial-gradient(1.1px 1.1px at 60% 27%, rgba(255,215,0,0.76) 0.55px, transparent 0.55px),
+    radial-gradient(1.2px 1.2px at 75% 33%, rgba(255,215,0,0.86) 0.7px, transparent 0.7px),
+    radial-gradient(1.05px 1.05px at 88% 29%, rgba(255,215,0,0.71) 0.525px, transparent 0.525px),
+    radial-gradient(1.3px 1.3px at 15% 38%, rgba(255,215,0,0.92) 0.65px, transparent 0.65px),
+    radial-gradient(1.1px 1.1px at 42% 35%, rgba(255,215,0,0.69) 0.55px, transparent 0.55px),
+    radial-gradient(1.45px 1.45px at 68% 39%, rgba(255,215,0,0.88) 0.7px, transparent 0.7px),
+    /* Lower-mid region 40-60%: sparser */
+    radial-gradient(1px 1px at 18% 48%, rgba(255,215,0,0.55) 0.4px, transparent 0.4px),
+    radial-gradient(1.2px 1.2px at 38% 52%, rgba(255,215,0,0.72) 0.7px, transparent 0.7px),
+    radial-gradient(1.15px 1.15px at 58% 45%, rgba(255,215,0,0.62) 0.575px, transparent 0.575px),
+    radial-gradient(1.4px 1.4px at 75% 50%, rgba(255,215,0,0.8) 0.675px, transparent 0.675px),
+    radial-gradient(1.1px 1.1px at 28% 58%, rgba(255,215,0,0.58) 0.55px, transparent 0.55px),
+    radial-gradient(1.2px 1.2px at 65% 56%, rgba(255,215,0,0.7) 0.7px, transparent 0.7px),
+    /* Bottom region 60-100%: very sparse */
+    radial-gradient(1.05px 1.05px at 22% 68%, rgba(255,215,0,0.45) 0.525px, transparent 0.525px),
+    radial-gradient(1.3px 1.3px at 52% 72%, rgba(255,215,0,0.6) 0.65px, transparent 0.65px),
+    radial-gradient(1.1px 1.1px at 78% 75%, rgba(255,215,0,0.5) 0.55px, transparent 0.55px),
+    radial-gradient(1.2px 1.2px at 35% 85%, rgba(255,215,0,0.48) 0.7px, transparent 0.7px);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  animation: floatParticles 8s ease-in-out infinite;
+  pointer-events: none;
+  opacity: 1;
+}
+
+@keyframes floatParticles {
+  0% {
+    transform: translateY(0) translateX(0);
+  }
+  25% {
+    transform: translateY(-15px) translateX(10px);
+  }
+  50% {
+    transform: translateY(-30px) translateX(-5px);
+  }
+  75% {
+    transform: translateY(-15px) translateX(15px);
+  }
+  100% {
+    transform: translateY(0) translateX(0);
+  }
+}
+
+/* Variant-specific particle colors */
+[data-variant="purple"] .inside::after {
+  background-image:
+    /* Top region 0-10%: dense cluster */
+    radial-gradient(1.2px 1.2px at 5% 2%, rgba(255,150,255,1) 0.7px, transparent 0.7px),
+    radial-gradient(1px 1px at 15% 1%, rgba(255,150,255,0.8) 0.4px, transparent 0.4px),
+    radial-gradient(1.3px 1.3px at 25% 3%, rgba(255,150,255,0.9) 0.65px, transparent 0.65px),
+    radial-gradient(1.1px 1.1px at 35% 2%, rgba(255,150,255,0.7) 0.55px, transparent 0.55px),
+    radial-gradient(1.45px 1.45px at 45% 1%, rgba(255,150,255,0.95) 0.7px, transparent 0.7px),
+    radial-gradient(1.05px 1.05px at 55% 4%, rgba(255,150,255,0.75) 0.525px, transparent 0.525px),
+    radial-gradient(1.2px 1.2px at 65% 2%, rgba(255,150,255,1) 0.7px, transparent 0.7px),
+    radial-gradient(1.15px 1.15px at 75% 3%, rgba(255,150,255,0.85) 0.575px, transparent 0.575px),
+    radial-gradient(1.4px 1.4px at 85% 1%, rgba(255,150,255,0.92) 0.675px, transparent 0.675px),
+    radial-gradient(1.1px 1.1px at 92% 4%, rgba(255,150,255,0.78) 0.55px, transparent 0.55px),
+    /* Top-mid region 10-25%: very dense */
+    radial-gradient(1.2px 1.2px at 8% 8%, rgba(255,150,255,0.88) 0.7px, transparent 0.7px),
+    radial-gradient(1.05px 1.05px at 18% 7%, rgba(255,150,255,0.7) 0.525px, transparent 0.525px),
+    radial-gradient(1.3px 1.3px at 28% 10%, rgba(255,150,255,1) 0.65px, transparent 0.65px),
+    radial-gradient(1.1px 1.1px at 38% 6%, rgba(255,150,255,0.82) 0.55px, transparent 0.55px),
+    radial-gradient(1.45px 1.45px at 48% 9%, rgba(255,150,255,0.91) 0.7px, transparent 0.7px),
+    radial-gradient(1px 1px at 58% 12%, rgba(255,150,255,0.72) 0.4px, transparent 0.4px),
+    radial-gradient(1.2px 1.2px at 68% 8%, rgba(255,150,255,0.89) 0.7px, transparent 0.7px),
+    radial-gradient(1.15px 1.15px at 78% 11%, rgba(255,150,255,0.79) 0.575px, transparent 0.575px),
+    radial-gradient(1.4px 1.4px at 88% 7%, rgba(255,150,255,0.94) 0.675px, transparent 0.675px),
+    radial-gradient(1.1px 1.1px at 12% 14%, rgba(255,150,255,0.75) 0.55px, transparent 0.55px),
+    radial-gradient(1.2px 1.2px at 32% 13%, rgba(255,150,255,0.87) 0.7px, transparent 0.7px),
+    radial-gradient(1.05px 1.05px at 52% 15%, rgba(255,150,255,0.68) 0.525px, transparent 0.525px),
+    radial-gradient(1.3px 1.3px at 72% 14%, rgba(255,150,255,0.93) 0.65px, transparent 0.65px),
+    radial-gradient(1.1px 1.1px at 42% 22%, rgba(255,150,255,0.81) 0.55px, transparent 0.55px),
+    radial-gradient(1.45px 1.45px at 62% 18%, rgba(255,150,255,0.97) 0.7px, transparent 0.7px),
+    /* Mid region 25-40%: still dense but less */
+    radial-gradient(1px 1px at 10% 28%, rgba(255,150,255,0.65) 0.4px, transparent 0.4px),
+    radial-gradient(1.2px 1.2px at 22% 32%, rgba(255,150,255,0.84) 0.7px, transparent 0.7px),
+    radial-gradient(1.15px 1.15px at 35% 26%, rgba(255,150,255,0.73) 0.575px, transparent 0.575px),
+    radial-gradient(1.4px 1.4px at 48% 30%, rgba(255,150,255,0.9) 0.675px, transparent 0.675px),
+    radial-gradient(1.1px 1.1px at 60% 27%, rgba(255,150,255,0.76) 0.55px, transparent 0.55px),
+    radial-gradient(1.2px 1.2px at 75% 33%, rgba(255,150,255,0.86) 0.7px, transparent 0.7px),
+    radial-gradient(1.05px 1.05px at 88% 29%, rgba(255,150,255,0.71) 0.525px, transparent 0.525px),
+    radial-gradient(1.3px 1.3px at 15% 38%, rgba(255,150,255,0.92) 0.65px, transparent 0.65px),
+    radial-gradient(1.1px 1.1px at 42% 35%, rgba(255,150,255,0.69) 0.55px, transparent 0.55px),
+    radial-gradient(1.45px 1.45px at 68% 39%, rgba(255,150,255,0.88) 0.7px, transparent 0.7px),
+    /* Lower-mid region 40-60%: sparser */
+    radial-gradient(1px 1px at 18% 48%, rgba(255,150,255,0.55) 0.4px, transparent 0.4px),
+    radial-gradient(1.2px 1.2px at 38% 52%, rgba(255,150,255,0.72) 0.7px, transparent 0.7px),
+    radial-gradient(1.15px 1.15px at 58% 45%, rgba(255,150,255,0.62) 0.575px, transparent 0.575px),
+    radial-gradient(1.4px 1.4px at 75% 50%, rgba(255,150,255,0.8) 0.675px, transparent 0.675px),
+    radial-gradient(1.1px 1.1px at 28% 58%, rgba(255,150,255,0.58) 0.55px, transparent 0.55px),
+    radial-gradient(1.2px 1.2px at 65% 56%, rgba(255,150,255,0.7) 0.7px, transparent 0.7px),
+    /* Bottom region 60-100%: very sparse */
+    radial-gradient(1.05px 1.05px at 22% 68%, rgba(255,150,255,0.45) 0.525px, transparent 0.525px),
+    radial-gradient(1.3px 1.3px at 52% 72%, rgba(255,150,255,0.6) 0.65px, transparent 0.65px),
+    radial-gradient(1.1px 1.1px at 78% 75%, rgba(255,150,255,0.5) 0.55px, transparent 0.55px),
+    radial-gradient(1.2px 1.2px at 35% 85%, rgba(255,150,255,0.48) 0.7px, transparent 0.7px);
+}
+
+[data-variant="primary"] .inside::after {
+  background-image:
+    /* Top region 0-10%: dense cluster */
+    radial-gradient(1.2px 1.2px at 5% 2%, rgba(255,250,205,1) 0.7px, transparent 0.7px),
+    radial-gradient(1px 1px at 15% 1%, rgba(255,250,205,0.8) 0.4px, transparent 0.4px),
+    radial-gradient(1.3px 1.3px at 25% 3%, rgba(255,250,205,0.9) 0.65px, transparent 0.65px),
+    radial-gradient(1.1px 1.1px at 35% 2%, rgba(255,250,205,0.7) 0.55px, transparent 0.55px),
+    radial-gradient(1.45px 1.45px at 45% 1%, rgba(255,250,205,0.95) 0.7px, transparent 0.7px),
+    radial-gradient(1.05px 1.05px at 55% 4%, rgba(255,250,205,0.75) 0.525px, transparent 0.525px),
+    radial-gradient(1.2px 1.2px at 65% 2%, rgba(255,250,205,1) 0.7px, transparent 0.7px),
+    radial-gradient(1.15px 1.15px at 75% 3%, rgba(255,250,205,0.85) 0.575px, transparent 0.575px),
+    radial-gradient(1.4px 1.4px at 85% 1%, rgba(255,250,205,0.92) 0.675px, transparent 0.675px),
+    radial-gradient(1.1px 1.1px at 92% 4%, rgba(255,250,205,0.78) 0.55px, transparent 0.55px),
+    /* Top-mid region 10-25%: very dense */
+    radial-gradient(1.2px 1.2px at 8% 8%, rgba(255,250,205,0.88) 0.7px, transparent 0.7px),
+    radial-gradient(1.05px 1.05px at 18% 7%, rgba(255,250,205,0.7) 0.525px, transparent 0.525px),
+    radial-gradient(1.3px 1.3px at 28% 10%, rgba(255,250,205,1) 0.65px, transparent 0.65px),
+    radial-gradient(1.1px 1.1px at 38% 6%, rgba(255,250,205,0.82) 0.55px, transparent 0.55px),
+    radial-gradient(1.45px 1.45px at 48% 9%, rgba(255,250,205,0.91) 0.7px, transparent 0.7px),
+    radial-gradient(1px 1px at 58% 12%, rgba(255,250,205,0.72) 0.4px, transparent 0.4px),
+    radial-gradient(1.2px 1.2px at 68% 8%, rgba(255,250,205,0.89) 0.7px, transparent 0.7px),
+    radial-gradient(1.15px 1.15px at 78% 11%, rgba(255,250,205,0.79) 0.575px, transparent 0.575px),
+    radial-gradient(1.4px 1.4px at 88% 7%, rgba(255,250,205,0.94) 0.675px, transparent 0.675px),
+    radial-gradient(1.1px 1.1px at 12% 14%, rgba(255,250,205,0.75) 0.55px, transparent 0.55px),
+    radial-gradient(1.2px 1.2px at 32% 13%, rgba(255,250,205,0.87) 0.7px, transparent 0.7px),
+    radial-gradient(1.05px 1.05px at 52% 15%, rgba(255,250,205,0.68) 0.525px, transparent 0.525px),
+    radial-gradient(1.3px 1.3px at 72% 14%, rgba(255,250,205,0.93) 0.65px, transparent 0.65px),
+    radial-gradient(1.1px 1.1px at 42% 22%, rgba(255,250,205,0.81) 0.55px, transparent 0.55px),
+    radial-gradient(1.45px 1.45px at 62% 18%, rgba(255,250,205,0.97) 0.7px, transparent 0.7px),
+    /* Mid region 25-40%: still dense but less */
+    radial-gradient(1px 1px at 10% 28%, rgba(255,250,205,0.65) 0.4px, transparent 0.4px),
+    radial-gradient(1.2px 1.2px at 22% 32%, rgba(255,250,205,0.84) 0.7px, transparent 0.7px),
+    radial-gradient(1.15px 1.15px at 35% 26%, rgba(255,250,205,0.73) 0.575px, transparent 0.575px),
+    radial-gradient(1.4px 1.4px at 48% 30%, rgba(255,250,205,0.9) 0.675px, transparent 0.675px),
+    radial-gradient(1.1px 1.1px at 60% 27%, rgba(255,250,205,0.76) 0.55px, transparent 0.55px),
+    radial-gradient(1.2px 1.2px at 75% 33%, rgba(255,250,205,0.86) 0.7px, transparent 0.7px),
+    radial-gradient(1.05px 1.05px at 88% 29%, rgba(255,250,205,0.71) 0.525px, transparent 0.525px),
+    radial-gradient(1.3px 1.3px at 15% 38%, rgba(255,250,205,0.92) 0.65px, transparent 0.65px),
+    radial-gradient(1.1px 1.1px at 42% 35%, rgba(255,250,205,0.69) 0.55px, transparent 0.55px),
+    radial-gradient(1.45px 1.45px at 68% 39%, rgba(255,250,205,0.88) 0.7px, transparent 0.7px),
+    /* Lower-mid region 40-60%: sparser */
+    radial-gradient(1px 1px at 18% 48%, rgba(255,250,205,0.55) 0.4px, transparent 0.4px),
+    radial-gradient(1.2px 1.2px at 38% 52%, rgba(255,250,205,0.72) 0.7px, transparent 0.7px),
+    radial-gradient(1.15px 1.15px at 58% 45%, rgba(255,250,205,0.62) 0.575px, transparent 0.575px),
+    radial-gradient(1.4px 1.4px at 75% 50%, rgba(255,250,205,0.8) 0.675px, transparent 0.675px),
+    radial-gradient(1.1px 1.1px at 28% 58%, rgba(255,250,205,0.58) 0.55px, transparent 0.55px),
+    radial-gradient(1.2px 1.2px at 65% 56%, rgba(255,250,205,0.7) 0.7px, transparent 0.7px),
+    /* Bottom region 60-100%: very sparse */
+    radial-gradient(1.05px 1.05px at 22% 68%, rgba(255,250,205,0.45) 0.525px, transparent 0.525px),
+    radial-gradient(1.3px 1.3px at 52% 72%, rgba(255,250,205,0.6) 0.65px, transparent 0.65px),
+    radial-gradient(1.1px 1.1px at 78% 75%, rgba(255,250,205,0.5) 0.55px, transparent 0.55px),
+    radial-gradient(1.2px 1.2px at 35% 85%, rgba(255,250,205,0.48) 0.7px, transparent 0.7px);
+}
+
+[data-variant="secondary"] .inside::after {
+  background-image:
+    /* Top region 0-10%: dense cluster */
+    radial-gradient(1.2px 1.2px at 5% 2%, rgba(255,255,0,1) 0.7px, transparent 0.7px),
+    radial-gradient(1px 1px at 15% 1%, rgba(255,255,0,0.8) 0.4px, transparent 0.4px),
+    radial-gradient(1.3px 1.3px at 25% 3%, rgba(255,255,0,0.9) 0.65px, transparent 0.65px),
+    radial-gradient(1.1px 1.1px at 35% 2%, rgba(255,255,0,0.7) 0.55px, transparent 0.55px),
+    radial-gradient(1.45px 1.45px at 45% 1%, rgba(255,255,0,0.95) 0.7px, transparent 0.7px),
+    radial-gradient(1.05px 1.05px at 55% 4%, rgba(255,255,0,0.75) 0.525px, transparent 0.525px),
+    radial-gradient(1.2px 1.2px at 65% 2%, rgba(255,255,0,1) 0.7px, transparent 0.7px),
+    radial-gradient(1.15px 1.15px at 75% 3%, rgba(255,255,0,0.85) 0.575px, transparent 0.575px),
+    radial-gradient(1.4px 1.4px at 85% 1%, rgba(255,255,0,0.92) 0.675px, transparent 0.675px),
+    radial-gradient(1.1px 1.1px at 92% 4%, rgba(255,255,0,0.78) 0.55px, transparent 0.55px),
+    /* Top-mid region 10-25%: very dense */
+    radial-gradient(1.2px 1.2px at 8% 8%, rgba(255,255,0,0.88) 0.7px, transparent 0.7px),
+    radial-gradient(1.05px 1.05px at 18% 7%, rgba(255,255,0,0.7) 0.525px, transparent 0.525px),
+    radial-gradient(1.3px 1.3px at 28% 10%, rgba(255,255,0,1) 0.65px, transparent 0.65px),
+    radial-gradient(1.1px 1.1px at 38% 6%, rgba(255,255,0,0.82) 0.55px, transparent 0.55px),
+    radial-gradient(1.45px 1.45px at 48% 9%, rgba(255,255,0,0.91) 0.7px, transparent 0.7px),
+    radial-gradient(1px 1px at 58% 12%, rgba(255,255,0,0.72) 0.4px, transparent 0.4px),
+    radial-gradient(1.2px 1.2px at 68% 8%, rgba(255,255,0,0.89) 0.7px, transparent 0.7px),
+    radial-gradient(1.15px 1.15px at 78% 11%, rgba(255,255,0,0.79) 0.575px, transparent 0.575px),
+    radial-gradient(1.4px 1.4px at 88% 7%, rgba(255,255,0,0.94) 0.675px, transparent 0.675px),
+    radial-gradient(1.1px 1.1px at 12% 14%, rgba(255,255,0,0.75) 0.55px, transparent 0.55px),
+    radial-gradient(1.2px 1.2px at 32% 13%, rgba(255,255,0,0.87) 0.7px, transparent 0.7px),
+    radial-gradient(1.05px 1.05px at 52% 15%, rgba(255,255,0,0.68) 0.525px, transparent 0.525px),
+    radial-gradient(1.3px 1.3px at 72% 14%, rgba(255,255,0,0.93) 0.65px, transparent 0.65px),
+    radial-gradient(1.1px 1.1px at 42% 22%, rgba(255,255,0,0.81) 0.55px, transparent 0.55px),
+    radial-gradient(1.45px 1.45px at 62% 18%, rgba(255,255,0,0.97) 0.7px, transparent 0.7px),
+    /* Mid region 25-40%: still dense but less */
+    radial-gradient(1px 1px at 10% 28%, rgba(255,255,0,0.65) 0.4px, transparent 0.4px),
+    radial-gradient(1.2px 1.2px at 22% 32%, rgba(255,255,0,0.84) 0.7px, transparent 0.7px),
+    radial-gradient(1.15px 1.15px at 35% 26%, rgba(255,255,0,0.73) 0.575px, transparent 0.575px),
+    radial-gradient(1.4px 1.4px at 48% 30%, rgba(255,255,0,0.9) 0.675px, transparent 0.675px),
+    radial-gradient(1.1px 1.1px at 60% 27%, rgba(255,255,0,0.76) 0.55px, transparent 0.55px),
+    radial-gradient(1.2px 1.2px at 75% 33%, rgba(255,255,0,0.86) 0.7px, transparent 0.7px),
+    radial-gradient(1.05px 1.05px at 88% 29%, rgba(255,255,0,0.71) 0.525px, transparent 0.525px),
+    radial-gradient(1.3px 1.3px at 15% 38%, rgba(255,255,0,0.92) 0.65px, transparent 0.65px),
+    radial-gradient(1.1px 1.1px at 42% 35%, rgba(255,255,0,0.69) 0.55px, transparent 0.55px),
+    radial-gradient(1.45px 1.45px at 68% 39%, rgba(255,255,0,0.88) 0.7px, transparent 0.7px),
+    /* Lower-mid region 40-60%: sparser */
+    radial-gradient(1px 1px at 18% 48%, rgba(255,255,0,0.55) 0.4px, transparent 0.4px),
+    radial-gradient(1.2px 1.2px at 38% 52%, rgba(255,255,0,0.72) 0.7px, transparent 0.7px),
+    radial-gradient(1.15px 1.15px at 58% 45%, rgba(255,255,0,0.62) 0.575px, transparent 0.575px),
+    radial-gradient(1.4px 1.4px at 75% 50%, rgba(255,255,0,0.8) 0.675px, transparent 0.675px),
+    radial-gradient(1.1px 1.1px at 28% 58%, rgba(255,255,0,0.58) 0.55px, transparent 0.55px),
+    radial-gradient(1.2px 1.2px at 65% 56%, rgba(255,255,0,0.7) 0.7px, transparent 0.7px),
+    /* Bottom region 60-100%: very sparse */
+    radial-gradient(1.05px 1.05px at 22% 68%, rgba(255,255,0,0.45) 0.525px, transparent 0.525px),
+    radial-gradient(1.3px 1.3px at 52% 72%, rgba(255,255,0,0.6) 0.65px, transparent 0.65px),
+    radial-gradient(1.1px 1.1px at 78% 75%, rgba(255,255,0,0.5) 0.55px, transparent 0.55px),
+    radial-gradient(1.2px 1.2px at 35% 85%, rgba(255,255,0,0.48) 0.7px, transparent 0.7px);
+}
+
+[data-variant="destructive"] .inside::after {
+  background-image:
+    /* Top region 0-10%: dense cluster */
+    radial-gradient(1.2px 1.2px at 5% 2%, rgba(255,255,0,1) 0.7px, transparent 0.7px),
+    radial-gradient(1px 1px at 15% 1%, rgba(255,255,0,0.8) 0.4px, transparent 0.4px),
+    radial-gradient(1.3px 1.3px at 25% 3%, rgba(255,255,0,0.9) 0.65px, transparent 0.65px),
+    radial-gradient(1.1px 1.1px at 35% 2%, rgba(255,255,0,0.7) 0.55px, transparent 0.55px),
+    radial-gradient(1.45px 1.45px at 45% 1%, rgba(255,255,0,0.95) 0.7px, transparent 0.7px),
+    radial-gradient(1.05px 1.05px at 55% 4%, rgba(255,255,0,0.75) 0.525px, transparent 0.525px),
+    radial-gradient(1.2px 1.2px at 65% 2%, rgba(255,255,0,1) 0.7px, transparent 0.7px),
+    radial-gradient(1.15px 1.15px at 75% 3%, rgba(255,255,0,0.85) 0.575px, transparent 0.575px),
+    radial-gradient(1.4px 1.4px at 85% 1%, rgba(255,255,0,0.92) 0.675px, transparent 0.675px),
+    radial-gradient(1.1px 1.1px at 92% 4%, rgba(255,255,0,0.78) 0.55px, transparent 0.55px),
+    /* Top-mid region 10-25%: very dense */
+    radial-gradient(1.2px 1.2px at 8% 8%, rgba(255,255,0,0.88) 0.7px, transparent 0.7px),
+    radial-gradient(1.05px 1.05px at 18% 7%, rgba(255,255,0,0.7) 0.525px, transparent 0.525px),
+    radial-gradient(1.3px 1.3px at 28% 10%, rgba(255,255,0,1) 0.65px, transparent 0.65px),
+    radial-gradient(1.1px 1.1px at 38% 6%, rgba(255,255,0,0.82) 0.55px, transparent 0.55px),
+    radial-gradient(1.45px 1.45px at 48% 9%, rgba(255,255,0,0.91) 0.7px, transparent 0.7px),
+    radial-gradient(1px 1px at 58% 12%, rgba(255,255,0,0.72) 0.4px, transparent 0.4px),
+    radial-gradient(1.2px 1.2px at 68% 8%, rgba(255,255,0,0.89) 0.7px, transparent 0.7px),
+    radial-gradient(1.15px 1.15px at 78% 11%, rgba(255,255,0,0.79) 0.575px, transparent 0.575px),
+    radial-gradient(1.4px 1.4px at 88% 7%, rgba(255,255,0,0.94) 0.675px, transparent 0.675px),
+    radial-gradient(1.1px 1.1px at 12% 14%, rgba(255,255,0,0.75) 0.55px, transparent 0.55px),
+    radial-gradient(1.2px 1.2px at 32% 13%, rgba(255,255,0,0.87) 0.7px, transparent 0.7px),
+    radial-gradient(1.05px 1.05px at 52% 15%, rgba(255,255,0,0.68) 0.525px, transparent 0.525px),
+    radial-gradient(1.3px 1.3px at 72% 14%, rgba(255,255,0,0.93) 0.65px, transparent 0.65px),
+    radial-gradient(1.1px 1.1px at 42% 22%, rgba(255,255,0,0.81) 0.55px, transparent 0.55px),
+    radial-gradient(1.45px 1.45px at 62% 18%, rgba(255,255,0,0.97) 0.7px, transparent 0.7px),
+    /* Mid region 25-40%: still dense but less */
+    radial-gradient(1px 1px at 10% 28%, rgba(255,255,0,0.65) 0.4px, transparent 0.4px),
+    radial-gradient(1.2px 1.2px at 22% 32%, rgba(255,255,0,0.84) 0.7px, transparent 0.7px),
+    radial-gradient(1.15px 1.15px at 35% 26%, rgba(255,255,0,0.73) 0.575px, transparent 0.575px),
+    radial-gradient(1.4px 1.4px at 48% 30%, rgba(255,255,0,0.9) 0.675px, transparent 0.675px),
+    radial-gradient(1.1px 1.1px at 60% 27%, rgba(255,255,0,0.76) 0.55px, transparent 0.55px),
+    radial-gradient(1.2px 1.2px at 75% 33%, rgba(255,255,0,0.86) 0.7px, transparent 0.7px),
+    radial-gradient(1.05px 1.05px at 88% 29%, rgba(255,255,0,0.71) 0.525px, transparent 0.525px),
+    radial-gradient(1.3px 1.3px at 15% 38%, rgba(255,255,0,0.92) 0.65px, transparent 0.65px),
+    radial-gradient(1.1px 1.1px at 42% 35%, rgba(255,255,0,0.69) 0.55px, transparent 0.55px),
+    radial-gradient(1.45px 1.45px at 68% 39%, rgba(255,255,0,0.88) 0.7px, transparent 0.7px),
+    /* Lower-mid region 40-60%: sparser */
+    radial-gradient(1px 1px at 18% 48%, rgba(255,255,0,0.55) 0.4px, transparent 0.4px),
+    radial-gradient(1.2px 1.2px at 38% 52%, rgba(255,255,0,0.72) 0.7px, transparent 0.7px),
+    radial-gradient(1.15px 1.15px at 58% 45%, rgba(255,255,0,0.62) 0.575px, transparent 0.575px),
+    radial-gradient(1.4px 1.4px at 75% 50%, rgba(255,255,0,0.8) 0.675px, transparent 0.675px),
+    radial-gradient(1.1px 1.1px at 28% 58%, rgba(255,255,0,0.58) 0.55px, transparent 0.55px),
+    radial-gradient(1.2px 1.2px at 65% 56%, rgba(255,255,0,0.7) 0.7px, transparent 0.7px),
+    /* Bottom region 60-100%: very sparse */
+    radial-gradient(1.05px 1.05px at 22% 68%, rgba(255,255,0,0.45) 0.525px, transparent 0.525px),
+    radial-gradient(1.3px 1.3px at 52% 72%, rgba(255,255,0,0.6) 0.65px, transparent 0.65px),
+    radial-gradient(1.1px 1.1px at 78% 75%, rgba(255,255,0,0.5) 0.55px, transparent 0.55px),
+    radial-gradient(1.2px 1.2px at 35% 85%, rgba(255,255,0,0.48) 0.7px, transparent 0.7px);
+}
+
+.inside-old {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(to bottom left, rgba(255,255,255,0.5), rgba(255,255,255,0.15)),
+    radial-gradient(var(--star-color, rgba(255,255,255,0.3)) 2.5px, transparent 0),
+    radial-gradient(var(--star-color, rgba(255,255,255,0.3)) 2.5px, transparent 0),
+    radial-gradient(var(--star-color, rgba(255,255,255,0.3)) 2.5px, transparent 0),
+    radial-gradient(var(--star-color, rgba(255,255,255,0.3)) 2.5px, transparent 0),
+    radial-gradient(var(--star-color, rgba(255,255,255,0.3)) 2.5px, transparent 0),
+    radial-gradient(var(--star-color, rgba(255,255,255,0.3)) 2.5px, transparent 0),
+    radial-gradient(var(--star-color, rgba(255,255,255,0.3)) 2.5px, transparent 0),
+    radial-gradient(var(--star-color, rgba(255,255,255,0.3)) 2.5px, transparent 0),
+    radial-gradient(var(--star-color, rgba(255,255,255,0.3)) 2.5px, transparent 0),
+    radial-gradient(var(--star-color, rgba(255,255,255,0.3)) 2.5px, transparent 0),
+    radial-gradient(var(--star-color, rgba(255,255,255,0.3)) 2.5px, transparent 0),
+    radial-gradient(var(--star-color, rgba(255,255,255,0.3)) 2.5px, transparent 0),
+    radial-gradient(var(--star-color, rgba(255,255,255,0.3)) 2.5px, transparent 0),
+    radial-gradient(var(--star-color, rgba(255,255,255,0.3)) 2.5px, transparent 0),
+    radial-gradient(var(--star-color, rgba(255,255,255,0.3)) 2.5px, transparent 0),
+    radial-gradient(var(--star-color, rgba(255,255,255,0.3)) 2.5px, transparent 0),
+    radial-gradient(var(--star-color, rgba(255,255,255,0.3)) 2.5px, transparent 0),
+    radial-gradient(var(--star-color, rgba(255,255,255,0.3)) 2.5px, transparent 0),
+    radial-gradient(var(--star-color, rgba(255,255,255,0.3)) 2.5px, transparent 0),
+    radial-gradient(var(--star-color, rgba(255,255,255,0.3)) 2.5px, transparent 0),
+    radial-gradient(var(--star-color, rgba(255,255,255,0.3)) 2.5px, transparent 0),
+    radial-gradient(var(--star-color, rgba(255,255,255,0.3)) 2.5px, transparent 0),
+    radial-gradient(var(--star-color, rgba(255,255,255,0.3)) 2.5px, transparent 0),
+    radial-gradient(var(--star-color, rgba(255,255,255,0.3)) 2.5px, transparent 0),
+    radial-gradient(var(--star-color, rgba(255,255,255,0.3)) 2.5px, transparent 0),
+    radial-gradient(var(--star-color, rgba(255,255,255,0.3)) 2.5px, transparent 0),
+    radial-gradient(var(--star-color, rgba(255,255,255,0.3)) 2.5px, transparent 0),
+    radial-gradient(var(--star-color, rgba(255,255,255,0.3)) 2.5px, transparent 0),
+    radial-gradient(var(--star-color, rgba(255,255,255,0.3)) 2.5px, transparent 0),
+    radial-gradient(var(--star-color, rgba(255,255,255,0.3)) 2.5px, transparent 0),
+    radial-gradient(var(--star-color, rgba(255,255,255,0.3)) 2.5px, transparent 0),
+    radial-gradient(var(--star-color, rgba(255,255,255,0.3)) 2.5px, transparent 0),
+    radial-gradient(var(--star-color, rgba(255,255,255,0.3)) 2.5px, transparent 0),
+    radial-gradient(var(--star-color, rgba(255,255,255,0.3)) 2.5px, transparent 0),
+    radial-gradient(var(--star-color, rgba(255,255,255,0.3)) 2.5px, transparent 0);
+  background-size: 100% 100%, 280px 280px;
+  background-position: 0 0, 0 0, 58px 94px, 178px 34px, 16px 238px, 106px 46px, 254px 194px, 34px 274px, 158px 122px, 82px 218px, 234px 14px, 22px 146px, 142px 274px, 46px 106px, 206px 174px, 98px 38px, 174px 254px, 28px 74px, 118px 278px, 218px 102px, 66px 194px, 182px 142px, 102px 278px, 130px 22px, 246px 222px, 54px 134px, 150px 74px, 202px 274px, 10px 194px, 94px 14px, 230px 166px, 146px 82px, 26px 270px, 166px 202px, 74px 114px, 134px 234px;
+  background-repeat: repeat;
+  animation: driftDots 20s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes driftDots {
+  0% {
+    transform: translateX(140px) translateY(-140px) rotate(0deg);
+    opacity: 0;
+  }
+  25% {
+    opacity: 1;
+  }
+  75% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(-140px) translateY(140px) rotate(-8deg);
+    opacity: 0;
+  }
+}
+
+/* --- Profile icon section --- */
+
+.profileIcon {
+  width: 100%;
+  height: 80px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  background-color: #4B5563;
+  position: relative;
+  z-index: 2;
+  border-bottom: 1px solid var(--btn-border-color, #1d2119);
+  color: #FFFFFF;
+}
+
+/* --- Content sections --- */
+
+.content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  position: relative;
+  z-index: 2;
+  font-family: var(--font-sans);
+  color: var(--btn-color);
+  padding: 8px;
+}
+
+.header {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  line-height: 1.2;
+  padding-bottom: 6px;
+  margin-bottom: 6px;
+  text-align: center;
+  background-image: linear-gradient(to right, transparent 12.5%, rgba(29, 33, 25, 0.35) 12.5%, rgba(29, 33, 25, 0.35) 87.5%, transparent 87.5%);
+  background-size: 100% 1px;
+  background-position: 0 bottom;
+  background-repeat: no-repeat;
+}
+
+.body {
+  flex: 1;
+  font-size: 0.75rem;
+  font-weight: 700;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 3px;
+  line-height: 1.2;
+  padding-bottom: 6px;
+  text-align: center;
+  background-image: linear-gradient(to right, transparent 12.5%, rgba(29, 33, 25, 0.35) 12.5%, rgba(29, 33, 25, 0.35) 87.5%, transparent 87.5%);
+  background-size: 100% 1px;
+  background-position: 0 bottom;
+  background-repeat: no-repeat;
+}
+
+.footer {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  opacity: 0.85;
+  margin-top: 6px;
+  line-height: 1.1;
+  text-align: center;
+}

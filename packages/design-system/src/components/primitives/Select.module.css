@@ -1,0 +1,282 @@
+/* ==========================================================================
+   Select — Dropdown with sticker-style trigger button
+   ========================================================================== */
+
+.wrapper {
+  display: inline-block;
+  position: relative;
+}
+
+.label {
+  display: block;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 6px;
+}
+
+.container {
+  position: relative;
+  display: inline-block;
+}
+
+/* --- Trigger button (reuses Button structure) --- */
+
+.trigger {
+  --bevel: 3px;
+  --bw: 3px;
+  --select-font-size: 0.875rem;
+  --select-padding-v: 10px;
+  --select-padding-h: 28px;
+  --select-gap: 8px;
+  cursor: pointer;
+  outline: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.9));
+  position: relative;
+  display: flex;
+  align-items: center;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-weight: 700;
+  font-size: var(--select-font-size);
+  color: var(--btn-color);
+  background: none;
+  border: none;
+}
+
+.trigger.disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+  filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.5));
+}
+
+.trigger.soft {
+  transition: color 0.2s;
+}
+
+.trigger:hover:not(.disabled).soft {
+  color: var(--btn-hover-color, #fff);
+}
+
+/* Trigger sizing */
+.sm {
+  --bevel: 2px;
+  --bw: 2.5px;
+  --select-font-size: 0.8125rem;
+  --select-padding-v: 7px;
+  --select-padding-h: 18px;
+  --select-gap: 6px;
+}
+
+.md {
+  --bevel: 3px;
+  --bw: 3px;
+  --select-font-size: 0.875rem;
+  --select-padding-v: 10px;
+  --select-padding-h: 28px;
+  --select-gap: 8px;
+}
+
+.lg {
+  --bevel: 4px;
+  --bw: 3.5px;
+  --select-font-size: 1rem;
+  --select-padding-v: 14px;
+  --select-padding-h: 36px;
+  --select-gap: 10px;
+}
+
+/* --- Sticker layers --- */
+
+.outline {
+  --b1: calc((var(--bevel) + var(--bw) * 2) - (var(--bw) * 0.4142) * 2);
+  --b2: calc(var(--b1) + var(--bw));
+  --b3: calc(var(--b2) + var(--bw));
+  display: block;
+  margin-top: calc(var(--bw) * -1);
+  margin-left: calc(var(--bw) * -1);
+  padding: var(--bw);
+  background-color: var(--btn-outline-color, #fff);
+  clip-path: polygon(
+    var(--b2) var(--bw),
+    calc(100% - var(--b2)) var(--bw),
+    100% var(--b3),
+    100% calc(100% - var(--b1)),
+    calc(100% - var(--b1)) 100%,
+    var(--b3) 100%,
+    var(--bw) calc(100% - var(--b2)),
+    var(--bw) var(--b2)
+  );
+  transition: clip-path 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.trigger:hover:not(.disabled) .outline,
+.trigger.open .outline {
+  clip-path: polygon(
+    var(--b1) 0,
+    calc(100% - var(--b3)) 0,
+    100% var(--b3),
+    100% calc(100% - var(--b1)),
+    calc(100% - var(--b1)) 100%,
+    var(--b3) 100%,
+    0 calc(100% - var(--b3)),
+    0 var(--b1)
+  );
+  transition: clip-path 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.darkLayer {
+  --b1: calc((var(--bevel) + var(--bw)) - var(--bw) * 0.4142);
+  --b2: calc(var(--b1) + var(--bw));
+  --b3: calc(var(--b2) + var(--bw));
+  display: block;
+  padding: calc(var(--bw) * 2);
+  background-color: var(--btn-border-color, #1d2119);
+  clip-path: polygon(
+    var(--b2) var(--bw),
+    calc(100% - var(--b2)) var(--bw),
+    100% var(--b3),
+    100% calc(100% - var(--b1)),
+    calc(100% - var(--b1)) 100%,
+    var(--b3) 100%,
+    var(--bw) calc(100% - var(--b2)),
+    var(--bw) var(--b2)
+  );
+  transition: clip-path 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.trigger:hover:not(.disabled) .darkLayer,
+.trigger.open .darkLayer {
+  clip-path: polygon(
+    var(--b1) 0,
+    calc(100% - var(--b3)) 0,
+    100% var(--b3),
+    100% calc(100% - var(--b1)),
+    calc(100% - var(--b1)) 100%,
+    var(--b3) 100%,
+    0 calc(100% - var(--b3)),
+    0 var(--b1)
+  );
+  transition: clip-path 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.inside {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--select-gap);
+  padding: var(--select-padding-v) var(--select-padding-h) calc(var(--select-padding-v) - 0.125em);
+  background-color: var(--btn-bg);
+  clip-path: polygon(
+    var(--bevel) 0,
+    calc(100% - var(--bevel)) 0,
+    100% var(--bevel),
+    100% calc(100% - var(--bevel)),
+    calc(100% - var(--bevel)) 100%,
+    var(--bevel) 100%,
+    0 calc(100% - var(--bevel)),
+    0 var(--bevel)
+  );
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+
+.trigger:hover:not(.disabled) .inside {
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.trigger:hover:not(.disabled) .inside,
+.trigger.open .inside {
+  transform: translate(calc(var(--bw) * -1), calc(var(--bw) * -1));
+}
+
+/* Halftone texture on hover */
+.inside::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right, var(--btn-hover-bg-fade), transparent),
+    radial-gradient(var(--btn-dot-color) 1px, transparent 0),
+    radial-gradient(var(--btn-dot-color) 1px, transparent 0);
+  background-size: auto, 6px 6px, 6px 6px;
+  background-position: 0 0, 0 0, 3px 3px;
+}
+
+.trigger:hover:not(.disabled) .inside::after {
+  opacity: 1;
+  animation: scrollHalftone 1s linear infinite;
+}
+
+@keyframes scrollHalftone {
+  to {
+    background-position-x: 0, -6px, -3px;
+  }
+}
+
+/* Variant-specific gradient end colors - light versions of each color */
+/* Primary soft (gold) - to light cream */
+.trigger .inside::after {
+  background-image:
+    linear-gradient(to right, var(--btn-hover-bg-fade), rgba(245, 240, 232, 0.6)),
+    radial-gradient(var(--btn-dot-color) 1px, transparent 0),
+    radial-gradient(var(--btn-dot-color) 1px, transparent 0);
+}
+
+.content {
+  flex: 1;
+  text-align: left;
+  position: relative;
+  z-index: 2;
+}
+
+.inside > div {
+  position: relative;
+  z-index: 2;
+}
+
+/* --- Dropdown menu --- */
+
+.menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  min-width: 100%;
+  background: white;
+  border: 2px solid #1d2119;
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  overflow: hidden;
+}
+
+.menuItem {
+  display: block;
+  width: 100%;
+  padding: 10px 16px;
+  background: none;
+  border: none;
+  text-align: left;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.875rem;
+  color: #1a1a1a;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.menuItem:hover {
+  background-color: var(--btn-hover-bg);
+}
+
+.menuItem.selected {
+  background-color: var(--btn-hover-bg);
+  color: #1a1a1a;
+  font-weight: 700;
+}

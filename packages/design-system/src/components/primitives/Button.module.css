@@ -13,7 +13,7 @@
 .button {
   --bevel: 3px;
   --bw: 3px; /* border-width */
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: var(--font-sans);
   font-weight: 700;
   font-size: var(--btn-font-size, 0.875rem);
   color: var(--btn-color);

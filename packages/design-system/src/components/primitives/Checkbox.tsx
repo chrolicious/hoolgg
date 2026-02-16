@@ -98,7 +98,7 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
                     exit={{ scale: 0, rotate: 180 }}
                     transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
                   >
-                    <Icon name={iconName} size={iconSizes[size]} strokeWidth={2.5} animation="none" />
+                    <Icon name={iconName} size={iconSizes[size]} animation="none" />
                   </motion.div>
                 ) : null}
               </AnimatePresence>

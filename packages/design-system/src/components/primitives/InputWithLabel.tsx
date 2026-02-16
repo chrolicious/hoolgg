@@ -11,7 +11,7 @@ export interface InputWithLabelProps extends InputProps {
 }
 
 export const InputWithLabel = React.forwardRef<HTMLInputElement, InputWithLabelProps>(
-  ({ label, description, ...inputProps }, ref) => {
+  ({ label, description, variant, size, error, icon, iconRight, ...nativeProps }, ref) => {
     const [isFocused, setIsFocused] = useState(false);
     const [isHovered, setIsHovered] = useState(false);
 
@@ -33,18 +33,18 @@ export const InputWithLabel = React.forwardRef<HTMLInputElement, InputWithLabelP
             <input
               ref={ref}
               className={styles.input}
-              disabled={inputProps.disabled}
+              disabled={nativeProps.disabled}
               onFocus={(e) => {
                 setIsFocused(true);
-                inputProps.onFocus?.(e);
+                nativeProps.onFocus?.(e);
               }}
               onBlur={(e) => {
                 setIsFocused(false);
-                inputProps.onBlur?.(e);
+                nativeProps.onBlur?.(e);
               }}
-              {...inputProps}
+              {...nativeProps}
             />
-            {inputProps.icon && <span className={styles.icon}>{inputProps.icon}</span>}
+            {icon && <span className={styles.icon}>{icon}</span>}
           </div>
         </div>
 

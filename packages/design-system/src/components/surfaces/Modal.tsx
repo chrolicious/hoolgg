@@ -3,6 +3,7 @@
 import React, { useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Button } from '../primitives/Button';
 import styles from './Modal.module.css';
 
 export interface ModalProps {
@@ -122,13 +123,36 @@ export const Modal = React.forwardRef<HTMLDivElement, ModalProps>(
                             )}
                           </div>
                           {onClose && (
-                            <button
-                              className={styles.closeButton}
-                              onClick={onClose}
-                              aria-label="Close modal"
+                            <motion.div
+                              animate={{ rotate: 360 }}
+                              transition={{
+                                duration: 20,
+                                repeat: Infinity,
+                                ease: 'linear',
+                              }}
                             >
-                              ✕
-                            </button>
+                              <Button
+                                variant="destructive"
+                                size="md"
+                                shape="circle"
+                                onClick={onClose}
+                                aria-label="Close modal"
+                                icon={
+                                  <svg
+                                    width="20"
+                                    height="20"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="3"
+                                    strokeLinecap="round"
+                                  >
+                                    <line x1="18" y1="6" x2="6" y2="18" />
+                                    <line x1="6" y1="6" x2="18" y2="18" />
+                                  </svg>
+                                }
+                              />
+                            </motion.div>
                           )}
                         </div>
                       )}

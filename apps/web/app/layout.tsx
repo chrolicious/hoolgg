@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import '@hool/design-system/css/globals';
 
 export const metadata: Metadata = {
   title: 'hool.gg',
