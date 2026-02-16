@@ -114,6 +114,7 @@ function TokenShowcase() {
           <Swatch color={colors.class.deathknight} label="deathknight" />
           <Swatch color={colors.class.demonhunter} label="demonhunter" />
           <Swatch color={colors.class.druid} label="druid" />
+          <Swatch color={colors.class.evoker} label="evoker" />
           <Swatch color={colors.class.hunter} label="hunter" />
           <Swatch color={colors.class.mage} label="mage" />
           <Swatch color={colors.class.monk} label="monk" />
