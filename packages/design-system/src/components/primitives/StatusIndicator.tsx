@@ -57,8 +57,8 @@ export const StatusIndicator = React.forwardRef<HTMLDivElement, StatusIndicatorP
         onClick={onClick}
         title={title}
         style={{
-          width: '12px',
-          height: '12px',
+          width: '16px',
+          height: '16px',
           borderRadius: '50%',
           backgroundColor: colors.bg,
           border: '2px solid #FFFFFF',
