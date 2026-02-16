@@ -2,7 +2,7 @@
   position: relative;
   display: block;
   border-radius: 6px;
-  overflow: hidden;
+  overflow: visible;
   background: rgba(255, 255, 255, 0.08);
   border: 2px solid rgba(255, 255, 255, 0.2);
 }
