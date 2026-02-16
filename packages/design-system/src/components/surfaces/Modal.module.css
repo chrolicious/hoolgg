@@ -77,6 +77,30 @@
   display: flex;
   flex-direction: column;
   height: 100%;
+  background: linear-gradient(
+    90deg,
+    #EF4444 0%,
+    #A855F7 25%,
+    #FB923C 50%,
+    #EC4899 75%,
+    #EF4444 100%
+  );
+  background-size: 200% 100%;
+  animation: gradientFlow 6s ease infinite;
+  padding: 2px;
+  border-radius: 6px;
+}
+
+@keyframes gradientFlow {
+  0% {
+    background-position: 0% center;
+  }
+  50% {
+    background-position: 100% center;
+  }
+  100% {
+    background-position: 0% center;
+  }
 }
 
 .darkLayer {
