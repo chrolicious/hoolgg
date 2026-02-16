@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import styles from './Modal.module.css';
 
@@ -69,7 +70,7 @@ export const Modal = React.forwardRef<HTMLDivElement, ModalProps>(
       }
     }, [isOpen]);
 
-    return (
+    return createPortal(
       <AnimatePresence mode="wait">
         {isOpen && (
           <>
@@ -158,7 +159,8 @@ export const Modal = React.forwardRef<HTMLDivElement, ModalProps>(
             </motion.div>
           </>
         )}
-      </AnimatePresence>
+      </AnimatePresence>,
+      document.body,
     );
   },
 );
