@@ -143,13 +143,12 @@ export const Modal = React.forwardRef<HTMLDivElement, ModalProps>(
                               <Button
                                 variant="destructive"
                                 size="sm"
-                                shape="circle"
                                 onClick={handleClose}
                                 aria-label="Close modal"
                                 icon={
                                   <svg
-                                    width="18"
-                                    height="18"
+                                    width="16"
+                                    height="16"
                                     viewBox="0 0 24 24"
                                     fill="none"
                                     stroke="currentColor"
