@@ -5,22 +5,22 @@
 .achievementGrid {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: var(--hool-space-5);
 }
 
 .title {
   margin: 0;
   font-family: var(--font-sans);
-  font-size: 1.125rem;
-  font-weight: 700;
-  color: #ffffff;
+  font-size: var(--text-h3);
+  font-weight: var(--font-weight-bold);
+  color: var(--hool-text-primary);
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
 /* Grid */
 .grid {
   display: grid;
-  gap: 20px;
+  gap: var(--hool-space-5);
 }
 
 /* Achievement item */
@@ -28,7 +28,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
+  gap: var(--hool-space-3);
   cursor: pointer;
   position: relative;
 }
@@ -38,16 +38,16 @@
   position: relative;
   width: 100%;
   aspect-ratio: 1;
-  border-radius: 12px;
+  border-radius: var(--hool-radius-md);
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
-  border: 2px solid rgba(255, 255, 255, 0.2);
+  border: var(--hool-border-medium) solid rgba(255, 255, 255, 0.2);
   display: flex;
   align-items: center;
   justify-content: center;
   box-shadow:
     inset 0 1px 3px rgba(255, 255, 255, 0.2),
-    0 4px 12px rgba(0, 0, 0, 0.15);
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    var(--hool-shadow-sm);
+  transition: all var(--hool-duration-normal) cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
 }
 
@@ -132,8 +132,8 @@
 .name {
   margin: 0;
   font-family: var(--font-sans);
-  font-size: 0.75rem;
-  font-weight: 600;
+  font-size: var(--text-small);
+  font-weight: var(--font-weight-semibold);
   color: rgba(255, 255, 255, 0.8);
   text-align: center;
   line-height: 1.3;
@@ -160,12 +160,12 @@
 }
 
 .tooltipContent {
-  padding: 12px 14px;
+  padding: var(--hool-space-3) var(--hool-space-4);
   background: rgba(0, 0, 0, 0.9);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 8px;
+  border: var(--hool-border-thin) solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--hool-radius-md);
   box-shadow:
-    0 12px 24px rgba(0, 0, 0, 0.5),
+    var(--hool-shadow-lg),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
   min-width: 180px;
   max-width: 240px;
@@ -175,16 +175,16 @@
 .tooltipName {
   margin: 0 0 6px 0;
   font-family: var(--font-sans);
-  font-size: 0.875rem;
-  font-weight: 700;
-  color: #ffffff;
+  font-size: var(--text-body);
+  font-weight: var(--font-weight-bold);
+  color: var(--hool-text-primary);
 }
 
 .tooltipDescription {
   margin: 0 0 6px 0;
   font-family: var(--font-sans);
-  font-size: 0.75rem;
-  font-weight: 400;
+  font-size: var(--text-small);
+  font-weight: var(--font-weight-regular);
   color: rgba(255, 255, 255, 0.7);
   line-height: 1.4;
 }
@@ -193,15 +193,15 @@
   margin: 0;
   font-family: var(--font-mono, 'Monaco', 'Courier New', monospace);
   font-size: 0.7rem;
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
   color: rgba(232, 184, 42, 0.8);
 }
 
 .tooltipLocked {
   margin: 0;
   font-family: var(--font-sans);
-  font-size: 0.75rem;
-  font-weight: 600;
+  font-size: var(--text-small);
+  font-weight: var(--font-weight-semibold);
   color: rgba(239, 68, 68, 0.8);
   text-transform: uppercase;
   letter-spacing: 0.5px;
