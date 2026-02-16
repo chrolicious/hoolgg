@@ -36,46 +36,6 @@
   min-width: 300px;
 }
 
-/* Rainbow bar at top of footer */
-.footer::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 12px;
-  background: linear-gradient(
-    90deg,
-    #ff0000 0%,
-    #ff7f00 14.28%,
-    #ffff00 28.57%,
-    #00ff00 42.85%,
-    #0000ff 57.14%,
-    #4b0082 71.42%,
-    #9400d3 85.71%,
-    #ff0000 100%
-  );
-  background-size: 200% 100%;
-  animation: rainbowFlow 8s linear infinite;
-  box-shadow: 0 0 20px rgba(255, 0, 0, 0.5), inset 0 2px 8px rgba(255, 255, 255, 0.2);
-  z-index: 1;
-}
-
-/* Dotted texture on rainbow bar */
-.footer::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 12px;
-  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.3) 1px, transparent 1px);
-  background-size: 6px 6px;
-  background-position: 0 0;
-  animation: dotScroll 8s linear infinite;
-  pointer-events: none;
-  z-index: 2;
-}
 
 /* Position variants */
 .bottom-right {
