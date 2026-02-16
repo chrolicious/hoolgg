@@ -48,14 +48,56 @@
   width: 100%;
   gap: var(--input-gap, 8px);
   padding: var(--input-padding-v, 10px) var(--input-padding-h, 20px);
-  background: rgba(217, 215, 209, 0.5);
+  background: rgba(217, 215, 209, 0.6);
   border: 3px solid rgba(29, 33, 25, 0.25);
-  backdrop-filter: blur(12px);
   transition:
     background-color 0.2s ease,
-    border-color 0.2s ease,
-    backdrop-filter 0.2s ease;
+    border-color 0.2s ease;
   box-shadow: inset 0 1px 3px rgba(255, 255, 255, 0.5);
+}
+
+.container::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-image:
+    repeating-linear-gradient(
+      135deg,
+      rgba(168, 85, 247, 0.15) 0px,
+      rgba(168, 85, 247, 0.15) 2px,
+      transparent 2px,
+      transparent 30px
+    ),
+    repeating-linear-gradient(
+      135deg,
+      rgba(212, 160, 23, 0.15) 0px,
+      rgba(212, 160, 23, 0.15) 2px,
+      transparent 2px,
+      transparent 30px
+    ),
+    repeating-linear-gradient(
+      135deg,
+      rgba(248, 113, 113, 0.15) 0px,
+      rgba(248, 113, 113, 0.15) 2px,
+      transparent 2px,
+      transparent 30px
+    );
+  background-size: 200px 200px, 200px 200px, 200px 200px;
+  background-position: 0 0, 0 0, 0 0;
+  animation: inputDiagonalLines 20s linear infinite;
+  pointer-events: none;
+  filter: blur(4px);
+  z-index: 1;
+}
+
+@keyframes inputDiagonalLines {
+  0% {
+    background-position: 0 0, 0 0, 0 0;
+  }
+  100% {
+    background-position: 200px 200px, 200px 200px, 200px 200px;
+  }
 }
 
 .wrapper:focus-within .container {
@@ -83,7 +125,6 @@
 .simple .container {
   border-radius: 9999px;
   border: 1px solid rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(10px);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), inset 0 1px 2px rgba(255, 255, 255, 0.4);
 }
 
@@ -285,6 +326,8 @@
   font-weight: 500;
   color: #1a1a1a;
   text-align: center;
+  position: relative;
+  z-index: 2;
 }
 
 .input::placeholder {
@@ -309,6 +352,8 @@
   justify-content: center;
   flex-shrink: 0;
   color: #6B7280;
+  position: relative;
+  z-index: 2;
 }
 
 /* --- Halftone overlay (hover/focus) --- */
