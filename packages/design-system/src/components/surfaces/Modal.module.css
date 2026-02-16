@@ -141,7 +141,7 @@
   color: #fff;
   margin: 0;
   letter-spacing: -0.5px;
-  -webkit-text-stroke: 0.3px #1d2119;
+  -webkit-text-stroke: 0.8px #1d2119;
   text-shadow:
     -1.5px -1.5px 0 #fff,
     1.5px -1.5px 0 #fff,
@@ -160,7 +160,7 @@
   font-size: 0.875rem;
   color: rgba(255, 255, 255, 0.9);
   margin: 4px 0 0 0;
-  -webkit-text-stroke: 0.2px #1d2119;
+  -webkit-text-stroke: 0.6px #1d2119;
   text-shadow:
     -1px -1px 0 #fff,
     1px -1px 0 #fff,
