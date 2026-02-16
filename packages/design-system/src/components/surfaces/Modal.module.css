@@ -78,7 +78,7 @@
   background-position: 0 0, 0 0, 0 0;
   animation: diagonalLines 20s linear infinite;
   pointer-events: none;
-  z-index: 10;
+  z-index: 1;
 }
 
 @keyframes textureShift {
