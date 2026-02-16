@@ -52,9 +52,11 @@ export const Modal = React.forwardRef<HTMLDivElement, ModalProps>(
     // Handle close button click
     const handleClose = () => {
       setIsClosing(true);
-      onClose?.();
-      // Reset spinning state after animation
-      setTimeout(() => setIsClosing(false), 600);
+      // Wait for spin animation to complete before closing
+      setTimeout(() => {
+        onClose?.();
+        setIsClosing(false);
+      }, 600);
     };
 
     // Handle escape key
