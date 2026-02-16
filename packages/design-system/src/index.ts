@@ -21,6 +21,7 @@ export type { Duration, Easing, Spring } from './tokens/animations';
 export * from './components/primitives';
 export * from './components/surfaces';
 export * from './components/data-display';
+export * from './components/navigation';
 // export * from './components/layout';
 // export * from './components/navigation';
 // export * from './components/data-display';

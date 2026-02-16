@@ -1,0 +1,72 @@
+/* ==========================================================================
+   TextureOverlay — Full-page texture pattern overlay
+   Checkerboard, grid, or dots pattern for visual depth
+   ========================================================================== */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 10;
+  mix-blend-mode: multiply;
+  background-repeat: repeat;
+}
+
+/* Checkerboard pattern */
+.checkerboard {
+  background-image:
+    linear-gradient(45deg, #000000 25%, transparent 25%),
+    linear-gradient(-45deg, #000000 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #000000 75%),
+    linear-gradient(-45deg, transparent 75%, #000000 75%);
+  background-size: 32px 32px;
+  background-position: 0 0, 0 16px, 16px -16px, -16px 0px;
+}
+
+/* Grid pattern */
+.grid {
+  background-image:
+    linear-gradient(0deg, rgba(0, 0, 0, 0.3) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.3) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+/* Dots pattern */
+.dots {
+  background-image: radial-gradient(circle, rgba(0, 0, 0, 0.4) 2px, transparent 2px);
+  background-size: 24px 24px;
+}
+
+/* Animated scroll effect */
+.animated {
+  animation: scrollTexture 20s linear infinite;
+}
+
+.checkerboard.animated {
+  animation: scrollCheckerboard 30s linear infinite;
+}
+
+@keyframes scrollCheckerboard {
+  0% {
+    background-position: 0 0, 0 16px, 16px -16px, -16px 0px;
+  }
+  100% {
+    background-position: 32px 0, 32px 16px, 48px -16px, 16px 0px;
+  }
+}
+
+@keyframes scrollTexture {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 32px 32px;
+  }
+}
+
+/* Performance optimization on lower-end devices */
+@media (prefers-reduced-motion: reduce) {
+  .animated {
+    animation: none;
+  }
+}

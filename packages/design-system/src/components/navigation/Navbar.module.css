@@ -1,0 +1,149 @@
+/* ==========================================================================
+   Navbar — Top-left positioned navigation with icon badge and title
+   Mario Wonder style with rainbow accent bar
+   ========================================================================== */
+
+.navbar {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 16px 24px;
+  gap: 0;
+}
+
+/* Rainbow accent bar */
+.accentBar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: linear-gradient(
+    90deg,
+    #ff0000 0%,
+    #ff7f00 16.66%,
+    #ffff00 33.33%,
+    #00ff00 50%,
+    #0000ff 66.66%,
+    #4b0082 83.33%,
+    #9400d3 100%
+  );
+  border-radius: 3px;
+}
+
+/* Content wrapper */
+.content {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding-top: 12px;
+}
+
+/* Badge with icon */
+.badge {
+  position: relative;
+  flex-shrink: 0;
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  box-shadow:
+    inset 1px 1px 0 rgba(255, 255, 255, 0.2),
+    inset -1px -1px 0 rgba(0, 0, 0, 0.3),
+    0 4px 12px rgba(0, 0, 0, 0.3);
+  /* Sticker effect with rotation */
+  transform: rotate(-2deg);
+  transition: transform 0.2s ease;
+}
+
+.badge:hover {
+  transform: rotate(-2deg) scale(1.05);
+}
+
+.badge::before {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 100%);
+  pointer-events: none;
+}
+
+.icon {
+  font-size: 1.75rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+}
+
+/* Text section */
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  flex: 1;
+  min-width: 0;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.5px;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5), 0 1px 3px rgba(0, 0, 0, 0.3);
+  line-height: 1.2;
+  word-break: break-word;
+}
+
+.subtitle {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.7);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Actions (right side) */
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .navbar {
+    padding: 12px 16px;
+  }
+
+  .badge {
+    width: 48px;
+    height: 48px;
+  }
+
+  .icon {
+    font-size: 1.5rem;
+  }
+
+  .title {
+    font-size: 1.25rem;
+  }
+
+  .subtitle {
+    font-size: 0.7rem;
+  }
+}

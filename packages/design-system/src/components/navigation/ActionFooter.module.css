@@ -1,0 +1,168 @@
+/* ==========================================================================
+   ActionFooter — Bottom action buttons with dark overlay support
+   ========================================================================== */
+
+/* Dark overlay background */
+.darkOverlay {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 120px;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.8));
+  pointer-events: none;
+  z-index: 45;
+}
+
+/* Footer container */
+.footer {
+  position: fixed;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 24px;
+  z-index: 50;
+  bottom: 0;
+}
+
+/* Position variants */
+.bottom-right {
+  right: 0;
+  justify-content: flex-end;
+}
+
+.bottom-center {
+  left: 50%;
+  right: auto;
+  transform: translateX(-50%);
+  justify-content: center;
+}
+
+.bottom-left {
+  left: 0;
+  justify-content: flex-start;
+}
+
+/* Action button */
+.action {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border-radius: 8px;
+  border: none;
+  font-family: var(--font-sans);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.action:hover {
+  box-shadow:
+    0 6px 16px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.action:active {
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+/* Action variants */
+.primary {
+  background: linear-gradient(135deg, #E8B82A 0%, #F59E0B 100%);
+  color: #1a1a1a;
+  border: 3px solid #FFFFFF;
+}
+
+.primary:hover {
+  background: linear-gradient(135deg, #F0C43F 0%, #FFAA1D 100%);
+}
+
+.secondary {
+  background: linear-gradient(135deg, #FFFFFF 0%, #F5F0E8 100%);
+  color: #1a1a1a;
+  border: 3px solid #FFFFFF;
+}
+
+.secondary:hover {
+  background: linear-gradient(135deg, #FFFBF5 0%, #FFFFFF 100%);
+}
+
+.danger {
+  background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
+  color: #FFFFFF;
+  border: 3px solid #FFFFFF;
+}
+
+.danger:hover {
+  background: linear-gradient(135deg, #F87171 0%, #EF4444 100%);
+}
+
+/* Icon */
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.125rem;
+  line-height: 1;
+}
+
+/* Label */
+.label {
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .footer {
+    padding: 16px;
+    gap: 12px;
+  }
+
+  .action {
+    padding: 10px 16px;
+    font-size: 0.875rem;
+    gap: 6px;
+  }
+
+  .icon {
+    font-size: 1rem;
+  }
+
+  .bottom-right {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
+
+/* Mobile single-column layout */
+@media (max-width: 480px) {
+  .footer {
+    flex-direction: column;
+    width: 100%;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .action {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .bottom-right,
+  .bottom-center,
+  .bottom-left {
+    left: 0;
+    right: 0;
+    transform: none;
+  }
+}
