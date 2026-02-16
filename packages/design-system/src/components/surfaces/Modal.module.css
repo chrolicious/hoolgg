@@ -106,10 +106,10 @@
 /* Diagonal lines animation */
 @keyframes diagonalLines {
   0% {
-    background-position: 0 0, 20px 20px, 10px 10px;
+    background-position: 0 0, 0 0, 0 0;
   }
   100% {
-    background-position: 200px 200px, 220px 220px, 210px 210px;
+    background-position: 200px 200px, 200px 200px, 200px 200px;
   }
 }
 
