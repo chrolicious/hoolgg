@@ -54,6 +54,39 @@ export const colors = {
     muted: 'rgba(255, 255, 255, 0.12)',
     default: 'rgba(255, 255, 255, 0.2)',
   },
+
+  // WoW Class Colors
+  class: {
+    warrior: '#C79C6E',
+    paladin: '#F58CBA',
+    hunter: '#ABD473',
+    rogue: '#FFF569',
+    priest: '#FFFFFF',
+    mage: '#69CCF0',
+    warlock: '#9482CA',
+    monk: '#00D9FF',
+    demonhunter: '#A335EE',
+  },
+
+  // Item Rarity Colors
+  rarity: {
+    common: '#9CA3AF',
+    uncommon: '#10B981',
+    rare: '#1E8FFF',
+    epic: '#A855F7',
+    legendary: '#FFD700',
+    mythic: '#FF6644',
+  },
+
+  // Additional UI Colors
+  ui: {
+    black: '#000000',
+    white: '#FFFFFF',
+    red: '#EF4444',
+    orange: '#FF8000',
+    yellow: '#FFD700',
+    green: '#00FF96',
+  },
 } as const;
 
 export type Colors = typeof colors;
