@@ -43,6 +43,7 @@
   border-radius: 0;
   box-shadow: 0 0 20px rgba(255, 0, 0, 0.5), inset 0 -2px 8px rgba(255, 255, 255, 0.2);
   overflow: hidden;
+  z-index: 1;
 }
 
 /* Dotted texture overlay on rainbow bar */
@@ -80,9 +81,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 16px;
-  padding-top: 20px;
-  padding-bottom: 12px;
+  gap: 24px;
+  padding-top: 40px;
+  padding-bottom: 40px;
   position: relative;
   z-index: 2;
   transform: rotate(15deg);
