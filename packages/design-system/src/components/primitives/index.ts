@@ -35,7 +35,10 @@ export { Tag } from './Tag';
 export type { TagProps, TagVariant, TagSize } from './Tag';
 
 export { Avatar } from './Avatar';
-export type { AvatarProps, AvatarSize, AvatarStatus } from './Avatar';
+export type { AvatarProps, AvatarSize } from './Avatar';
+
+export { StatusIndicator } from './StatusIndicator';
+export type { StatusIndicatorProps, StatusType } from './StatusIndicator';
 
 export { Tooltip } from './Tooltip';
 export type { TooltipProps, TooltipPosition } from './Tooltip';
