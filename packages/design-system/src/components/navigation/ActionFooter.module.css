@@ -17,20 +17,21 @@
 
 /* Footer container - DARK SECTION WITH RAINBOW BAR */
 .footer {
-  position: relative;
+  position: fixed;
   display: flex;
   flex-direction: column;
   gap: 0;
   padding: 24px 32px 32px 32px;
   z-index: 50;
-  margin-left: auto;
+  bottom: 0;
+  right: 0;
   transform: skewY(3deg) skewX(2deg);
   transform-origin: bottom right;
-  background: linear-gradient(135deg, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.7) 100%);
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.8) 100%);
   border-left: 8px solid #000000;
   border-top: 8px solid #000000;
   box-shadow:
-    -12px 12px 40px rgba(0, 0, 0, 0.8),
+    -12px 12px 40px rgba(0, 0, 0, 0.9),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
   min-width: 300px;
 }
@@ -78,7 +79,7 @@
 
 /* Position variants */
 .bottom-right {
-  margin-left: auto;
+  right: 0;
   justify-content: flex-end;
   flex-direction: row;
   align-items: center;
@@ -86,8 +87,10 @@
 }
 
 .bottom-center {
-  margin-left: auto;
-  margin-right: auto;
+  left: 50%;
+  right: auto;
+  transform: translateX(-50%) skewY(3deg) skewX(2deg);
+  transform-origin: bottom center;
   justify-content: center;
   flex-direction: row;
   align-items: center;
@@ -95,7 +98,8 @@
 }
 
 .bottom-left {
-  margin-right: auto;
+  left: 0;
+  right: auto;
   justify-content: flex-start;
   flex-direction: row;
   align-items: center;
@@ -211,14 +215,15 @@
     width: 100%;
     padding-left: 16px;
     padding-right: 16px;
-    transform: none;
   }
 
   .bottom-right,
   .bottom-center,
   .bottom-left {
-    margin-left: auto;
-    margin-right: auto;
+    left: 0;
+    right: 0;
+    transform: skewY(3deg) skewX(2deg);
+    transform-origin: bottom right;
     justify-content: center;
   }
 }
