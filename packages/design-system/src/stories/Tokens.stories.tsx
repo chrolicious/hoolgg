@@ -99,6 +99,47 @@ function TokenShowcase() {
           <Swatch color={colors.semantic.warning} label="warning" />
         </Section>
 
+        <Section title="Slate">
+          <Swatch color={colors.slate[500]} label="slate-500" />
+          <Swatch color={colors.slate[400]} label="slate-400" />
+        </Section>
+
+        <Section title="Cream &amp; Sticker">
+          <Swatch color={colors.cream} label="cream" />
+          <Swatch color={colors.sticker.border} label="sticker-border" />
+          <Swatch color={colors.sticker.outline} label="sticker-outline" />
+        </Section>
+
+        <Section title="WoW Class Colors">
+          <Swatch color={colors.class.warrior} label="warrior" />
+          <Swatch color={colors.class.paladin} label="paladin" />
+          <Swatch color={colors.class.hunter} label="hunter" />
+          <Swatch color={colors.class.rogue} label="rogue" />
+          <Swatch color={colors.class.priest} label="priest" />
+          <Swatch color={colors.class.mage} label="mage" />
+          <Swatch color={colors.class.warlock} label="warlock" />
+          <Swatch color={colors.class.monk} label="monk" />
+          <Swatch color={colors.class.demonhunter} label="demonhunter" />
+        </Section>
+
+        <Section title="Item Rarity">
+          <Swatch color={colors.rarity.common} label="common" />
+          <Swatch color={colors.rarity.uncommon} label="uncommon" />
+          <Swatch color={colors.rarity.rare} label="rare" />
+          <Swatch color={colors.rarity.epic} label="epic" />
+          <Swatch color={colors.rarity.legendary} label="legendary" />
+          <Swatch color={colors.rarity.mythic} label="mythic" />
+        </Section>
+
+        <Section title="UI Colors">
+          <Swatch color={colors.ui.black} label="black" />
+          <Swatch color={colors.ui.white} label="white" />
+          <Swatch color={colors.ui.red} label="red" />
+          <Swatch color={colors.ui.orange} label="orange" />
+          <Swatch color={colors.ui.yellow} label="yellow" />
+          <Swatch color={colors.ui.green} label="green" />
+        </Section>
+
         <Section title="Borders">
           {Object.entries(borderRadius).map(([key, value]) => (
             <div key={key} style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
