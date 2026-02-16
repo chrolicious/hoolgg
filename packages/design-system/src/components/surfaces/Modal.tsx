@@ -135,19 +135,19 @@ export const Modal = React.forwardRef<HTMLDivElement, ModalProps>(
                             )}
                           </div>
                           {onClose && (
-                            <motion.div
-                              animate={{ rotate: isClosing ? 360 : 0 }}
-                              transition={{
-                                duration: isClosing ? 0.6 : 0,
-                                ease: 'easeInOut',
-                              }}
-                            >
-                              <Button
-                                variant="destructive"
-                                size="sm"
-                                onClick={handleClose}
-                                aria-label="Close modal"
-                                icon={
+                            <Button
+                              variant="destructive"
+                              size="sm"
+                              onClick={handleClose}
+                              aria-label="Close modal"
+                              icon={
+                                <motion.div
+                                  animate={{ rotate: isClosing ? 360 : 0 }}
+                                  transition={{
+                                    duration: isClosing ? 0.6 : 0,
+                                    ease: 'easeInOut',
+                                  }}
+                                >
                                   <svg
                                     width="12"
                                     height="12"
@@ -160,9 +160,9 @@ export const Modal = React.forwardRef<HTMLDivElement, ModalProps>(
                                     <line x1="18" y1="6" x2="6" y2="18" />
                                     <line x1="6" y1="6" x2="18" y2="18" />
                                   </svg>
-                                }
-                              />
-                            </motion.div>
+                                </motion.div>
+                              }
+                            />
                           )}
                         </div>
                       )}
