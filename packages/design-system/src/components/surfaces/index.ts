@@ -11,4 +11,4 @@ export { GuildCard } from './GuildCard';
 export type { GuildCardProps } from './GuildCard';
 
 export { PlayerCard } from './PlayerCard';
-export type { PlayerCardProps, PlayerRole, PlayerClass } from './PlayerCard';
+export type { PlayerCardProps } from './PlayerCard';
