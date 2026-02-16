@@ -5,7 +5,7 @@
 
 .navbarFooter {
   position: fixed;
-  bottom: 0;
+  bottom: 80px;
   left: 0;
   right: 0;
   display: flex;
