@@ -435,6 +435,279 @@
     radial-gradient(1.2px 1.2px at 35% 85%, rgba(255,255,0,0.48) 0.7px, transparent 0.7px);
 }
 
+/* --- WoW Class Variants --- */
+
+/* Death Knight - Red */
+[data-variant="deathknight"] .inside::before {
+  background-image: url("data:image/svg+xml,%3Csvg width='140' height='140' viewBox='0 0 70 70' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M35 5 L43 27 L67 27 L47 42 L55 64 L35 49 L15 64 L23 42 L3 27 L27 27 Z' fill='%238B0A1A'/%3E%3C/svg%3E");
+}
+
+[data-variant="deathknight"] .inside::after {
+  background-image:
+    radial-gradient(1.2px 1.2px at 5% 2%, rgba(196,30,58,1) 0.7px, transparent 0.7px),
+    radial-gradient(1px 1px at 15% 1%, rgba(196,30,58,0.8) 0.4px, transparent 0.4px),
+    radial-gradient(1.3px 1.3px at 25% 3%, rgba(196,30,58,0.9) 0.65px, transparent 0.65px),
+    radial-gradient(1.1px 1.1px at 35% 2%, rgba(196,30,58,0.7) 0.55px, transparent 0.55px),
+    radial-gradient(1.45px 1.45px at 45% 1%, rgba(196,30,58,0.95) 0.7px, transparent 0.7px),
+    radial-gradient(1.05px 1.05px at 55% 4%, rgba(196,30,58,0.75) 0.525px, transparent 0.525px),
+    radial-gradient(1.2px 1.2px at 65% 2%, rgba(196,30,58,1) 0.7px, transparent 0.7px),
+    radial-gradient(1.15px 1.15px at 75% 3%, rgba(196,30,58,0.85) 0.575px, transparent 0.575px),
+    radial-gradient(1.4px 1.4px at 85% 1%, rgba(196,30,58,0.92) 0.675px, transparent 0.675px),
+    radial-gradient(1.1px 1.1px at 92% 4%, rgba(196,30,58,0.78) 0.55px, transparent 0.55px),
+    radial-gradient(1.2px 1.2px at 8% 8%, rgba(196,30,58,0.88) 0.7px, transparent 0.7px),
+    radial-gradient(1.05px 1.05px at 18% 7%, rgba(196,30,58,0.7) 0.525px, transparent 0.525px),
+    radial-gradient(1.3px 1.3px at 28% 10%, rgba(196,30,58,1) 0.65px, transparent 0.65px),
+    radial-gradient(1.1px 1.1px at 38% 6%, rgba(196,30,58,0.82) 0.55px, transparent 0.55px),
+    radial-gradient(1.45px 1.45px at 48% 9%, rgba(196,30,58,0.91) 0.7px, transparent 0.7px),
+    radial-gradient(1px 1px at 58% 12%, rgba(196,30,58,0.72) 0.4px, transparent 0.4px),
+    radial-gradient(1.2px 1.2px at 68% 8%, rgba(196,30,58,0.89) 0.7px, transparent 0.7px),
+    radial-gradient(1.15px 1.15px at 78% 11%, rgba(196,30,58,0.79) 0.575px, transparent 0.575px),
+    radial-gradient(1.4px 1.4px at 88% 7%, rgba(196,30,58,0.94) 0.675px, transparent 0.675px),
+    radial-gradient(1.1px 1.1px at 12% 14%, rgba(196,30,58,0.75) 0.55px, transparent 0.55px),
+    radial-gradient(1.2px 1.2px at 32% 13%, rgba(196,30,58,0.87) 0.7px, transparent 0.7px),
+    radial-gradient(1.05px 1.05px at 52% 15%, rgba(196,30,58,0.68) 0.525px, transparent 0.525px),
+    radial-gradient(1.3px 1.3px at 72% 14%, rgba(196,30,58,0.93) 0.65px, transparent 0.65px),
+    radial-gradient(1.1px 1.1px at 42% 22%, rgba(196,30,58,0.81) 0.55px, transparent 0.55px),
+    radial-gradient(1.45px 1.45px at 62% 18%, rgba(196,30,58,0.97) 0.7px, transparent 0.7px);
+}
+
+/* Demon Hunter - Purple */
+[data-variant="demonhunter"] .inside::before {
+  background-image: url("data:image/svg+xml,%3Csvg width='140' height='140' viewBox='0 0 70 70' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M35 5 L43 27 L67 27 L47 42 L55 64 L35 49 L15 64 L23 42 L3 27 L27 27 Z' fill='%23751E8A'/%3E%3C/svg%3E");
+}
+
+[data-variant="demonhunter"] .inside::after {
+  background-image:
+    radial-gradient(1.2px 1.2px at 5% 2%, rgba(163,48,201,1) 0.7px, transparent 0.7px),
+    radial-gradient(1px 1px at 15% 1%, rgba(163,48,201,0.8) 0.4px, transparent 0.4px),
+    radial-gradient(1.3px 1.3px at 25% 3%, rgba(163,48,201,0.9) 0.65px, transparent 0.65px),
+    radial-gradient(1.1px 1.1px at 35% 2%, rgba(163,48,201,0.7) 0.55px, transparent 0.55px),
+    radial-gradient(1.45px 1.45px at 45% 1%, rgba(163,48,201,0.95) 0.7px, transparent 0.7px),
+    radial-gradient(1.05px 1.05px at 55% 4%, rgba(163,48,201,0.75) 0.525px, transparent 0.525px),
+    radial-gradient(1.2px 1.2px at 65% 2%, rgba(163,48,201,1) 0.7px, transparent 0.7px),
+    radial-gradient(1.15px 1.15px at 75% 3%, rgba(163,48,201,0.85) 0.575px, transparent 0.575px),
+    radial-gradient(1.4px 1.4px at 85% 1%, rgba(163,48,201,0.92) 0.675px, transparent 0.675px),
+    radial-gradient(1.1px 1.1px at 92% 4%, rgba(163,48,201,0.78) 0.55px, transparent 0.55px),
+    radial-gradient(1.2px 1.2px at 8% 8%, rgba(163,48,201,0.88) 0.7px, transparent 0.7px),
+    radial-gradient(1.05px 1.05px at 18% 7%, rgba(163,48,201,0.7) 0.525px, transparent 0.525px),
+    radial-gradient(1.3px 1.3px at 28% 10%, rgba(163,48,201,1) 0.65px, transparent 0.65px),
+    radial-gradient(1.1px 1.1px at 38% 6%, rgba(163,48,201,0.82) 0.55px, transparent 0.55px),
+    radial-gradient(1.45px 1.45px at 48% 9%, rgba(163,48,201,0.91) 0.7px, transparent 0.7px);
+}
+
+/* Druid - Orange */
+[data-variant="druid"] .inside::before {
+  background-image: url("data:image/svg+xml,%3Csvg width='140' height='140' viewBox='0 0 70 70' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M35 5 L43 27 L67 27 L47 42 L55 64 L35 49 L15 64 L23 42 L3 27 L27 27 Z' fill='%23CC5C0A'/%3E%3C/svg%3E");
+}
+
+[data-variant="druid"] .inside::after {
+  background-image:
+    radial-gradient(1.2px 1.2px at 5% 2%, rgba(255,124,10,1) 0.7px, transparent 0.7px),
+    radial-gradient(1px 1px at 15% 1%, rgba(255,124,10,0.8) 0.4px, transparent 0.4px),
+    radial-gradient(1.3px 1.3px at 25% 3%, rgba(255,124,10,0.9) 0.65px, transparent 0.65px),
+    radial-gradient(1.1px 1.1px at 35% 2%, rgba(255,124,10,0.7) 0.55px, transparent 0.55px),
+    radial-gradient(1.45px 1.45px at 45% 1%, rgba(255,124,10,0.95) 0.7px, transparent 0.7px),
+    radial-gradient(1.05px 1.05px at 55% 4%, rgba(255,124,10,0.75) 0.525px, transparent 0.525px),
+    radial-gradient(1.2px 1.2px at 65% 2%, rgba(255,124,10,1) 0.7px, transparent 0.7px),
+    radial-gradient(1.15px 1.15px at 75% 3%, rgba(255,124,10,0.85) 0.575px, transparent 0.575px),
+    radial-gradient(1.4px 1.4px at 85% 1%, rgba(255,124,10,0.92) 0.675px, transparent 0.675px),
+    radial-gradient(1.1px 1.1px at 92% 4%, rgba(255,124,10,0.78) 0.55px, transparent 0.55px),
+    radial-gradient(1.2px 1.2px at 8% 8%, rgba(255,124,10,0.88) 0.7px, transparent 0.7px),
+    radial-gradient(1.05px 1.05px at 18% 7%, rgba(255,124,10,0.7) 0.525px, transparent 0.525px),
+    radial-gradient(1.3px 1.3px at 28% 10%, rgba(255,124,10,1) 0.65px, transparent 0.65px),
+    radial-gradient(1.1px 1.1px at 38% 6%, rgba(255,124,10,0.82) 0.55px, transparent 0.55px);
+}
+
+/* Evoker - Teal */
+[data-variant="evoker"] .inside::before {
+  background-image: url("data:image/svg+xml,%3Csvg width='140' height='140' viewBox='0 0 70 70' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M35 5 L43 27 L67 27 L47 42 L55 64 L35 49 L15 64 L23 42 L3 27 L27 27 Z' fill='%23226657'/%3E%3C/svg%3E");
+}
+
+[data-variant="evoker"] .inside::after {
+  background-image:
+    radial-gradient(1.2px 1.2px at 5% 2%, rgba(51,147,127,1) 0.7px, transparent 0.7px),
+    radial-gradient(1px 1px at 15% 1%, rgba(51,147,127,0.8) 0.4px, transparent 0.4px),
+    radial-gradient(1.3px 1.3px at 25% 3%, rgba(51,147,127,0.9) 0.65px, transparent 0.65px),
+    radial-gradient(1.1px 1.1px at 35% 2%, rgba(51,147,127,0.7) 0.55px, transparent 0.55px),
+    radial-gradient(1.45px 1.45px at 45% 1%, rgba(51,147,127,0.95) 0.7px, transparent 0.7px),
+    radial-gradient(1.05px 1.05px at 55% 4%, rgba(51,147,127,0.75) 0.525px, transparent 0.525px),
+    radial-gradient(1.2px 1.2px at 65% 2%, rgba(51,147,127,1) 0.7px, transparent 0.7px),
+    radial-gradient(1.15px 1.15px at 75% 3%, rgba(51,147,127,0.85) 0.575px, transparent 0.575px),
+    radial-gradient(1.4px 1.4px at 85% 1%, rgba(51,147,127,0.92) 0.675px, transparent 0.675px),
+    radial-gradient(1.1px 1.1px at 92% 4%, rgba(51,147,127,0.78) 0.55px, transparent 0.55px);
+}
+
+/* Hunter - Green */
+[data-variant="hunter"] .inside::before {
+  background-image: url("data:image/svg+xml,%3Csvg width='140' height='140' viewBox='0 0 70 70' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M35 5 L43 27 L67 27 L47 42 L55 64 L35 49 L15 64 L23 42 L3 27 L27 27 Z' fill='%238A9C54'/%3E%3C/svg%3E");
+}
+
+[data-variant="hunter"] .inside::after {
+  background-image:
+    radial-gradient(1.2px 1.2px at 5% 2%, rgba(170,211,114,1) 0.7px, transparent 0.7px),
+    radial-gradient(1px 1px at 15% 1%, rgba(170,211,114,0.8) 0.4px, transparent 0.4px),
+    radial-gradient(1.3px 1.3px at 25% 3%, rgba(170,211,114,0.9) 0.65px, transparent 0.65px),
+    radial-gradient(1.1px 1.1px at 35% 2%, rgba(170,211,114,0.7) 0.55px, transparent 0.55px),
+    radial-gradient(1.45px 1.45px at 45% 1%, rgba(170,211,114,0.95) 0.7px, transparent 0.7px),
+    radial-gradient(1.05px 1.05px at 55% 4%, rgba(170,211,114,0.75) 0.525px, transparent 0.525px),
+    radial-gradient(1.2px 1.2px at 65% 2%, rgba(170,211,114,1) 0.7px, transparent 0.7px),
+    radial-gradient(1.15px 1.15px at 75% 3%, rgba(170,211,114,0.85) 0.575px, transparent 0.575px),
+    radial-gradient(1.4px 1.4px at 85% 1%, rgba(170,211,114,0.92) 0.675px, transparent 0.675px),
+    radial-gradient(1.1px 1.1px at 92% 4%, rgba(170,211,114,0.78) 0.55px, transparent 0.55px);
+}
+
+/* Mage - Cyan */
+[data-variant="mage"] .inside::before {
+  background-image: url("data:image/svg+xml,%3Csvg width='140' height='140' viewBox='0 0 70 70' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M35 5 L43 27 L67 27 L47 42 L55 64 L35 49 L15 64 L23 42 L3 27 L27 27 Z' fill='%23309FBF'/%3E%3C/svg%3E");
+}
+
+[data-variant="mage"] .inside::after {
+  background-image:
+    radial-gradient(1.2px 1.2px at 5% 2%, rgba(63,199,235,1) 0.7px, transparent 0.7px),
+    radial-gradient(1px 1px at 15% 1%, rgba(63,199,235,0.8) 0.4px, transparent 0.4px),
+    radial-gradient(1.3px 1.3px at 25% 3%, rgba(63,199,235,0.9) 0.65px, transparent 0.65px),
+    radial-gradient(1.1px 1.1px at 35% 2%, rgba(63,199,235,0.7) 0.55px, transparent 0.55px),
+    radial-gradient(1.45px 1.45px at 45% 1%, rgba(63,199,235,0.95) 0.7px, transparent 0.7px),
+    radial-gradient(1.05px 1.05px at 55% 4%, rgba(63,199,235,0.75) 0.525px, transparent 0.525px),
+    radial-gradient(1.2px 1.2px at 65% 2%, rgba(63,199,235,1) 0.7px, transparent 0.7px),
+    radial-gradient(1.15px 1.15px at 75% 3%, rgba(63,199,235,0.85) 0.575px, transparent 0.575px),
+    radial-gradient(1.4px 1.4px at 85% 1%, rgba(63,199,235,0.92) 0.675px, transparent 0.675px),
+    radial-gradient(1.1px 1.1px at 92% 4%, rgba(63,199,235,0.78) 0.55px, transparent 0.55px);
+}
+
+/* Monk - Bright Green */
+[data-variant="monk"] .inside::before {
+  background-image: url("data:image/svg+xml,%3Csvg width='140' height='140' viewBox='0 0 70 70' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M35 5 L43 27 L67 27 L47 42 L55 64 L35 49 L15 64 L23 42 L3 27 L27 27 Z' fill='%2300CC77'/%3E%3C/svg%3E");
+}
+
+[data-variant="monk"] .inside::after {
+  background-image:
+    radial-gradient(1.2px 1.2px at 5% 2%, rgba(0,255,152,1) 0.7px, transparent 0.7px),
+    radial-gradient(1px 1px at 15% 1%, rgba(0,255,152,0.8) 0.4px, transparent 0.4px),
+    radial-gradient(1.3px 1.3px at 25% 3%, rgba(0,255,152,0.9) 0.65px, transparent 0.65px),
+    radial-gradient(1.1px 1.1px at 35% 2%, rgba(0,255,152,0.7) 0.55px, transparent 0.55px),
+    radial-gradient(1.45px 1.45px at 45% 1%, rgba(0,255,152,0.95) 0.7px, transparent 0.7px),
+    radial-gradient(1.05px 1.05px at 55% 4%, rgba(0,255,152,0.75) 0.525px, transparent 0.525px),
+    radial-gradient(1.2px 1.2px at 65% 2%, rgba(0,255,152,1) 0.7px, transparent 0.7px),
+    radial-gradient(1.15px 1.15px at 75% 3%, rgba(0,255,152,0.85) 0.575px, transparent 0.575px),
+    radial-gradient(1.4px 1.4px at 85% 1%, rgba(0,255,152,0.92) 0.675px, transparent 0.675px),
+    radial-gradient(1.1px 1.1px at 92% 4%, rgba(0,255,152,0.78) 0.55px, transparent 0.55px);
+}
+
+/* Paladin - Pink */
+[data-variant="paladin"] .inside::before {
+  background-image: url("data:image/svg+xml,%3Csvg width='140' height='140' viewBox='0 0 70 70' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M35 5 L43 27 L67 27 L47 42 L55 64 L35 49 L15 64 L23 42 L3 27 L27 27 Z' fill='%23D26F94'/%3E%3C/svg%3E");
+}
+
+[data-variant="paladin"] .inside::after {
+  background-image:
+    radial-gradient(1.2px 1.2px at 5% 2%, rgba(244,140,186,1) 0.7px, transparent 0.7px),
+    radial-gradient(1px 1px at 15% 1%, rgba(244,140,186,0.8) 0.4px, transparent 0.4px),
+    radial-gradient(1.3px 1.3px at 25% 3%, rgba(244,140,186,0.9) 0.65px, transparent 0.65px),
+    radial-gradient(1.1px 1.1px at 35% 2%, rgba(244,140,186,0.7) 0.55px, transparent 0.55px),
+    radial-gradient(1.45px 1.45px at 45% 1%, rgba(244,140,186,0.95) 0.7px, transparent 0.7px),
+    radial-gradient(1.05px 1.05px at 55% 4%, rgba(244,140,186,0.75) 0.525px, transparent 0.525px),
+    radial-gradient(1.2px 1.2px at 65% 2%, rgba(244,140,186,1) 0.7px, transparent 0.7px),
+    radial-gradient(1.15px 1.15px at 75% 3%, rgba(244,140,186,0.85) 0.575px, transparent 0.575px),
+    radial-gradient(1.4px 1.4px at 85% 1%, rgba(244,140,186,0.92) 0.675px, transparent 0.675px),
+    radial-gradient(1.1px 1.1px at 92% 4%, rgba(244,140,186,0.78) 0.55px, transparent 0.55px);
+}
+
+/* Priest - White */
+[data-variant="priest"] .inside::before {
+  background-image: url("data:image/svg+xml,%3Csvg width='140' height='140' viewBox='0 0 70 70' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M35 5 L43 27 L67 27 L47 42 L55 64 L35 49 L15 64 L23 42 L3 27 L27 27 Z' fill='%23D0D0D0'/%3E%3C/svg%3E");
+}
+
+[data-variant="priest"] .inside::after {
+  background-image:
+    radial-gradient(1.2px 1.2px at 5% 2%, rgba(240,240,240,1) 0.7px, transparent 0.7px),
+    radial-gradient(1px 1px at 15% 1%, rgba(240,240,240,0.8) 0.4px, transparent 0.4px),
+    radial-gradient(1.3px 1.3px at 25% 3%, rgba(240,240,240,0.9) 0.65px, transparent 0.65px),
+    radial-gradient(1.1px 1.1px at 35% 2%, rgba(240,240,240,0.7) 0.55px, transparent 0.55px),
+    radial-gradient(1.45px 1.45px at 45% 1%, rgba(240,240,240,0.95) 0.7px, transparent 0.7px),
+    radial-gradient(1.05px 1.05px at 55% 4%, rgba(240,240,240,0.75) 0.525px, transparent 0.525px),
+    radial-gradient(1.2px 1.2px at 65% 2%, rgba(240,240,240,1) 0.7px, transparent 0.7px),
+    radial-gradient(1.15px 1.15px at 75% 3%, rgba(240,240,240,0.85) 0.575px, transparent 0.575px),
+    radial-gradient(1.4px 1.4px at 85% 1%, rgba(240,240,240,0.92) 0.675px, transparent 0.675px),
+    radial-gradient(1.1px 1.1px at 92% 4%, rgba(240,240,240,0.78) 0.55px, transparent 0.55px);
+}
+
+/* Rogue - Yellow */
+[data-variant="rogue"] .inside::before {
+  background-image: url("data:image/svg+xml,%3Csvg width='140' height='140' viewBox='0 0 70 70' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M35 5 L43 27 L67 27 L47 42 L55 64 L35 49 L15 64 L23 42 L3 27 L27 27 Z' fill='%23D4B836'/%3E%3C/svg%3E");
+}
+
+[data-variant="rogue"] .inside::after {
+  background-image:
+    radial-gradient(1.2px 1.2px at 5% 2%, rgba(255,244,104,1) 0.7px, transparent 0.7px),
+    radial-gradient(1px 1px at 15% 1%, rgba(255,244,104,0.8) 0.4px, transparent 0.4px),
+    radial-gradient(1.3px 1.3px at 25% 3%, rgba(255,244,104,0.9) 0.65px, transparent 0.65px),
+    radial-gradient(1.1px 1.1px at 35% 2%, rgba(255,244,104,0.7) 0.55px, transparent 0.55px),
+    radial-gradient(1.45px 1.45px at 45% 1%, rgba(255,244,104,0.95) 0.7px, transparent 0.7px),
+    radial-gradient(1.05px 1.05px at 55% 4%, rgba(255,244,104,0.75) 0.525px, transparent 0.525px),
+    radial-gradient(1.2px 1.2px at 65% 2%, rgba(255,244,104,1) 0.7px, transparent 0.7px),
+    radial-gradient(1.15px 1.15px at 75% 3%, rgba(255,244,104,0.85) 0.575px, transparent 0.575px),
+    radial-gradient(1.4px 1.4px at 85% 1%, rgba(255,244,104,0.92) 0.675px, transparent 0.675px),
+    radial-gradient(1.1px 1.1px at 92% 4%, rgba(255,244,104,0.78) 0.55px, transparent 0.55px);
+}
+
+/* Shaman - Blue */
+[data-variant="shaman"] .inside::before {
+  background-image: url("data:image/svg+xml,%3Csvg width='140' height='140' viewBox='0 0 70 70' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M35 5 L43 27 L67 27 L47 42 L55 64 L35 49 L15 64 L23 42 L3 27 L27 27 Z' fill='%23005ABE'/%3E%3C/svg%3E");
+}
+
+[data-variant="shaman"] .inside::after {
+  background-image:
+    radial-gradient(1.2px 1.2px at 5% 2%, rgba(0,112,221,1) 0.7px, transparent 0.7px),
+    radial-gradient(1px 1px at 15% 1%, rgba(0,112,221,0.8) 0.4px, transparent 0.4px),
+    radial-gradient(1.3px 1.3px at 25% 3%, rgba(0,112,221,0.9) 0.65px, transparent 0.65px),
+    radial-gradient(1.1px 1.1px at 35% 2%, rgba(0,112,221,0.7) 0.55px, transparent 0.55px),
+    radial-gradient(1.45px 1.45px at 45% 1%, rgba(0,112,221,0.95) 0.7px, transparent 0.7px),
+    radial-gradient(1.05px 1.05px at 55% 4%, rgba(0,112,221,0.75) 0.525px, transparent 0.525px),
+    radial-gradient(1.2px 1.2px at 65% 2%, rgba(0,112,221,1) 0.7px, transparent 0.7px),
+    radial-gradient(1.15px 1.15px at 75% 3%, rgba(0,112,221,0.85) 0.575px, transparent 0.575px),
+    radial-gradient(1.4px 1.4px at 85% 1%, rgba(0,112,221,0.92) 0.675px, transparent 0.675px),
+    radial-gradient(1.1px 1.1px at 92% 4%, rgba(0,112,221,0.78) 0.55px, transparent 0.55px);
+}
+
+/* Warlock - Purple */
+[data-variant="warlock"] .inside::before {
+  background-image: url("data:image/svg+xml,%3Csvg width='140' height='140' viewBox='0 0 70 70' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M35 5 L43 27 L67 27 L47 42 L55 64 L35 49 L15 64 L23 42 L3 27 L27 27 Z' fill='%236B6AB0'/%3E%3C/svg%3E");
+}
+
+[data-variant="warlock"] .inside::after {
+  background-image:
+    radial-gradient(1.2px 1.2px at 5% 2%, rgba(135,136,238,1) 0.7px, transparent 0.7px),
+    radial-gradient(1px 1px at 15% 1%, rgba(135,136,238,0.8) 0.4px, transparent 0.4px),
+    radial-gradient(1.3px 1.3px at 25% 3%, rgba(135,136,238,0.9) 0.65px, transparent 0.65px),
+    radial-gradient(1.1px 1.1px at 35% 2%, rgba(135,136,238,0.7) 0.55px, transparent 0.55px),
+    radial-gradient(1.45px 1.45px at 45% 1%, rgba(135,136,238,0.95) 0.7px, transparent 0.7px),
+    radial-gradient(1.05px 1.05px at 55% 4%, rgba(135,136,238,0.75) 0.525px, transparent 0.525px),
+    radial-gradient(1.2px 1.2px at 65% 2%, rgba(135,136,238,1) 0.7px, transparent 0.7px),
+    radial-gradient(1.15px 1.15px at 75% 3%, rgba(135,136,238,0.85) 0.575px, transparent 0.575px),
+    radial-gradient(1.4px 1.4px at 85% 1%, rgba(135,136,238,0.92) 0.675px, transparent 0.675px),
+    radial-gradient(1.1px 1.1px at 92% 4%, rgba(135,136,238,0.78) 0.55px, transparent 0.55px);
+}
+
+/* Warrior - Tan */
+[data-variant="warrior"] .inside::before {
+  background-image: url("data:image/svg+xml,%3Csvg width='140' height='140' viewBox='0 0 70 70' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M35 5 L43 27 L67 27 L47 42 L55 64 L35 49 L15 64 L23 42 L3 27 L27 27 Z' fill='%23A67C52'/%3E%3C/svg%3E");
+}
+
+[data-variant="warrior"] .inside::after {
+  background-image:
+    radial-gradient(1.2px 1.2px at 5% 2%, rgba(198,155,109,1) 0.7px, transparent 0.7px),
+    radial-gradient(1px 1px at 15% 1%, rgba(198,155,109,0.8) 0.4px, transparent 0.4px),
+    radial-gradient(1.3px 1.3px at 25% 3%, rgba(198,155,109,0.9) 0.65px, transparent 0.65px),
+    radial-gradient(1.1px 1.1px at 35% 2%, rgba(198,155,109,0.7) 0.55px, transparent 0.55px),
+    radial-gradient(1.45px 1.45px at 45% 1%, rgba(198,155,109,0.95) 0.7px, transparent 0.7px),
+    radial-gradient(1.05px 1.05px at 55% 4%, rgba(198,155,109,0.75) 0.525px, transparent 0.525px),
+    radial-gradient(1.2px 1.2px at 65% 2%, rgba(198,155,109,1) 0.7px, transparent 0.7px),
+    radial-gradient(1.15px 1.15px at 75% 3%, rgba(198,155,109,0.85) 0.575px, transparent 0.575px),
+    radial-gradient(1.4px 1.4px at 85% 1%, rgba(198,155,109,0.92) 0.675px, transparent 0.675px),
+    radial-gradient(1.1px 1.1px at 92% 4%, rgba(198,155,109,0.78) 0.55px, transparent 0.55px);
+}
+
 /* --- Profile icon section --- */
 
 .profileIcon {
