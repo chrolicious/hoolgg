@@ -83,6 +83,8 @@
 .simple .container {
   border-radius: 9999px;
   border: 1px solid rgba(0, 0, 0, 0.1);
+  background: rgba(217, 215, 209, 0.85);
+  backdrop-filter: none;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
@@ -238,19 +240,21 @@
 
 /* Layer 3: Inside fill */
 .hero .inside {
+  --b1: calc((var(--bevel) + var(--bw)) - var(--bw) * 0.4142);
+  --b2: calc(var(--b1) + var(--bw));
+  --b3: calc(var(--b2) + var(--bw));
   position: relative;
   display: flex;
   background-color: #FFFFFF;
   clip-path: polygon(
-    0 0, /* top-left: 90° corner */
-    calc(100% - var(--bevel)) 0,
-    100% var(--bevel),
-    100% 100%, /* bottom-right: 90° corner */
-    var(--bevel) 100%,
-    0 calc(100% - var(--bevel)),
-    0 0 /* close path at top-left */
+    var(--bw) var(--bw), /* top-left: inset at rest */
+    calc(100% - var(--b2)) var(--bw),
+    100% var(--b3),
+    100% 100%, /* bottom-right: stays full extent */
+    var(--b3) 100%,
+    var(--bw) calc(100% - var(--b2))
   );
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), clip-path 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Hover lift: translate up-left to reveal shadow */
