@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { StatusIndicator } from './StatusIndicator';
 import { Avatar } from './Avatar';
+import { StatusIndicator } from './StatusIndicator';
 
-const meta: Meta<typeof StatusIndicator> = {
-  title: 'Primitives/StatusIndicator',
-  component: StatusIndicator,
+const meta: Meta<typeof Avatar> = {
+  title: 'Primitives/Avatar',
+  component: Avatar,
   parameters: {
     layout: 'centered',
   },
@@ -14,38 +14,54 @@ const meta: Meta<typeof StatusIndicator> = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Online: Story = {
+export const Small: Story = {
   args: {
-    status: 'online',
-    title: 'Online',
+    fallback: 'JD',
+    size: 'sm',
   },
 };
 
-export const Away: Story = {
+export const Medium: Story = {
   args: {
-    status: 'away',
-    title: 'Away',
+    fallback: 'JD',
+    size: 'md',
   },
 };
 
-export const Offline: Story = {
+export const Large: Story = {
   args: {
-    status: 'offline',
-    title: 'Offline',
+    fallback: 'JD',
+    size: 'lg',
   },
 };
 
-export const Group: Story = {
+export const ExtraLarge: Story = {
+  args: {
+    fallback: 'JD',
+    size: 'xl',
+  },
+};
+
+export const AllSizes: Story = {
   render: () => (
-    <div style={{ display: 'flex', gap: '16px' }}>
-      <StatusIndicator status="online" title="Online" />
-      <StatusIndicator status="away" title="Away" />
-      <StatusIndicator status="offline" title="Offline" />
+    <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
+      <Avatar fallback="JD" size="sm" />
+      <Avatar fallback="JD" size="md" />
+      <Avatar fallback="JD" size="lg" />
+      <Avatar fallback="JD" size="xl" />
     </div>
   ),
 };
 
-export const WithAvatarOnline: Story = {
+export const WithImageUrl: Story = {
+  args: {
+    src: 'https://api.dicebear.com/7.x/avataaars/svg?seed=John',
+    alt: 'John Doe',
+    size: 'lg',
+  },
+};
+
+export const WithStatusOnline: Story = {
   render: () => (
     <div style={{ position: 'relative', display: 'inline-block' }}>
       <Avatar fallback="JD" size="lg" />
@@ -63,7 +79,7 @@ export const WithAvatarOnline: Story = {
   ),
 };
 
-export const WithAvatarAway: Story = {
+export const WithStatusAway: Story = {
   render: () => (
     <div style={{ position: 'relative', display: 'inline-block' }}>
       <Avatar fallback="JD" size="lg" />
@@ -81,7 +97,7 @@ export const WithAvatarAway: Story = {
   ),
 };
 
-export const WithAvatarOffline: Story = {
+export const WithStatusOffline: Story = {
   render: () => (
     <div style={{ position: 'relative', display: 'inline-block' }}>
       <Avatar fallback="JD" size="lg" />
@@ -99,7 +115,7 @@ export const WithAvatarOffline: Story = {
   ),
 };
 
-export const AvatarGroup: Story = {
+export const StatusGroup: Story = {
   render: () => (
     <div style={{ display: 'flex', gap: '24px' }}>
       <div style={{ position: 'relative', display: 'inline-block' }}>
