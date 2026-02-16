@@ -47,7 +47,10 @@
       "Bash(git checkout:*)",
       "Bash(pnpm build:*)",
       "Bash(xargs:*)",
-      "Bash(comm:*)"
+      "Bash(comm:*)",
+      "Bash(npx stylelint:*)",
+      "Bash(grep:*)",
+      "Bash(pnpm run typecheck:*)"
     ]
   }
 }
