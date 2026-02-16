@@ -1,0 +1,110 @@
+/* ==========================================================================
+   Tooltip — Glassmorphism design with frosted glass effect
+   ========================================================================== */
+
+@keyframes floatParticles {
+  0% {
+    transform: translateY(0) translateX(0);
+  }
+  25% {
+    transform: translateY(-8px) translateX(5px);
+  }
+  50% {
+    transform: translateY(-15px) translateX(-3px);
+  }
+  75% {
+    transform: translateY(-8px) translateX(8px);
+  }
+  100% {
+    transform: translateY(0) translateX(0);
+  }
+}
+
+.tooltipWrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip {
+  position: absolute;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 120px;
+  max-width: 280px;
+  padding: 12px 16px;
+  white-space: normal;
+  word-wrap: break-word;
+  pointer-events: auto;
+  color: #ffffff;
+  font-size: 0.75rem;
+  font-weight: 500;
+  font-style: italic;
+  font-family: 'Inter', system-ui, sans-serif;
+  text-align: center;
+  line-height: 1.4;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+
+  /* Glassmorphism */
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-right-color: rgba(255, 255, 255, 0.1);
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.tooltip::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    /* Distributed white particles - larger and more translucent */
+    radial-gradient(2px 2px at 10% 15%, rgba(255, 255, 255, 0.4) 1px, transparent 1px),
+    radial-gradient(2.2px 2.2px at 25% 8%, rgba(255, 255, 255, 0.35) 1.1px, transparent 1.1px),
+    radial-gradient(1.8px 1.8px at 42% 22%, rgba(255, 255, 255, 0.45) 0.9px, transparent 0.9px),
+    radial-gradient(2.1px 2.1px at 58% 12%, rgba(255, 255, 255, 0.3) 1.05px, transparent 1.05px),
+    radial-gradient(2.3px 2.3px at 72% 28%, rgba(255, 255, 255, 0.42) 1.15px, transparent 1.15px),
+    radial-gradient(2px 2px at 15% 45%, rgba(255, 255, 255, 0.25) 1px, transparent 1px),
+    radial-gradient(2.2px 2.2px at 48% 52%, rgba(255, 255, 255, 0.38) 1.1px, transparent 1.1px),
+    radial-gradient(2.1px 2.1px at 65% 38%, rgba(255, 255, 255, 0.32) 1.05px, transparent 1.05px),
+    radial-gradient(2px 2px at 32% 68%, rgba(255, 255, 255, 0.28) 1px, transparent 1px),
+    radial-gradient(2.2px 2.2px at 78% 62%, rgba(255, 255, 255, 0.4) 1.1px, transparent 1.1px);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  animation: floatParticles 6s ease-in-out infinite;
+  pointer-events: none;
+  border-radius: 8px;
+}
+
+/* Position: Top */
+.top {
+  bottom: calc(100% + 12px);
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* Position: Bottom */
+.bottom {
+  top: calc(100% + 12px);
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* Position: Left */
+.left {
+  right: calc(100% + 12px);
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* Position: Right */
+.right {
+  left: calc(100% + 4px);
+  top: 50%;
+  transform: translateY(-50%);
+}
+
