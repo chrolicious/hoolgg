@@ -53,15 +53,32 @@
   inset: 0;
   border-radius: 6px;
   background-image:
-    radial-gradient(circle at 20% 50%, rgba(168, 85, 247, 0.25) 2px, transparent 2px),
-    radial-gradient(circle at 60% 70%, rgba(212, 160, 23, 0.25) 2px, transparent 2px),
-    radial-gradient(circle at 80% 10%, rgba(248, 113, 113, 0.25) 2px, transparent 2px);
-  background-size: 150px 150px, 200px 200px, 180px 180px;
-  background-position: 0 0, 40px 60px, 130px 270px;
-  animation: textureShift 45s ease-in-out infinite;
+    repeating-linear-gradient(
+      45deg,
+      rgba(168, 85, 247, 0.08) 0px,
+      rgba(168, 85, 247, 0.08) 2px,
+      transparent 2px,
+      transparent 30px
+    ),
+    repeating-linear-gradient(
+      45deg,
+      rgba(212, 160, 23, 0.08) 15px,
+      rgba(212, 160, 23, 0.08) 17px,
+      transparent 17px,
+      transparent 45px
+    ),
+    repeating-linear-gradient(
+      45deg,
+      rgba(248, 113, 113, 0.08) 8px,
+      rgba(248, 113, 113, 0.08) 10px,
+      transparent 10px,
+      transparent 38px
+    );
+  background-size: 200px 200px, 200px 200px, 200px 200px;
+  background-position: 0 0, 20px 20px, 10px 10px;
+  animation: diagonalLines 20s linear infinite;
   pointer-events: none;
   z-index: 10;
-  mix-blend-mode: screen;
 }
 
 @keyframes textureShift {
@@ -83,6 +100,16 @@
   }
   100% {
     background-position: 0% 0%;
+  }
+}
+
+/* Diagonal lines animation */
+@keyframes diagonalLines {
+  0% {
+    background-position: 0 0, 20px 20px, 10px 10px;
+  }
+  100% {
+    background-position: 200px 200px, 220px 220px, 210px 210px;
   }
 }
 
