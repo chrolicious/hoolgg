@@ -240,7 +240,7 @@
 .hero .inside {
   position: relative;
   display: flex;
-  background-color: rgba(217, 215, 209, 0.85);
+  background-color: #FFFFFF;
   clip-path: polygon(
     0 0, /* top-left: 90° corner */
     calc(100% - var(--bevel)) 0,
