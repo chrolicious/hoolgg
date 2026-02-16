@@ -50,17 +50,18 @@
 .modal::before {
   content: '';
   position: absolute;
-  inset: 2px;
-  border-radius: 4px;
+  inset: 0;
+  border-radius: 6px;
   background-image:
-    radial-gradient(circle at 20% 50%, rgba(168, 85, 247, 0.12) 1.5px, transparent 1.5px),
-    radial-gradient(circle at 60% 70%, rgba(212, 160, 23, 0.12) 1.5px, transparent 1.5px),
-    radial-gradient(circle at 80% 10%, rgba(248, 113, 113, 0.12) 1.5px, transparent 1.5px);
+    radial-gradient(circle at 20% 50%, rgba(168, 85, 247, 0.25) 2px, transparent 2px),
+    radial-gradient(circle at 60% 70%, rgba(212, 160, 23, 0.25) 2px, transparent 2px),
+    radial-gradient(circle at 80% 10%, rgba(248, 113, 113, 0.25) 2px, transparent 2px);
   background-size: 150px 150px, 200px 200px, 180px 180px;
   background-position: 0 0, 40px 60px, 130px 270px;
   animation: textureShift 45s ease-in-out infinite;
   pointer-events: none;
-  z-index: 1;
+  z-index: 10;
+  mix-blend-mode: screen;
 }
 
 @keyframes textureShift {
@@ -158,6 +159,7 @@
 /* Body section */
 .body {
   flex: 1;
+  background-color: #4B5563;
 }
 
 /* Footer section */
