@@ -111,15 +111,18 @@ function TokenShowcase() {
         </Section>
 
         <Section title="WoW Class Colors">
-          <Swatch color={colors.class.warrior} label="warrior" />
-          <Swatch color={colors.class.paladin} label="paladin" />
-          <Swatch color={colors.class.hunter} label="hunter" />
-          <Swatch color={colors.class.rogue} label="rogue" />
-          <Swatch color={colors.class.priest} label="priest" />
-          <Swatch color={colors.class.mage} label="mage" />
-          <Swatch color={colors.class.warlock} label="warlock" />
-          <Swatch color={colors.class.monk} label="monk" />
+          <Swatch color={colors.class.deathknight} label="deathknight" />
           <Swatch color={colors.class.demonhunter} label="demonhunter" />
+          <Swatch color={colors.class.druid} label="druid" />
+          <Swatch color={colors.class.hunter} label="hunter" />
+          <Swatch color={colors.class.mage} label="mage" />
+          <Swatch color={colors.class.monk} label="monk" />
+          <Swatch color={colors.class.paladin} label="paladin" />
+          <Swatch color={colors.class.priest} label="priest" />
+          <Swatch color={colors.class.rogue} label="rogue" />
+          <Swatch color={colors.class.shaman} label="shaman" />
+          <Swatch color={colors.class.warlock} label="warlock" />
+          <Swatch color={colors.class.warrior} label="warrior" />
         </Section>
 
         <Section title="Item Rarity">

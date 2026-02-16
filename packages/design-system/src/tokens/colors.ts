@@ -57,15 +57,18 @@ export const colors = {
 
   // WoW Class Colors
   class: {
-    warrior: '#C79C6E',
-    paladin: '#F58CBA',
+    deathknight: '#C41F3B',
+    demonhunter: '#A330C9',
+    druid: '#FF7D0A',
     hunter: '#ABD473',
-    rogue: '#FFF569',
-    priest: '#FFFFFF',
     mage: '#69CCF0',
-    warlock: '#9482CA',
-    monk: '#00D9FF',
-    demonhunter: '#A335EE',
+    monk: '#00FF96',
+    paladin: '#F58CBA',
+    priest: '#FFFFFF',
+    rogue: '#FFF569',
+    shaman: '#0070DE',
+    warlock: '#9482C9',
+    warrior: '#C79C6E',
   },
 
   // Item Rarity Colors

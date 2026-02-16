@@ -59,15 +59,18 @@
   --hool-sticker-outline: #FFFFFF;
 
   /* WoW Class Colors */
-  --hool-class-warrior: #C79C6E;
-  --hool-class-paladin: #F58CBA;
+  --hool-class-deathknight: #C41F3B;
+  --hool-class-demonhunter: #A330C9;
+  --hool-class-druid: #FF7D0A;
   --hool-class-hunter: #ABD473;
-  --hool-class-rogue: #FFF569;
-  --hool-class-priest: #FFFFFF;
   --hool-class-mage: #69CCF0;
-  --hool-class-warlock: #9482CA;
-  --hool-class-monk: #00D9FF;
-  --hool-class-demonhunter: #A335EE;
+  --hool-class-monk: #00FF96;
+  --hool-class-paladin: #F58CBA;
+  --hool-class-priest: #FFFFFF;
+  --hool-class-rogue: #FFF569;
+  --hool-class-shaman: #0070DE;
+  --hool-class-warlock: #9482C9;
+  --hool-class-warrior: #C79C6E;
 
   /* Item Rarity Colors */
   --hool-rarity-common: #9CA3AF;
