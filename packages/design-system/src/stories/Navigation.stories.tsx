@@ -217,13 +217,6 @@ export const Complete: StoryObj<typeof ScreenLayout> = {
         opacity: 0.15,
         animated: true,
       }}
-      actions={{
-        position: 'bottom-right',
-        actions: [
-          { key: 'back', label: 'Back', variant: 'secondary' },
-          { key: 'next', label: 'Next', variant: 'primary' },
-        ],
-      }}
     >
       <div
         style={{
@@ -250,14 +243,6 @@ export const CharacterSelection: StoryObj<typeof ScreenLayout> = {
       texture={{
         pattern: 'checkerboard',
         opacity: 0.15,
-      }}
-      actions={{
-        position: 'bottom-right',
-        showDarkOverlay: true,
-        actions: [
-          { key: 'back', label: 'Back', icon: '←' },
-          { key: 'select', label: 'Select', icon: '✓', variant: 'primary' },
-        ],
       }}
     >
       <div
@@ -290,12 +275,6 @@ export const RosterView: StoryObj<typeof ScreenLayout> = {
       texture={{
         pattern: 'grid',
         opacity: 0.1,
-      }}
-      actions={{
-        position: 'bottom-right',
-        actions: [
-          { key: 'back', label: 'Back', variant: 'secondary' },
-        ],
       }}
     >
       <div style={{ color: '#fff', textAlign: 'center' }}>

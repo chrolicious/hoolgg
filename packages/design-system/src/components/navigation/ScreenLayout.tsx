@@ -3,20 +3,18 @@
 import React from 'react';
 import { Navbar, type NavbarProps } from './Navbar';
 import { TextureOverlay, type TextureOverlayProps } from './TextureOverlay';
-import { ActionFooter, type ActionFooterProps } from './ActionFooter';
 import styles from './ScreenLayout.module.css';
 
 export interface ScreenLayoutProps {
   navbar?: NavbarProps;
   texture?: TextureOverlayProps;
-  actions?: ActionFooterProps;
   children?: React.ReactNode;
   className?: string;
 }
 
 /**
- * ScreenLayout — Complete screen layout with navbar, texture, and actions
- * Combines all navigation components for Mario Wonder-style screens
+ * ScreenLayout — Complete screen layout with navbar and texture
+ * Combines navigation components for Mario Wonder-style screens
  *
  * Usage:
  * <ScreenLayout
@@ -26,23 +24,15 @@ export interface ScreenLayoutProps {
  *     subtitle: "Browse guilds",
  *   }}
  *   texture={{ pattern: 'checkerboard', opacity: 0.15 }}
- *   actions={{
- *     position: 'bottom-right',
- *     actions: [
- *       { key: 'back', label: 'Back', variant: 'secondary' },
- *       { key: 'next', label: 'Next', variant: 'primary' },
- *     ],
- *   }}
  * >
  *   Page content
- * {/ScreenLayout}
+ * </ScreenLayout>
  */
 export const ScreenLayout = React.forwardRef<HTMLDivElement, ScreenLayoutProps>(
   (
     {
       navbar,
       texture,
-      actions,
       children,
       className,
     },
@@ -63,9 +53,6 @@ export const ScreenLayout = React.forwardRef<HTMLDivElement, ScreenLayoutProps>(
         <main className={styles.main}>
           {children}
         </main>
-
-        {/* Action footer */}
-        {actions && <ActionFooter {...actions} />}
       </div>
     );
   },
