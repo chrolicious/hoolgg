@@ -35,9 +35,22 @@
     #ff0000 100%
   );
   background-size: 200% 100%;
-  animation: rainbowFlow 3s linear infinite;
+  animation: rainbowFlow 8s linear infinite;
   border-radius: 0;
   box-shadow: 0 0 20px rgba(255, 0, 0, 0.5), inset 0 2px 8px rgba(255, 255, 255, 0.2);
+  overflow: hidden;
+}
+
+/* Dotted texture overlay on rainbow bar */
+.accentBar::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.3) 1px, transparent 1px);
+  background-size: 6px 6px;
+  background-position: 0 0;
+  pointer-events: none;
+  animation: dotScroll 8s linear infinite;
 }
 
 @keyframes rainbowFlow {
@@ -46,6 +59,15 @@
   }
   100% {
     background-position: 200% 0%;
+  }
+}
+
+@keyframes dotScroll {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 12px 0;
   }
 }
 
