@@ -1,4 +1,4 @@
-/* Online status with shine effect */
+/* Online status with subtle glow animation */
 .online {
   animation: onlineShine 2s ease-in-out infinite;
 }
@@ -6,16 +6,12 @@
 @keyframes onlineShine {
   0%, 100% {
     box-shadow:
-      0 2px 8px rgba(0, 0, 0, 0.3),
-      0 0 0 2px var(--btn-outline-color, #FFFFFF),
-      inset 1px 1px 0 rgba(255, 255, 255, 0.6),
-      0 0 8px rgba(16, 185, 129, 0.4);
+      0 0 4px rgba(16, 185, 129, 0.4),
+      0 0 0 2px #FFFFFF;
   }
   50% {
     box-shadow:
-      0 2px 8px rgba(0, 0, 0, 0.3),
-      0 0 0 2px var(--btn-outline-color, #FFFFFF),
-      inset 1px 1px 0 rgba(255, 255, 255, 0.6),
-      0 0 16px rgba(16, 185, 129, 0.8);
+      0 0 8px rgba(16, 185, 129, 0.8),
+      0 0 0 2px #FFFFFF;
   }
 }

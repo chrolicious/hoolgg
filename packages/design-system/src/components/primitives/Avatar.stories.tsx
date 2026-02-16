@@ -68,8 +68,8 @@ export const WithStatusOnline: Story = {
       <div
         style={{
           position: 'absolute',
-          bottom: '-8px',
-          right: '-8px',
+          bottom: '-4px',
+          right: '-4px',
           zIndex: 10,
         }}
       >
@@ -86,8 +86,8 @@ export const WithStatusAway: Story = {
       <div
         style={{
           position: 'absolute',
-          bottom: '-8px',
-          right: '-8px',
+          bottom: '-4px',
+          right: '-4px',
           zIndex: 10,
         }}
       >
@@ -104,8 +104,8 @@ export const WithStatusOffline: Story = {
       <div
         style={{
           position: 'absolute',
-          bottom: '-8px',
-          right: '-8px',
+          bottom: '-4px',
+          right: '-4px',
           zIndex: 10,
         }}
       >
@@ -120,19 +120,19 @@ export const StatusGroup: Story = {
     <div style={{ display: 'flex', gap: '24px' }}>
       <div style={{ position: 'relative', display: 'inline-block' }}>
         <Avatar fallback="JD" size="lg" />
-        <div style={{ position: 'absolute', bottom: '-8px', right: '-8px', zIndex: 10 }}>
+        <div style={{ position: 'absolute', bottom: '-4px', right: '-4px', zIndex: 10 }}>
           <StatusIndicator status="online" title="Online" />
         </div>
       </div>
       <div style={{ position: 'relative', display: 'inline-block' }}>
         <Avatar fallback="AB" size="lg" />
-        <div style={{ position: 'absolute', bottom: '-8px', right: '-8px', zIndex: 10 }}>
+        <div style={{ position: 'absolute', bottom: '-4px', right: '-4px', zIndex: 10 }}>
           <StatusIndicator status="away" title="Away" />
         </div>
       </div>
       <div style={{ position: 'relative', display: 'inline-block' }}>
         <Avatar fallback="XY" size="lg" />
-        <div style={{ position: 'absolute', bottom: '-8px', right: '-8px', zIndex: 10 }}>
+        <div style={{ position: 'absolute', bottom: '-4px', right: '-4px', zIndex: 10 }}>
           <StatusIndicator status="offline" title="Offline" />
         </div>
       </div>

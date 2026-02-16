@@ -1,7 +1,6 @@
 'use client';
 
-import React, { useEffect } from 'react';
-import { Button } from './Button';
+import React from 'react';
 import styles from './StatusIndicator.module.css';
 
 export type StatusType = 'online' | 'away' | 'offline';
@@ -9,76 +8,69 @@ export type StatusType = 'online' | 'away' | 'offline';
 export interface StatusIndicatorProps {
   /** Status type */
   status: StatusType;
-  /** Optional icon to display inside the circle */
-  icon?: React.ReactNode;
   /** Click handler */
   onClick?: () => void;
   /** Tooltip title (via title attribute) */
   title?: string;
 }
 
-const statusColorMap: Record<StatusType, { bg: string; color: string; border: string; hover: string }> = {
+const statusColorMap: Record<StatusType, { bg: string; hover: string }> = {
   online: {
-    bg: '#10B981',      // Green (uncommon rarity)
-    color: '#FFFFFF',
-    border: '#1d2119',
+    bg: '#10B981',      // Green
     hover: '#059669',
   },
   away: {
     bg: '#FF8000',      // Orange
-    color: '#FFFFFF',
-    border: '#1d2119',
     hover: '#E67E00',
   },
   offline: {
     bg: '#6B7280',      // Gray
-    color: '#FFFFFF',
-    border: '#1d2119',
     hover: '#4B5563',
   },
 };
 
 /**
- * StatusIndicator — Small circle button for showing user status
+ * StatusIndicator — Small circle dot for showing user status
  *
  * Usage:
  * <StatusIndicator status="online" />
- * <StatusIndicator status="away" icon={<AwayIcon />} />
+ * <StatusIndicator status="away" />
  * <StatusIndicator status="offline" title="Offline" />
  *
  * With Avatar:
  * <div style={{ position: 'relative', display: 'inline-block' }}>
  *   <Avatar fallback="JD" size="lg" />
- *   <div style={{ position: 'absolute', bottom: '-8px', right: '-8px', zIndex: 10 }}>
+ *   <div style={{ position: 'absolute', bottom: '-4px', right: '-4px', zIndex: 10 }}>
  *     <StatusIndicator status="online" />
  *   </div>
  * </div>
  */
-export const StatusIndicator = React.forwardRef<HTMLButtonElement, StatusIndicatorProps>(
-  ({ status, icon, onClick, title }, ref) => {
+export const StatusIndicator = React.forwardRef<HTMLDivElement, StatusIndicatorProps>(
+  ({ status, onClick, title }, ref) => {
     const colors = statusColorMap[status];
     const isOnline = status === 'online';
 
     return (
-      <Button
+      <div
         ref={ref}
-        variant="primary"
-        shape="circle"
-        size="sm"
-        icon={icon}
+        className={isOnline ? styles.online : ''}
         onClick={onClick}
         title={title}
-        className={isOnline ? styles.online : ''}
         style={{
-          '--btn-bg': colors.bg,
-          '--btn-hover-bg': colors.hover,
-          '--btn-color': colors.color,
-          '--btn-border-color': colors.border,
-          '--btn-hover-bg-fade': `${colors.bg}e6`,
-          '--btn-dot-color': 'rgba(0, 0, 0, 0.1)',
-          minWidth: '32px',
-          padding: '6px',
-        } as React.CSSProperties}
+          width: '12px',
+          height: '12px',
+          borderRadius: '50%',
+          backgroundColor: colors.bg,
+          border: '2px solid #FFFFFF',
+          cursor: onClick ? 'pointer' : 'default',
+          transition: 'background-color 0.2s ease',
+        }}
+        onMouseEnter={(e) => {
+          (e.currentTarget as HTMLDivElement).style.backgroundColor = colors.hover;
+        }}
+        onMouseLeave={(e) => {
+          (e.currentTarget as HTMLDivElement).style.backgroundColor = colors.bg;
+        }}
       />
     );
   },
