@@ -23,6 +23,8 @@
   padding: 24px;
   z-index: 50;
   bottom: 0;
+  transform: skewY(2deg) skewX(3deg);
+  transform-origin: bottom right;
 }
 
 /* Position variants */
@@ -60,6 +62,7 @@
   box-shadow:
     0 4px 12px rgba(0, 0, 0, 0.3),
     inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  transform: skewY(1deg) skewX(2deg) rotate(1deg);
 }
 
 .action:hover {

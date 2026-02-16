@@ -9,6 +9,8 @@
   flex-direction: column;
   padding: 16px 24px;
   gap: 0;
+  transform: skewY(-3deg) skewX(-2deg);
+  transform-origin: top left;
 }
 
 /* Rainbow accent bar */
@@ -55,8 +57,8 @@
     inset 1px 1px 0 rgba(255, 255, 255, 0.2),
     inset -1px -1px 0 rgba(0, 0, 0, 0.3),
     0 4px 12px rgba(0, 0, 0, 0.3);
-  /* Sticker effect with rotation */
-  transform: rotate(-2deg);
+  /* Sticker effect with rotation and skew */
+  transform: rotate(-2deg) skewY(-1deg);
   transition: transform 0.2s ease;
 }
 
