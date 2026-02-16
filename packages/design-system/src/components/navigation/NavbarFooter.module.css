@@ -5,7 +5,7 @@
 
 .navbarFooter {
   position: fixed;
-  bottom: 80px;
+  bottom: 0;
   left: 0;
   right: 0;
   display: flex;
@@ -14,7 +14,7 @@
   gap: 0;
   width: 100%;
   min-height: 200px;
-  transform: rotate(-3deg);
+  transform: rotate(-3deg) translateY(-100px);
   transform-origin: bottom right;
   background: linear-gradient(180deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.7) 100%);
   box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.6);
