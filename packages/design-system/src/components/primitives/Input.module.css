@@ -11,7 +11,7 @@
   position: relative;
   display: inline-flex;
   font-family: var(--font-sans);
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   cursor: text;
   filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.9));
 }
@@ -33,7 +33,7 @@
   position: absolute;
   inset: -3px;
   border-radius: 9999px;
-  border: 3px solid #FFFFFF;
+  border: 3px solid var(--hool-sticker-outline);
   pointer-events: none;
   z-index: -1;
 }
@@ -48,21 +48,21 @@
   width: 100%;
   gap: var(--input-gap, 8px);
   padding: var(--input-padding-v, 10px) var(--input-padding-h, 20px);
-  background: #FFFFFF;
-  border: 3px solid #1d2119;
+  background: var(--hool-sticker-outline);
+  border: 3px solid var(--hool-sticker-border);
   transition:
     background-color 0.2s ease,
     border-color 0.2s ease;
 }
 
 .wrapper:focus-within .container {
-  border-color: #E8B82A;
+  border-color: var(--hool-gold-400);
   border-width: 4px;
   padding: calc(var(--input-padding-v, 10px) - 1px) calc(var(--input-padding-h, 20px) - 1px);
 }
 
 .wrapper.error .container {
-  border-color: #EF4444;
+  border-color: var(--hool-error);
 }
 
 .wrapper.error:focus-within .container {
@@ -85,7 +85,7 @@
 
 .simple:focus-within .container {
   border-width: 2px;
-  border-color: #E8B82A;
+  border-color: var(--hool-gold-400);
   padding: calc(var(--input-padding-v, 10px) - 1px) calc(var(--input-padding-h, 20px) - 1px);
   box-shadow: 0 4px 8px rgba(232, 184, 42, 0.2);
 }
@@ -135,7 +135,7 @@
   margin-top: calc(var(--bw) * -1);
   margin-left: calc(var(--bw) * -1);
   padding: var(--bw);
-  background-color: #FFFFFF;
+  background-color: var(--hool-sticker-outline);
   clip-path: polygon(
     var(--bw) var(--bw), /* top-left: inset at rest */
     calc(100% - var(--b2)) var(--bw),
@@ -167,7 +167,7 @@
   --b3: calc(var(--b2) + var(--bw));
   display: block;
   padding: calc(var(--bw) * 2);
-  background-color: #1d2119;
+  background-color: var(--hool-sticker-border);
   /* Animated halftone pattern - brighter for visibility */
   background-image:
     radial-gradient(rgba(255, 255, 255, 0.25) 1px, transparent 0),
@@ -199,7 +199,7 @@
 }
 
 .hero:focus-within .darkLayer {
-  background-color: #E8B82A;
+  background-color: var(--hool-gold-400);
   /* Super sparkly animated pattern on focus */
   background-image:
     radial-gradient(rgba(255, 255, 255, 0.4) 1px, transparent 0),
@@ -220,7 +220,7 @@
 
 /* Error state - red border */
 .hero.error .darkLayer {
-  background-color: #EF4444;
+  background-color: var(--hool-error);
 }
 
 .hero.error:focus-within .darkLayer {
@@ -237,7 +237,7 @@
 .hero .inside {
   position: relative;
   display: flex;
-  background-color: #FFFFFF;
+  background-color: var(--hool-sticker-outline);
   clip-path: polygon(
     0 0, /* top-left: 90° corner */
     calc(100% - var(--bevel)) 0,
@@ -277,7 +277,7 @@
   background: transparent;
   font-family: inherit;
   font-size: var(--input-font-size, 0.875rem);
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
   color: #1a1a1a;
   text-align: center;
 }
@@ -288,7 +288,7 @@
 
 /* Bold text when input has a value */
 .input:not(:placeholder-shown) {
-  font-weight: 700;
+  font-weight: var(--font-weight-bold);
 }
 
 .input:disabled {

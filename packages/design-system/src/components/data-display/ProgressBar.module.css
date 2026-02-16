@@ -26,17 +26,17 @@
 .label {
   margin: 0;
   font-family: var(--font-sans);
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: #ffffff;
+  font-size: var(--text-body);
+  font-weight: var(--font-weight-semibold);
+  color: var(--hool-text-primary);
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
 .subtitle {
   margin: 0;
   font-family: var(--font-sans);
-  font-size: 0.75rem;
-  font-weight: 400;
+  font-size: var(--text-small);
+  font-weight: var(--font-weight-regular);
   color: rgba(255, 255, 255, 0.5);
 }
 
@@ -49,8 +49,8 @@
 
 .value {
   font-family: var(--font-mono, 'Monaco', 'Courier New', monospace);
-  font-size: 0.875rem;
-  font-weight: 700;
+  font-size: var(--text-body);
+  font-weight: var(--font-weight-bold);
   color: rgba(255, 255, 255, 0.9);
   white-space: nowrap;
 }
@@ -58,7 +58,7 @@
 .percentage {
   font-family: var(--font-mono, 'Monaco', 'Courier New', monospace);
   font-size: 1rem;
-  font-weight: 700;
+  font-weight: var(--font-weight-bold);
   color: rgba(255, 255, 255, 0.9);
   white-space: nowrap;
 }
@@ -98,35 +98,35 @@
 
 /* Variants */
 .default .barFill {
-  background: linear-gradient(90deg, #E8B82A 0%, #F59E0B 100%);
+  background: linear-gradient(90deg, var(--hool-gold-400) 0%, var(--hool-warning) 100%);
   box-shadow:
     0 0 12px rgba(232, 184, 42, 0.3),
     inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 .success .barFill {
-  background: linear-gradient(90deg, #10B981 0%, #059669 100%);
+  background: linear-gradient(90deg, var(--hool-rarity-uncommon) 0%, #059669 100%);
   box-shadow:
     0 0 12px rgba(16, 185, 129, 0.3),
     inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 .warning .barFill {
-  background: linear-gradient(90deg, #F59E0B 0%, #D97706 100%);
+  background: linear-gradient(90deg, var(--hool-warning) 0%, #D97706 100%);
   box-shadow:
     0 0 12px rgba(245, 158, 11, 0.3),
     inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 .danger .barFill {
-  background: linear-gradient(90deg, #EF4444 0%, #DC2626 100%);
+  background: linear-gradient(90deg, var(--hool-error) 0%, #DC2626 100%);
   box-shadow:
     0 0 12px rgba(239, 68, 68, 0.3),
     inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 .highlight .barFill {
-  background: linear-gradient(90deg, #A855F7 0%, #9333EA 100%);
+  background: linear-gradient(90deg, var(--hool-purple-500) 0%, #9333EA 100%);
   box-shadow:
     0 0 12px rgba(168, 85, 247, 0.3),
     inset 0 1px 0 rgba(255, 255, 255, 0.2);

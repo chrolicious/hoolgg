@@ -1,16 +1,16 @@
 .card {
   position: relative;
   display: block;
-  border-radius: 6px;
+  border-radius: var(--hool-radius-sm);
   background: rgba(255, 255, 255, 0.08);
-  border: 2px solid rgba(255, 255, 255, 0.2);
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  border: var(--hool-border-medium) solid rgba(255, 255, 255, 0.2);
+  transition: all var(--hool-duration-normal) cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .card::before {
   content: '';
   position: absolute;
-  inset: 2px;
+  inset: var(--hool-border-medium);
   border-radius: 4px;
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0) 100%);
   pointer-events: none;
@@ -82,7 +82,7 @@
   box-shadow:
     inset 1px 1px 0 rgba(255, 255, 255, 0.25),
     inset -1px -1px 0 rgba(0, 0, 0, 0.25),
-    0 12px 24px rgba(0, 0, 0, 0.25) !important;
+    var(--hool-shadow-lg) !important;
 }
 
 .interactive:active {

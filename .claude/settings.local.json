@@ -43,7 +43,11 @@
       "Bash(export PATH=\"/tmp/ffmpeg-master-latest-win64-gpl/bin:$PATH\")",
       "Bash(ffmpeg:*)",
       "Bash(python:*)",
-      "Bash(pnpm build:storybook:*)"
+      "Bash(pnpm build:storybook:*)",
+      "Bash(git checkout:*)",
+      "Bash(pnpm build:*)",
+      "Bash(xargs:*)",
+      "Bash(comm:*)"
     ]
   }
 }

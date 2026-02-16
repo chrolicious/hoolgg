@@ -44,6 +44,47 @@
   --hool-radius-xl: 20px;
   --hool-radius-full: 9999px;
 
+  /* Border Width */
+  --hool-border-thin: 1px;
+  --hool-border-medium: 2px;
+  --hool-border-thick: 3px;
+
+  /* Cream & Slate */
+  --hool-cream: #F5F0E8;
+  --hool-slate-500: #64748B;
+  --hool-slate-400: #7C8DA2;
+
+  /* Sticker Colors */
+  --hool-sticker-border: #1d2119;
+  --hool-sticker-outline: #FFFFFF;
+
+  /* WoW Class Colors */
+  --hool-class-warrior: #C79C6E;
+  --hool-class-paladin: #F58CBA;
+  --hool-class-hunter: #ABD473;
+  --hool-class-rogue: #FFF569;
+  --hool-class-priest: #FFFFFF;
+  --hool-class-mage: #69CCF0;
+  --hool-class-warlock: #9482CA;
+  --hool-class-monk: #00D9FF;
+  --hool-class-demonhunter: #A335EE;
+
+  /* Item Rarity Colors */
+  --hool-rarity-common: #9CA3AF;
+  --hool-rarity-uncommon: #10B981;
+  --hool-rarity-rare: #1E8FFF;
+  --hool-rarity-epic: #A855F7;
+  --hool-rarity-legendary: #FFD700;
+  --hool-rarity-mythic: #FF6644;
+
+  /* UI Colors */
+  --hool-ui-black: #000000;
+  --hool-ui-white: #FFFFFF;
+  --hool-ui-red: #EF4444;
+  --hool-ui-orange: #FF8000;
+  --hool-ui-yellow: #FFD700;
+  --hool-ui-green: #00FF96;
+
   /* Shadows */
   --hool-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
   --hool-shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);

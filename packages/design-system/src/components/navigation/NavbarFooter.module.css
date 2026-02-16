@@ -147,9 +147,9 @@
 .title {
   margin: 0;
   font-family: var(--font-sans);
-  font-size: 1.5rem;
-  font-weight: 800;
-  color: #ffffff;
+  font-size: var(--text-h2);
+  font-weight: var(--font-weight-extrabold);
+  color: var(--hool-text-primary);
   letter-spacing: -0.5px;
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5), 0 1px 3px rgba(0, 0, 0, 0.3);
   line-height: 1.2;
@@ -159,8 +159,8 @@
 .subtitle {
   margin: 0;
   font-family: var(--font-sans);
-  font-size: 0.75rem;
-  font-weight: 500;
+  font-size: var(--text-small);
+  font-weight: var(--font-weight-medium);
   color: rgba(255, 255, 255, 0.7);
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
   text-transform: uppercase;
