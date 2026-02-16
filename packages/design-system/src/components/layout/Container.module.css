@@ -1,0 +1,85 @@
+/* ==========================================================================
+   Container — Checkered background with glassmorphism border
+   ========================================================================== */
+
+@keyframes checkerboardShift {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: -30px 30px;
+  }
+}
+
+
+.container {
+  position: relative;
+  border-radius: 6px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-right-color: rgba(255, 255, 255, 0.1);
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+/* Diagonal striped background pattern overlay */
+.container::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.04) 0px,
+    rgba(255, 255, 255, 0.04) 2px,
+    transparent 2px,
+    transparent 10px
+  );
+  background-size: 30px 30px;
+  background-position: 0 0;
+  pointer-events: none;
+  border-radius: 6px;
+}
+
+/* Animated version */
+.animated::before {
+  animation: checkerboardShift 5s linear infinite;
+}
+
+/* Subtle stationary shine effect */
+.container::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    transparent 0%,
+    transparent 35%,
+    rgba(255, 255, 255, 0.15) 50%,
+    transparent 65%,
+    transparent 100%
+  );
+  pointer-events: none;
+  border-radius: 6px;
+}
+
+
+/* Padding variants */
+.sm {
+  padding: 8px;
+}
+
+.md {
+  padding: 16px;
+}
+
+.lg {
+  padding: 24px;
+}
+
+/* Content wrapper to sit above the background pattern */
+.container > * {
+  position: relative;
+  z-index: 1;
+}
