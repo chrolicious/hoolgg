@@ -50,32 +50,32 @@
 .modal::before {
   content: '';
   position: absolute;
-  inset: 0;
-  border-radius: 6px;
+  inset: 2px;
+  border-radius: 4px;
   background-image:
     repeating-linear-gradient(
-      45deg,
+      135deg,
       rgba(168, 85, 247, 0.08) 0px,
       rgba(168, 85, 247, 0.08) 2px,
       transparent 2px,
       transparent 30px
     ),
     repeating-linear-gradient(
-      45deg,
-      rgba(212, 160, 23, 0.08) 15px,
-      rgba(212, 160, 23, 0.08) 17px,
-      transparent 17px,
-      transparent 45px
+      135deg,
+      rgba(212, 160, 23, 0.08) 0px,
+      rgba(212, 160, 23, 0.08) 2px,
+      transparent 2px,
+      transparent 30px
     ),
     repeating-linear-gradient(
-      45deg,
-      rgba(248, 113, 113, 0.08) 8px,
-      rgba(248, 113, 113, 0.08) 10px,
-      transparent 10px,
-      transparent 38px
+      135deg,
+      rgba(248, 113, 113, 0.08) 0px,
+      rgba(248, 113, 113, 0.08) 2px,
+      transparent 2px,
+      transparent 30px
     );
   background-size: 200px 200px, 200px 200px, 200px 200px;
-  background-position: 0 0, 20px 20px, 10px 10px;
+  background-position: 0 0, 0 0, 0 0;
   animation: diagonalLines 20s linear infinite;
   pointer-events: none;
   z-index: 10;
@@ -93,13 +93,13 @@
 /* Gradient animation for border flow */
 @keyframes gradientFlow {
   0% {
-    background-position: 0% 0%;
+    background-position: 0% 0%, 0% 0%;
   }
   50% {
-    background-position: 100% 100%;
+    background-position: 0% 0%, 100% 100%;
   }
   100% {
-    background-position: 0% 0%;
+    background-position: 0% 0%, 0% 0%;
   }
 }
 
