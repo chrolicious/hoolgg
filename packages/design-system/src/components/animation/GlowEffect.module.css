@@ -1,0 +1,4 @@
+.glow {
+  filter-backend: gpu;
+  will-change: opacity, transform;
+}
