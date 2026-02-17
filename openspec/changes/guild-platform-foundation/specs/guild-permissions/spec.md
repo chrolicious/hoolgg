@@ -1,6 +1,6 @@
 # Guild Permissions Specification
 
-Rank-based access control. GMs configure access per tool by guild rank. Permissions are strict by default (no data visible without explicit permission). Dynamic permission checking on every request against Blizzard character rank.
+Rank-based access control. GMs configure access per tool by guild rank. Recommended defaults are pre-configured on guild creation (Progress for all members, Recruitment for Officers+). GMs can customize these defaults. Dynamic permission checking on every request against Blizzard character rank.
 
 ## ADDED Requirements
 
@@ -51,20 +51,23 @@ The system SHALL check permissions on every API request. User must have sufficie
 
 ---
 
-### Requirement: Default Permissions Are Strict
-New guilds SHALL have default permissions that deny all access. GMs must explicitly grant.
+### Requirement: Default Permissions Use Recommended Defaults
+New guilds SHALL have recommended default permissions pre-configured. GMs can customize.
 
-#### Scenario: New guild has no permissions by default
+#### Scenario: New guild has recommended defaults
 - **WHEN** GM creates Guild Theta in hool.gg
-- **THEN** system initializes guild_permissions with all tools disabled
-- **AND** when Members try to access tools, get 403 Forbidden
-- **AND** only GM can access Guild Settings to configure
+- **THEN** system initializes guild_permissions with recommended defaults:
+  - Progress: enabled for all members (min_rank_id = 9, i.e., all ranks)
+  - Recruitment: enabled for Officers+ (min_rank_id ≤ 1)
+- **AND** members can immediately access Progress tool
+- **AND** only Officers+ can access Recruitment tool
+- **AND** GM can access Guild Settings to customize these defaults
 
-#### Scenario: GM must explicitly enable tools
-- **WHEN** GM wants to enable recruitment tool
-- **THEN** GM must explicitly go to Settings and enable it
-- **AND** set minimum rank requirement
-- **THEN** other members can access (if they meet rank requirement)
+#### Scenario: GM can customize default permissions
+- **WHEN** GM wants to change access for a tool
+- **THEN** GM navigates to Settings and adjusts the rank requirement
+- **AND** can restrict, expand, or disable any tool
+- **THEN** members see updated access based on GM's configuration
 
 ---
 

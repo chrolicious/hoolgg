@@ -70,6 +70,8 @@ The system SHALL grant platform access only if at least one character meets both
 - **AND** Guild Beta requires Officer (rank_id=1)
 - **THEN** user is denied access to Guild Beta
 
+> **Note:** WoW guild ranks (0-9) are custom per guild. The `rank_id` values in these scenarios are illustrative. The system uses the guild's actual Blizzard rank structure.
+
 ---
 
 ### Requirement: Token Refresh Flow

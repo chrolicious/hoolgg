@@ -1,6 +1,6 @@
 # Frontend Platform Specification
 
-Single Next.js app with unified navigation, design system components, route groups per tool. After login, displays accessible guilds (based on character membership + rank). Uses Mario Wonder-style design system for cohesive experience.
+Single Next.js app with unified navigation, design system components, route groups per tool. After login, displays accessible guilds (based on character membership + rank). Uses WoW-inspired Epic Tier design system (sticker-style components) for cohesive experience.
 
 ## ADDED Requirements
 
@@ -60,7 +60,7 @@ The platform SHALL work on desktop and mobile devices.
 ---
 
 ### Requirement: Design System Component Usage
-All UI elements SHALL use design system components (Mario Wonder sticker style).
+All UI elements SHALL use design system components (WoW-inspired Epic Tier, sticker-style).
 
 #### Scenario: Buttons follow sticker style
 - **WHEN** user sees action buttons (Login, Save, Cancel, Delete)

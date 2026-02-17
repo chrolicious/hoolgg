@@ -27,7 +27,7 @@ Officers (rank_id ≤ 1) in a guild SHALL be able to create a hool.gg instance f
   - `guilds { id, name, realm, gm_bnet_id, created_at }`
   - gm_bnet_id = Officer's bnet_id
 - **AND** system creates initial guild_members entries for all guild members (from Blizzard roster)
-- **AND** system initializes guild_permissions (all tools disabled, strict default)
+- **AND** system initializes guild_permissions with recommended defaults (Progress for all members, Recruitment for Officers+)
 
 #### Scenario: Only Officers/GMs can create instances
 - **WHEN** Member tries to create guild instance

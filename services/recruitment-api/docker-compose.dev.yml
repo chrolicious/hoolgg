@@ -1,0 +1,86 @@
+version: '3.8'
+
+# Development environment configuration
+# Use: docker-compose -f docker-compose.dev.yml up
+
+services:
+  recruitment-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: recruitment-api-dev
+    ports:
+      - "5001:5001"
+    environment:
+      - FLASK_ENV=development
+      - DATABASE_URL=postgresql://hool:hool@postgres:5432/hoolgg_dev
+      - REDIS_URL=redis://redis:6379
+      - GUILD_API_URL=http://guild-api:5000
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY:-dev-jwt-secret}
+      - SECRET_KEY=${SECRET_KEY:-dev-secret-key}
+      - RAIDER_IO_API_URL=https://raider.io/api/v1
+      - WOW_PROGRESS_API_URL=https://www.wowprogress.com/api
+      - WARCRAFT_LOGS_API_URL=https://www.warcraftlogs.com/api/v2
+      - CORS_ORIGINS=http://localhost:3000,https://dev.hool.gg
+      - LOG_LEVEL=DEBUG
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      # Mount code for hot reload in development
+      - ./app:/app/app
+      - ./tests:/app/tests
+    networks:
+      - hool-dev
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5001/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: postgres-dev
+    environment:
+      - POSTGRES_USER=hool
+      - POSTGRES_PASSWORD=hool
+      - POSTGRES_DB=hoolgg_dev
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_dev_data:/var/lib/postgresql/data
+    networks:
+      - hool-dev
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U hool"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis-dev
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_dev_data:/data
+    networks:
+      - hool-dev
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_dev_data:
+    driver: local
+  redis_dev_data:
+    driver: local
+
+networks:
+  hool-dev:
+    driver: bridge

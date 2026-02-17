@@ -1,5 +1,8 @@
 import type { Metadata } from 'next';
 import '@hool/design-system/css/globals';
+import './globals.css';
+import { AuthProvider } from './lib/auth-context';
+import { OfflineBanner } from './components/offline-banner';
 
 export const metadata: Metadata = {
   title: 'hool.gg',
@@ -13,7 +16,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <AuthProvider>
+          <OfflineBanner />
+          {children}
+        </AuthProvider>
+      </body>
     </html>
   );
 }

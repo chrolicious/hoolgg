@@ -95,13 +95,15 @@ Staging deployments skip redundant tests; images from staging are re-tagged for 
 ### Requirement: Production Deployment (Manual, No Redundant Testing)
 Deploying to prod SHALL NOT re-run tests; images are promoted from staging.
 
-#### Scenario: PR to main triggers tag and build
+#### Scenario: PR to main triggers smoke tests and approval
 - **WHEN** PR is opened staging → main
-- **THEN** GitHub Actions runs:
-  1. Full test suite (final check)
-  2. If passing, awaits manual approval
+- **THEN** GitHub Actions runs smoke tests only (lint/typecheck/build/unit already passed on staging):
+  1. Health check verification
+  2. Build confirmation (no new code changes)
+  3. If passing, awaits manual approval
 - **AND** workflow reports: ⏸️ "Waiting for approval"
 - **AND** developer/maintainer gets notification
+- **AND** full test suite is available as optional safety net (not required)
 
 #### Scenario: Manual approval is required for production
 - **WHEN** workflow is waiting

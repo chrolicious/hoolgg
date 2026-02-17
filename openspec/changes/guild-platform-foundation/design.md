@@ -4,7 +4,7 @@
 
 **Current State:**
 - Two standalone Flask applications: discord_rio_recruitment_py and midnight_tracker
-- Design system built and polished (Mario Wonder sticker style, all primitives + surfaces complete)
+- Design system built and polished (WoW-inspired Epic Tier sticker style, all primitives + surfaces complete)
 - Next.js 15 skeleton app exists but minimal content ("Coming soon")
 - Monorepo structure in place (pnpm workspaces, Turborepo)
 - Hetzner VPS + Coolify for hosting
@@ -97,7 +97,7 @@ Shared:
 **Token Details:**
 - Access token: 15-minute lifetime, httpOnly cookie, Secure flag, SameSite=Lax
 - Refresh token: 7-day lifetime, httpOnly cookie, Secure flag, SameSite=Lax
-- Payload: `{ bnet_id, timestamp, issued_at }`
+- Payload: `{ bnet_id, iat, exp }`
 - Revocation: stored in Redis blacklist (optional, for logout)
 
 **Alternatives Considered:**
@@ -274,7 +274,7 @@ PR: staging → main
 | **Hetzner VPS runs out of resources** | Monitor CPU/RAM. Auto-scale services (add more workers). Could migrate to managed Postgres if needed. |
 | **Database migrations block deployments** | Use Alembic with backward-compatible migrations. Test migrations in staging first. Rollback plan: `alembic downgrade -1`. |
 | **Deployment goes wrong, need instant rollback** | Docker images tagged with version. Can redeploy previous image (2 min rollback). Also: `git revert` on main. |
-| **Rank data sync gets out of sync with Blizzard** | Background job (every 1 hour) refreshes all guild rosters. On-demand sync when character logs in. |
+| **Rank data sync gets out of sync with Blizzard** | Background job (every 6 hours) refreshes all guild rosters. On-demand sync when character logs in. |
 | **Recruitment/progress tools have different UX** | Use design system components consistently. Shared navbar/sidebar. Clear navigation between tools. |
 
 ---
@@ -282,7 +282,7 @@ PR: staging → main
 ## Migration Plan
 
 **Phase 1: Foundation (Week 1-2)**
-1. Set up guild-api service (Django or Flask, PostgreSQL)
+1. Set up guild-api service (Flask, PostgreSQL)
 2. Implement Blizzard OAuth in guild-api
 3. Implement JWT token issuance (access + refresh tokens)
 4. Create guild_members schema, rank caching
@@ -319,27 +319,19 @@ PR: staging → main
 
 ---
 
-## Open Questions
+## Resolved Questions
 
-1. **Subdomain architecture**: Use recruiting.hool.gg + progress.hool.gg (separate subdomains)? Or single domain with route groups?
-   - Affects: DNS setup, cookie SameSite configuration
-   - Recommendation: Single domain (hool.gg) with route groups is simpler
+1. **Subdomain architecture**: ✅ Resolved — Single domain (hool.gg) with route groups. Already assumed by specs and task structure.
 
-2. **Rank names vs IDs**: Store Blizzard rank (0=GM, 1=Officer) or also cache rank name ("Officer")?
-   - Recommendation: Store both (id + name for UI)
+2. **Rank names vs IDs**: ✅ Resolved — Store both (rank_id + rank_name). Already in guild_members schema.
 
-3. **Character data freshness**: How often sync character ranks from Blizzard?
-   - Options: on-login only, every 1 hour, every 24 hours
-   - Recommendation: on-login + background job every 6 hours
+3. **Character data freshness**: ✅ Resolved — On-login sync + background job every 6 hours. Balances freshness with API rate limits.
 
-4. **Raid planning tool**: Is this truly future only, or should we design for it now (schema, permission structure)?
-   - Recommendation: Design for extensibility (each tool is a "capability"), but don't build raid planner yet
+4. **Raid planning tool**: ✅ Resolved — Design for extensibility via generic `tool_name` in guild_permissions. Don't build raid planner yet.
 
-5. **Discord integration**: Should recruitment tool listen to Discord webhooks?
-   - Recommendation: Out of scope for foundation. Can add in recruitment-api v1.1+
+5. **Discord integration**: ✅ Resolved — Out of scope for foundation release. Can add in recruitment-api v1.1+.
 
-6. **Analytics**: What metrics matter? (active guilds, users, tool usage)
-   - Recommendation: Start with basic: daily active users, guilds created, API response times
+6. **Analytics**: ✅ Resolved — Start with basic metrics: daily active users, guilds created, API response times.
 
 ---
 

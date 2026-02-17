@@ -10,8 +10,8 @@ You currently have two WoW-focused tools built separately: a recruitment scanner
 - **Bnet account authentication**: Users log in with Blizzard OAuth (one Bnet account, multiple characters). Access to the platform is only granted if **at least one character** meets both: (1) is in a guild with a hool.gg instance, AND (2) has a high enough rank in that guild. This prevents alt-spying and low-rank access in a single gate.
 - **Rank-based permissions**: GMs configure access by guild rank: "Officer or higher can use recruitment", "Raider or higher can see progress", etc. Access is checked against Blizzard character rank on every request.
 - **Unified authentication**: Single Blizzard OAuth login at hool.gg, with JWT tokens valid across all subdomains/services. Identifies user by Bnet account, tracks which characters/guilds they have access to.
-- **Shared guild context**: All tools know which guild you're in (via character), who you are, your rank, and what you can access (strict by default, configurable by GM per rank).
-- **Redesigned frontend**: Single Next.js app with route groups for each tool (e.g., `/guilds/[guildId]/progress`, `/guilds/[guildId]/recruitment`). After login, user sees their accessible guilds (determined by character membership + rank). Uses the new Mario Wonder-style design system for visual cohesion.
+- **Shared guild context**: All tools know which guild you're in (via character), who you are, your rank, and what you can access (recommended defaults pre-configured, configurable by GM per rank).
+- **Redesigned frontend**: Single Next.js app with route groups for each tool (e.g., `/guilds/[guildId]/progress`, `/guilds/[guildId]/recruitment`). After login, user sees their accessible guilds (determined by character membership + rank). Uses the WoW-inspired Epic Tier design system (sticker-style components) for visual cohesion.
 - **Multi-service architecture**: Keep backend services separate (guild-api, progress-api, recruitment-api) for independent scaling and evolution, but unified through the frontend.
 - **Production-ready deployment**: 3-tier environments (dev, staging, prod), Git Flow branching, optimized CI/CD, semantic versioning, zero-downtime deployments where possible.
 
@@ -20,11 +20,11 @@ You currently have two WoW-focused tools built separately: a recruitment scanner
 ### New Capabilities
 
 - `blizzard-oauth`: Authenticate users via Blizzard OAuth (Bnet account). Fetch all characters, their guild memberships, and ranks on login. Gate platform access: only grant if at least one character is in a guild with a hool.gg instance AND has sufficient rank.
-- `guild-permissions`: Rank-based access control. GMs configure access per tool by guild rank: "Officer or higher can access recruitment", "Raider or higher can view progress", etc. Strict by default (no data visible without explicit permission). Dynamic permission checking on every request against Blizzard character rank.
+- `guild-permissions`: Rank-based access control. GMs configure access per tool by guild rank: "Officer or higher can access recruitment", "Raider or higher can view progress", etc. Recommended defaults are pre-configured (Progress for all members, Recruitment for Officers+), configurable by GM. Dynamic permission checking on every request against Blizzard character rank.
 - `guild-management`: Guild creation by officers/GMs. Configure rank-based access per tool. View guild roster and member ranks. Enable/disable tools per guild.
 - `character-progress-tracking`: Migrate midnight_tracker functionality. Track character progression, weekly iLvl targets, gear priorities, expansion roadmaps. Guild-scoped (see your guild members' progress). Compare guild performance to public WarcraftLogs data.
 - `recruitment-tools`: Migrate discord_rio_recruitment_py functionality. Scan multiple sources (Discord, Raider.io, WoW Progress), filter by role/class, rank candidates. Guild-scoped (post recruits to your guild).
-- `frontend-platform`: Single Next.js app with unified navigation, design system components, route groups per tool. After login, displays accessible guilds (based on character membership + rank). Uses Mario Wonder-style design system for cohesive experience.
+- `frontend-platform`: Single Next.js app with unified navigation, design system components, route groups per tool. After login, displays accessible guilds (based on character membership + rank). Uses WoW-inspired Epic Tier design system (sticker-style components) for cohesive experience.
 - `ci-cd-pipeline`: GitHub Actions for linting, building, testing, and deployment. Three environments (dev, staging, prod). Optimized to avoid redundant testing. Semantic versioning with git tags.
 
 ### Modified Capabilities

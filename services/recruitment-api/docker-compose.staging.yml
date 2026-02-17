@@ -1,0 +1,40 @@
+version: '3.8'
+
+# Staging environment configuration
+# Use: docker-compose -f docker-compose.staging.yml up
+
+services:
+  recruitment-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: recruitment-api-staging
+    ports:
+      - "5001:5001"
+    environment:
+      - FLASK_ENV=production
+      - DATABASE_URL=${DATABASE_URL}
+      - REDIS_URL=${REDIS_URL}
+      - GUILD_API_URL=${GUILD_API_URL:-http://guild-api:5000}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - SECRET_KEY=${SECRET_KEY}
+      - RAIDER_IO_API_URL=https://raider.io/api/v1
+      - WOW_PROGRESS_API_URL=https://www.wowprogress.com/api
+      - WARCRAFT_LOGS_API_URL=https://www.warcraftlogs.com/api/v2
+      - CORS_ORIGINS=${CORS_ORIGINS:-https://staging.hool.gg}
+      - LOG_LEVEL=INFO
+      - GUNICORN_WORKERS=4
+      - GUNICORN_TIMEOUT=120
+    networks:
+      - hool-staging
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5001/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    restart: unless-stopped
+
+networks:
+  hool-staging:
+    external: true

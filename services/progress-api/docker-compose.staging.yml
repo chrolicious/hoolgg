@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  progress-api:
+    build:
+      context: .
+      target: production
+    ports:
+      - "5001:5001"
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - REDIS_URL=${REDIS_URL}
+      - SECRET_KEY=${SECRET_KEY}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - BLIZZARD_CLIENT_ID=${BLIZZARD_CLIENT_ID}
+      - BLIZZARD_CLIENT_SECRET=${BLIZZARD_CLIENT_SECRET}
+      - BLIZZARD_REGION=us
+      - WARCRAFTLOGS_CLIENT_ID=${WARCRAFTLOGS_CLIENT_ID}
+      - WARCRAFTLOGS_CLIENT_SECRET=${WARCRAFTLOGS_CLIENT_SECRET}
+      - GUILD_API_URL=https://api.staging.hool.gg
+      - CORS_ORIGINS=https://staging.hool.gg
+      - DEBUG=False
+      - PORT=5001
+    restart: unless-stopped
+    networks:
+      - hool-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+networks:
+  hool-network:
+    external: true

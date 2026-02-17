@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  progress-api:
+    image: progress-api:${VERSION:-latest}
+    ports:
+      - "5001:5001"
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - REDIS_URL=${REDIS_URL}
+      - SECRET_KEY=${SECRET_KEY}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - BLIZZARD_CLIENT_ID=${BLIZZARD_CLIENT_ID}
+      - BLIZZARD_CLIENT_SECRET=${BLIZZARD_CLIENT_SECRET}
+      - BLIZZARD_REGION=us
+      - WARCRAFTLOGS_CLIENT_ID=${WARCRAFTLOGS_CLIENT_ID}
+      - WARCRAFTLOGS_CLIENT_SECRET=${WARCRAFTLOGS_CLIENT_SECRET}
+      - GUILD_API_URL=https://api.hool.gg
+      - CORS_ORIGINS=https://hool.gg
+      - DEBUG=False
+      - PORT=5001
+    restart: always
+    networks:
+      - hool-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
+    deploy:
+      replicas: 2
+      update_config:
+        parallelism: 1
+        delay: 10s
+        failure_action: rollback
+      rollback_config:
+        parallelism: 1
+        delay: 5s
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+
+networks:
+  hool-network:
+    external: true

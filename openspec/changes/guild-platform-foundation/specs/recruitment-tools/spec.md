@@ -107,6 +107,8 @@ Officers SHALL compare multiple candidates side-by-side.
 ### Requirement: Discord Integration (Optional)
 System CAN scan Discord recruitment channels (if configured).
 
+> **Note:** Discord integration is out of scope for the foundation release. These scenarios describe future functionality.
+
 #### Scenario: Officer configures Discord channel
 - **WHEN** Officer navigates to Recruitment → Settings
 - **THEN** system shows "Discord Integration"

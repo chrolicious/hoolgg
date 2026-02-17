@@ -1,0 +1,48 @@
+version: '3.8'
+
+# Production environment configuration
+# Use: docker-compose -f docker-compose.prod.yml up
+
+services:
+  recruitment-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: recruitment-api-prod
+    ports:
+      - "5001:5001"
+    environment:
+      - FLASK_ENV=production
+      - DATABASE_URL=${DATABASE_URL}
+      - REDIS_URL=${REDIS_URL}
+      - GUILD_API_URL=${GUILD_API_URL:-http://guild-api:5000}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - SECRET_KEY=${SECRET_KEY}
+      - RAIDER_IO_API_URL=https://raider.io/api/v1
+      - WOW_PROGRESS_API_URL=https://www.wowprogress.com/api
+      - WARCRAFT_LOGS_API_URL=https://www.warcraftlogs.com/api/v2
+      - CORS_ORIGINS=${CORS_ORIGINS:-https://hool.gg}
+      - LOG_LEVEL=WARNING
+      - GUNICORN_WORKERS=8
+      - GUNICORN_TIMEOUT=120
+    networks:
+      - hool-prod
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5001/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2G
+        reservations:
+          cpus: '1.0'
+          memory: 1G
+
+networks:
+  hool-prod:
+    external: true

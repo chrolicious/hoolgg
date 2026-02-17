@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  progress-api:
+    build:
+      context: .
+      target: development
+    ports:
+      - "5001:5001"
+    environment:
+      - DATABASE_URL=postgresql://hool:hool@postgres:5432/hoolgg
+      - REDIS_URL=redis://redis:6379
+      - FLASK_ENV=development
+      - DEBUG=True
+    volumes:
+      - .:/app
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - hool-network
+
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_USER=hool
+      - POSTGRES_PASSWORD=hool
+      - POSTGRES_DB=hoolgg
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - hool-network
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    networks:
+      - hool-network
+
+networks:
+  hool-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
