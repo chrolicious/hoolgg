@@ -1,6 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { PageTransition } from '../components/animation/PageTransition';
-import { Container } from '../components/layout/Container';
 import { Stack } from '../components/layout/Stack';
 import { useState } from 'react';
 import { Button } from '../components/primitives/Button';
@@ -71,14 +70,14 @@ export const FadeMode: Story = {
     isVisible: true,
   },
   render: (args) => (
-    <Container padding="lg">
+    <div style={{ padding: 'var(--hool-space-6)' }}>
       <PageTransition {...args}>
         <PageContent
           title="Fade Transition"
           color="linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
         />
       </PageTransition>
-    </Container>
+    </div>
   ),
 };
 
@@ -90,14 +89,14 @@ export const SlideMode: Story = {
     isVisible: true,
   },
   render: (args) => (
-    <Container padding="lg">
+    <div style={{ padding: 'var(--hool-space-6)' }}>
       <PageTransition {...args}>
         <PageContent
           title="Slide Transition"
           color="linear-gradient(135deg, #f093fb 0%, #f5576c 100%)"
         />
       </PageTransition>
-    </Container>
+    </div>
   ),
 };
 
@@ -109,20 +108,20 @@ export const ZigzagWipeMode: Story = {
     isVisible: true,
   },
   render: (args) => (
-    <Container padding="lg">
+    <div style={{ padding: 'var(--hool-space-6)' }}>
       <PageTransition {...args}>
         <PageContent
           title="Zigzag Wipe (Mario Wonder Style)"
           color="linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)"
         />
       </PageTransition>
-    </Container>
+    </div>
   ),
 };
 
 export const AllDirections: Story = {
   render: () => (
-    <Container padding="lg">
+    <div style={{ padding: 'var(--hool-space-6)' }}>
       <Stack direction="vertical" gap="lg">
         <div style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: '0.75rem' }}>
           Fade from all directions
@@ -144,13 +143,13 @@ export const AllDirections: Story = {
           <PageContent title="From Bottom" color="rgba(100, 255, 200, 0.3)" />
         </PageTransition>
       </Stack>
-    </Container>
+    </div>
   ),
 };
 
 export const SlideAllDirections: Story = {
   render: () => (
-    <Container padding="lg">
+    <div style={{ padding: 'var(--hool-space-6)' }}>
       <Stack direction="vertical" gap="lg">
         <div style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: '0.75rem' }}>
           Slide transitions from all directions
@@ -184,7 +183,7 @@ export const SlideAllDirections: Story = {
           />
         </PageTransition>
       </Stack>
-    </Container>
+    </div>
   ),
 };
 
@@ -209,7 +208,7 @@ export const InteractivePageSwitch: Story = {
     const currentPage = pages[page];
 
     return (
-      <Container padding="lg">
+      <div style={{ padding: 'var(--hool-space-6)' }}>
         <Stack direction="vertical" gap="lg">
           <div style={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>
             {pages.map((_, idx) => (
@@ -234,7 +233,7 @@ export const InteractivePageSwitch: Story = {
             <PageContent title={currentPage.title} color={currentPage.color} />
           </PageTransition>
         </Stack>
-      </Container>
+      </div>
     );
   },
 };
@@ -261,7 +260,7 @@ export const DirectionalPageSwitch: Story = {
     const direction = page > 1 ? 'left' : 'right';
 
     return (
-      <Container padding="lg">
+      <div style={{ padding: 'var(--hool-space-6)' }}>
         <Stack direction="vertical" gap="lg">
           <div style={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>
             <Button
@@ -295,14 +294,14 @@ export const DirectionalPageSwitch: Story = {
             />
           </PageTransition>
         </Stack>
-      </Container>
+      </div>
     );
   },
 };
 
 export const DurationVariants: Story = {
   render: () => (
-    <Container padding="lg">
+    <div style={{ padding: 'var(--hool-space-6)' }}>
       <Stack direction="vertical" gap="lg">
         <div style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: '0.75rem' }}>
           0.2s (Quick)
@@ -334,6 +333,6 @@ export const DurationVariants: Story = {
           />
         </PageTransition>
       </Stack>
-    </Container>
+    </div>
   ),
 };
