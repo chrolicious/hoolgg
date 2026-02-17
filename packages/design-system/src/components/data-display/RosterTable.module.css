@@ -68,6 +68,7 @@
   align-items: center;
   gap: var(--hool-space-3);
   padding: var(--hool-space-3) var(--hool-space-4);
+  padding-right: var(--hool-space-6);
   width: 100%;
   min-width: 0;
   flex: 1;
