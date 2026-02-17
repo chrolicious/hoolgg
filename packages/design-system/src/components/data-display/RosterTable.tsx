@@ -2,9 +2,7 @@
 
 import React, { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { Icon } from '../primitives/Icon';
 import { Badge } from '../primitives/Badge';
-import { Modal } from '../surfaces/Modal';
 import styles from './RosterTable.module.css';
 
 export type SortDirection = 'asc' | 'desc' | null;
@@ -123,7 +121,7 @@ export const RosterTable = React.forwardRef<HTMLDivElement, RosterTableProps>(
     };
 
     const handleMemberClick = (member: RosterMember) => {
-      setSelectedMember(member);
+      setSelectedMember(selectedMember?.id === member.id ? null : member);
       onMemberClick?.(member);
     };
 
@@ -143,15 +141,17 @@ export const RosterTable = React.forwardRef<HTMLDivElement, RosterTableProps>(
               <p>{emptyMessage}</p>
             </div>
           ) : (
-            members.map((member, index) => (
-              <motion.div
-                key={member.id}
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.02, duration: 0.2 }}
-                whileHover={onMemberClick ? { y: -4 } : undefined}
-              >
-                <Badge
+            members.map((member, index) => {
+              const isExpanded = selectedMember?.id === member.id;
+              return (
+                <motion.div
+                  key={member.id}
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.02, duration: 0.2 }}
+                  layout
+                >
+                  <Badge
                   variant={classBadgeVariants[member.class]}
                   className={`${styles.memberBadge} ${onMemberClick ? styles.interactive : ''}`}
                   onClick={() => handleMemberClick(member)}
@@ -195,108 +195,72 @@ export const RosterTable = React.forwardRef<HTMLDivElement, RosterTableProps>(
                     </div>
 
                   </div>
+
+                  {/* Expanded content */}
+                  {isExpanded && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      exit={{ opacity: 0, height: 0 }}
+                      transition={{ duration: 0.3 }}
+                      style={{ overflow: 'hidden', paddingTop: 'var(--hool-space-4)', borderTop: '1px solid rgba(255, 255, 255, 0.1)' }}
+                    >
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--hool-space-4)', paddingBottom: 'var(--hool-space-4)' }}>
+                        <div>
+                          <div style={{ fontSize: '0.75rem', color: 'rgba(255, 255, 255, 0.6)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '4px' }}>
+                            Class
+                          </div>
+                          <div style={{ fontSize: '0.95rem', fontWeight: 'bold', color: '#ffffff' }}>
+                            {member.class.charAt(0).toUpperCase() + member.class.slice(1)}
+                          </div>
+                        </div>
+                        {member.achievements !== undefined && (
+                          <div>
+                            <div style={{ fontSize: '0.75rem', color: 'rgba(255, 255, 255, 0.6)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '4px' }}>
+                              Achievements
+                            </div>
+                            <div style={{ fontSize: '0.95rem', fontWeight: 'bold', color: '#ffffff' }}>
+                              {member.achievements}
+                            </div>
+                          </div>
+                        )}
+                        {member.joinedDate && (
+                          <div>
+                            <div style={{ fontSize: '0.75rem', color: 'rgba(255, 255, 255, 0.6)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '4px' }}>
+                              Joined
+                            </div>
+                            <div style={{ fontSize: '0.95rem', fontWeight: 'bold', color: '#ffffff' }}>
+                              {new Date(member.joinedDate).toLocaleDateString()}
+                            </div>
+                          </div>
+                        )}
+                        {member.status && (
+                          <div>
+                            <div style={{ fontSize: '0.75rem', color: 'rgba(255, 255, 255, 0.6)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '4px' }}>
+                              Status
+                            </div>
+                            <div style={{ fontSize: '0.95rem', fontWeight: 'bold', color: '#ffffff', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                              <div
+                                style={{
+                                  width: '8px',
+                                  height: '8px',
+                                  borderRadius: '50%',
+                                  backgroundColor: statusColors[member.status],
+                                }}
+                              />
+                              {member.status.charAt(0).toUpperCase() + member.status.slice(1)}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </motion.div>
+                  )}
                 </Badge>
               </motion.div>
-            ))
+            );
+            })
           )}
         </div>
-
-        {/* Member detail modal */}
-        {selectedMember && (
-          <Modal
-            isOpen={!!selectedMember}
-            onClose={() => setSelectedMember(null)}
-            title={selectedMember.name}
-            subtitle={selectedMember.class.charAt(0).toUpperCase() + selectedMember.class.slice(1)}
-            size="md"
-            padding="lg"
-            gradientVariant="purple-pink"
-          >
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              {/* Class and Spec */}
-              <div style={{ display: 'flex', gap: '16px' }}>
-                <div>
-                  <div style={{ fontSize: '0.75rem', color: 'rgba(255, 255, 255, 0.6)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                    Class
-                  </div>
-                  <div style={{ fontSize: '1rem', fontWeight: 'bold', color: '#ffffff', marginTop: '4px' }}>
-                    {selectedMember.class.charAt(0).toUpperCase() + selectedMember.class.slice(1)}
-                  </div>
-                </div>
-                <div>
-                  <div style={{ fontSize: '0.75rem', color: 'rgba(255, 255, 255, 0.6)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                    Spec
-                  </div>
-                  <div style={{ fontSize: '1rem', fontWeight: 'bold', color: '#ffffff', marginTop: '4px' }}>
-                    {selectedMember.spec}
-                  </div>
-                </div>
-              </div>
-
-              {/* Role and iLvl */}
-              <div style={{ display: 'flex', gap: '16px' }}>
-                <div>
-                  <div style={{ fontSize: '0.75rem', color: 'rgba(255, 255, 255, 0.6)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                    Role
-                  </div>
-                  <div style={{ fontSize: '1rem', fontWeight: 'bold', color: classColors[selectedMember.class], marginTop: '4px' }}>
-                    {selectedMember.role.toUpperCase()}
-                  </div>
-                </div>
-                <div>
-                  <div style={{ fontSize: '0.75rem', color: 'rgba(255, 255, 255, 0.6)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                    iLvl
-                  </div>
-                  <div style={{ fontSize: '1rem', fontWeight: 'bold', color: '#ffffff', marginTop: '4px' }}>
-                    {selectedMember.ilvl}
-                  </div>
-                </div>
-              </div>
-
-              {/* Status and Achievements */}
-              <div style={{ display: 'flex', gap: '16px' }}>
-                <div>
-                  <div style={{ fontSize: '0.75rem', color: 'rgba(255, 255, 255, 0.6)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                    Status
-                  </div>
-                  <div style={{ fontSize: '1rem', fontWeight: 'bold', color: '#ffffff', marginTop: '4px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <div
-                      style={{
-                        width: '8px',
-                        height: '8px',
-                        borderRadius: '50%',
-                        backgroundColor: statusColors[selectedMember.status],
-                      }}
-                    />
-                    {selectedMember.status.charAt(0).toUpperCase() + selectedMember.status.slice(1)}
-                  </div>
-                </div>
-                {selectedMember.achievements !== undefined && (
-                  <div>
-                    <div style={{ fontSize: '0.75rem', color: 'rgba(255, 255, 255, 0.6)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                      Achievements
-                    </div>
-                    <div style={{ fontSize: '1rem', fontWeight: 'bold', color: '#ffffff', marginTop: '4px' }}>
-                      {selectedMember.achievements}
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* Joined Date */}
-              {selectedMember.joinedDate && (
-                <div>
-                  <div style={{ fontSize: '0.75rem', color: 'rgba(255, 255, 255, 0.6)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                    Joined
-                  </div>
-                  <div style={{ fontSize: '1rem', fontWeight: 'bold', color: '#ffffff', marginTop: '4px' }}>
-                    {new Date(selectedMember.joinedDate).toLocaleDateString()}
-                  </div>
-                </div>
-              )}
-            </div>
-          </Modal>
-        )}
       </div>
     );
   },
