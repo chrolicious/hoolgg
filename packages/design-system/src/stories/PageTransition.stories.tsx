@@ -45,6 +45,7 @@ const PageContent = ({ title, color }: { title: string; color: string }) => (
   <div
     style={{
       width: '100%',
+      maxWidth: '100%',
       minHeight: '300px',
       background: color,
       display: 'flex',
@@ -57,6 +58,7 @@ const PageContent = ({ title, color }: { title: string; color: string }) => (
       textAlign: 'center',
       padding: '24px',
       borderRadius: '6px',
+      boxSizing: 'border-box',
     }}
   >
     <h2 style={{ margin: 0, fontSize: '1.5rem' }}>{title}</h2>
