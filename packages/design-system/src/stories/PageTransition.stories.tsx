@@ -65,7 +65,7 @@ const PageContent = ({ title, color }: { title: string; color: string }) => (
 );
 
 const StoryWrapper = ({ children }: { children: React.ReactNode }) => (
-  <div style={{ padding: 'var(--hool-space-6)', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+  <div style={{ padding: 'var(--hool-space-6)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
     <Container padding="lg" style={{ width: '100%', maxWidth: '800px' }}>
       {children}
     </Container>
