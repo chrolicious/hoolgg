@@ -63,8 +63,6 @@ body {
   line-height: var(--text-body-line-height);
   font-weight: var(--text-body-font-weight);
   color: #fff;
-  overflow-y: scroll;
-  scrollbar-gutter: stable;
 }
 
 /* Headings */
