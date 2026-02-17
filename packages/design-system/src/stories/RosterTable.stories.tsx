@@ -25,6 +25,8 @@ const mockMembers: RosterMember[] = [
     achievements: 87,
     status: 'online',
     joinedDate: '2023-01-15',
+    guild: 'Knights of Azeroth',
+    herotalent: 'Unbreakable',
   },
   {
     id: '2',
@@ -36,6 +38,8 @@ const mockMembers: RosterMember[] = [
     achievements: 92,
     status: 'online',
     joinedDate: '2023-03-22',
+    guild: 'Celestial Guardians',
+    herotalent: 'Divine Blessing',
   },
   {
     id: '3',
@@ -47,6 +51,8 @@ const mockMembers: RosterMember[] = [
     achievements: 105,
     status: 'away',
     joinedDate: '2022-11-08',
+    guild: 'Shadow Syndicate',
+    herotalent: 'Lethality',
   },
   {
     id: '4',
@@ -58,6 +64,8 @@ const mockMembers: RosterMember[] = [
     achievements: 56,
     status: 'offline',
     joinedDate: '2023-06-10',
+    guild: 'Beast Masters',
+    herotalent: 'Sniper Training',
   },
   {
     id: '5',
@@ -69,6 +77,8 @@ const mockMembers: RosterMember[] = [
     achievements: 78,
     status: 'online',
     joinedDate: '2023-02-14',
+    guild: 'Arcane Circle',
+    herotalent: 'Eternal Winter',
   },
   {
     id: '6',
@@ -80,6 +90,8 @@ const mockMembers: RosterMember[] = [
     achievements: 88,
     status: 'online',
     joinedDate: '2023-04-05',
+    guild: 'Emerald Grove',
+    herotalent: 'Nature\'s Blessing',
   },
   {
     id: '7',
@@ -91,6 +103,8 @@ const mockMembers: RosterMember[] = [
     achievements: 71,
     status: 'offline',
     joinedDate: '2023-07-22',
+    guild: 'Death Knights of Ruin',
+    herotalent: 'Undying',
   },
   {
     id: '8',
@@ -102,13 +116,15 @@ const mockMembers: RosterMember[] = [
     achievements: 82,
     status: 'online',
     joinedDate: '2023-05-18',
+    guild: 'Demon\'s Pact',
+    herotalent: 'Infernal Fury',
   },
 ];
 
 export const Default: Story = {
   render: () => (
     <Container padding="lg" style={{ minHeight: '500px' }}>
-      <RosterTable members={mockMembers} />
+      <RosterTable members={mockMembers} onMemberClick={() => {}} />
     </Container>
   ),
 };
