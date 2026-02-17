@@ -151,11 +151,12 @@ export const RosterTable = React.forwardRef<HTMLDivElement, RosterTableProps>(
                   transition={{ delay: index * 0.02, duration: 0.2 }}
                   layout
                 >
+                  <motion.div layout>
                   <Badge
-                  variant={classBadgeVariants[member.class]}
-                  className={`${styles.memberBadge} ${onMemberClick ? styles.interactive : ''}`}
-                  onClick={() => handleMemberClick(member)}
-                >
+                    variant={classBadgeVariants[member.class]}
+                    className={`${styles.memberBadge} ${onMemberClick ? styles.interactive : ''}`}
+                    onClick={() => handleMemberClick(member)}
+                  >
                   {/* Badge content - all columns inside */}
                   <div className={styles.badgeContent}>
                     {/* Name + Guild column */}
@@ -256,6 +257,7 @@ export const RosterTable = React.forwardRef<HTMLDivElement, RosterTableProps>(
                     </motion.div>
                   )}
                 </Badge>
+                </motion.div>
               </motion.div>
             );
             })
