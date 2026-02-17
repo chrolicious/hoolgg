@@ -187,9 +187,12 @@ export const RosterTable = React.forwardRef<HTMLDivElement, RosterTableProps>(
 
                     {/* Role column */}
                     <div className={styles.column}>
-                      <Badge variant={roleColors[member.role] as any} size="sm">
+                      <span
+                        className={styles.role}
+                        style={{ color: classColors[member.class] }}
+                      >
                         {member.role.toUpperCase()}
-                      </Badge>
+                      </span>
                     </div>
 
                     {/* Status column */}

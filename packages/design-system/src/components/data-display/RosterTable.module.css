@@ -154,6 +154,16 @@
   white-space: nowrap;
 }
 
+.role {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  white-space: nowrap;
+}
+
 /* Status */
 .status {
   display: flex;
