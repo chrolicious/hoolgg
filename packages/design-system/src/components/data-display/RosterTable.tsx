@@ -203,9 +203,9 @@ export const RosterTable = React.forwardRef<HTMLDivElement, RosterTableProps>(
                       animate={{ opacity: 1, height: 'auto' }}
                       exit={{ opacity: 0, height: 0 }}
                       transition={{ duration: 0.3 }}
-                      style={{ overflow: 'hidden', paddingTop: 'var(--hool-space-4)', borderTop: '1px solid rgba(255, 255, 255, 0.1)' }}
+                      style={{ overflow: 'hidden', width: '100%' }}
                     >
-                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--hool-space-4)', paddingBottom: 'var(--hool-space-4)' }}>
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--hool-space-4)', paddingTop: 'var(--hool-space-4)', paddingBottom: 'var(--hool-space-4)', borderTop: '1px solid rgba(255, 255, 255, 0.1)', width: '100%', boxSizing: 'border-box' }}>
                         <div>
                           <div style={{ fontSize: '0.75rem', color: 'rgba(255, 255, 255, 0.6)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '4px' }}>
                             Class
