@@ -65,3 +65,80 @@ See `.env.example` for the full list. Key ones:
 - **api.hool.gg** → Flask recruitment API
 - **analytics.hool.gg** → Umami (self-hosted)
 - SSL via Let's Encrypt (auto-managed by Coolify/Traefik)
+
+## Git Workflow (Git Flow)
+
+**Branches:**
+- `develop` — integration branch (auto-deploys to dev.hool.gg)
+- `staging` — pre-production (auto-deploys to staging.hool.gg)
+- `main` — production (manual deploy to hool.gg, tagged releases)
+- `feature/*`, `bugfix/*` — branch from develop
+
+**Development Workflow:**
+
+1. Create feature branch from develop
+   ```bash
+   git checkout develop
+   git pull origin develop
+   git checkout -b feature/my-feature
+   ```
+
+2. Work locally, commit, push
+   ```bash
+   git push origin feature/my-feature
+   ```
+
+3. Open PR to develop
+   - GitHub Actions runs: lint, typecheck, build, tests
+   - If passing, merge to develop
+   - Auto-deploys to dev.hool.gg
+
+4. Test on dev environment, iterate as needed
+
+5. When ready, open PR `develop → staging`
+   - Full test suite runs
+   - If passing, auto-deploys to staging.hool.gg
+
+6. Manual testing on staging
+   - Test all user flows
+   - Verify with realistic data
+   - Run smoke tests
+
+7. When ready for production, open PR `staging → main`
+   - Full test suite runs
+   - If passing, builds and tags Docker images
+   - Requires explicit manual approval
+   - Auto-deploys to hool.gg
+
+8. Tag the release
+   ```bash
+   git tag v1.0.0
+   git push origin v1.0.0
+   ```
+   GitHub Actions creates release notes automatically.
+
+**Hotfixes (emergency production fixes):**
+```bash
+git checkout main
+git checkout -b hotfix/critical-bug-name
+[fix the bug]
+git push origin hotfix/critical-bug-name
+# Open PR to main
+# Merge, tag, deploy as above
+```
+
+## Versioning
+
+Use **Semantic Versioning**: `MAJOR.MINOR.PATCH`
+- **MAJOR** — breaking changes (rare, coordinate with users)
+- **MINOR** — new features (guilds, new tool, etc.)
+- **PATCH** — bug fixes
+
+Examples:
+- `v1.0.0` — Initial release (Guild API + Auth + Progress Tool)
+- `v1.1.0` — Add Recruitment Tool
+- `v1.1.1` — Fix guild permissions bug
+- `v2.0.0` — Breaking API change (if ever needed)
+
+Tag format: `v1.0.0` (annotated tags preferred)
+Release notes: auto-generated from commit messages (use conventional commits)
