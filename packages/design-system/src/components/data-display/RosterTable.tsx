@@ -5,6 +5,20 @@ import { motion } from 'framer-motion';
 import { Badge } from '../primitives/Badge';
 import styles from './RosterTable.module.css';
 
+// Determine if a color is light or dark for better text contrast
+const getContrastTextColor = (hexColor: string): string => {
+  const hex = hexColor.replace('#', '');
+  const r = parseInt(hex.substr(0, 2), 16);
+  const g = parseInt(hex.substr(2, 2), 16);
+  const b = parseInt(hex.substr(4, 2), 16);
+
+  // Calculate luminance using relative luminance formula
+  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+
+  // Return black text for light backgrounds, white for dark
+  return luminance > 0.5 ? '#000000' : '#ffffff';
+};
+
 export type SortDirection = 'asc' | 'desc' | null;
 export type PlayerStatus = 'online' | 'offline' | 'away';
 export type PlayerRole = 'tank' | 'healer' | 'mdps' | 'rdps';
@@ -143,6 +157,10 @@ export const RosterTable = React.forwardRef<HTMLDivElement, RosterTableProps>(
           ) : (
             members.map((member, index) => {
               const isExpanded = selectedMember?.id === member.id;
+              const textColor = getContrastTextColor(classColors[member.class]);
+              const secondaryTextColor = textColor === '#000000'
+                ? 'rgba(0, 0, 0, 0.6)'
+                : 'rgba(255, 255, 255, 0.6)';
               return (
                 <motion.div
                   key={member.id}
@@ -162,9 +180,9 @@ export const RosterTable = React.forwardRef<HTMLDivElement, RosterTableProps>(
                     {/* Name + Guild column */}
                     <div className={styles.column}>
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-                        <span className={styles.name}>{member.name}</span>
+                        <span className={styles.name} style={{ color: textColor }}>{member.name}</span>
                         {member.guild && (
-                          <span style={{ fontSize: '0.7rem', color: 'rgba(255, 255, 255, 0.6)' }}>
+                          <span style={{ fontSize: '0.7rem', color: secondaryTextColor }}>
                             {member.guild}
                           </span>
                         )}
@@ -174,9 +192,9 @@ export const RosterTable = React.forwardRef<HTMLDivElement, RosterTableProps>(
                     {/* Spec + Hero Talent column */}
                     <div className={styles.column}>
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-                        <span className={styles.spec}>{member.spec}</span>
+                        <span className={styles.spec} style={{ color: textColor }}>{member.spec}</span>
                         {member.herotalent && (
-                          <span style={{ fontSize: '0.7rem', color: 'rgba(255, 255, 255, 0.6)' }}>
+                          <span style={{ fontSize: '0.7rem', color: secondaryTextColor }}>
                             {member.herotalent}
                           </span>
                         )}
@@ -185,12 +203,12 @@ export const RosterTable = React.forwardRef<HTMLDivElement, RosterTableProps>(
 
                     {/* iLvl column */}
                     <div className={styles.column}>
-                      <span className={styles.ilvl}>{member.ilvl}</span>
+                      <span className={styles.ilvl} style={{ color: textColor }}>{member.ilvl}</span>
                     </div>
 
                     {/* Role column */}
                     <div className={styles.column}>
-                      <span className={styles.role}>
+                      <span className={styles.role} style={{ color: textColor }}>
                         {member.role.toUpperCase()}
                       </span>
                     </div>
@@ -206,41 +224,41 @@ export const RosterTable = React.forwardRef<HTMLDivElement, RosterTableProps>(
                       transition={{ duration: 0.3 }}
                       style={{ overflow: 'hidden', width: '100%' }}
                     >
-                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--hool-space-4)', paddingTop: 'var(--hool-space-4)', paddingBottom: 'var(--hool-space-4)', borderTop: '1px solid rgba(255, 255, 255, 0.1)', width: '100%', boxSizing: 'border-box' }}>
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--hool-space-4)', paddingTop: 'var(--hool-space-4)', paddingBottom: 'var(--hool-space-4)', borderTop: `1px solid ${textColor === '#000000' ? 'rgba(0, 0, 0, 0.1)' : 'rgba(255, 255, 255, 0.1)'}`, width: '100%', boxSizing: 'border-box' }}>
                         <div>
-                          <div style={{ fontSize: '0.75rem', color: 'rgba(255, 255, 255, 0.6)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '4px' }}>
+                          <div style={{ fontSize: '0.75rem', color: secondaryTextColor, textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '4px' }}>
                             Class
                           </div>
-                          <div style={{ fontSize: '0.95rem', fontWeight: 'bold', color: '#ffffff' }}>
+                          <div style={{ fontSize: '0.95rem', fontWeight: 'bold', color: textColor }}>
                             {member.class.charAt(0).toUpperCase() + member.class.slice(1)}
                           </div>
                         </div>
                         {member.achievements !== undefined && (
                           <div>
-                            <div style={{ fontSize: '0.75rem', color: 'rgba(255, 255, 255, 0.6)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '4px' }}>
+                            <div style={{ fontSize: '0.75rem', color: secondaryTextColor, textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '4px' }}>
                               Achievements
                             </div>
-                            <div style={{ fontSize: '0.95rem', fontWeight: 'bold', color: '#ffffff' }}>
+                            <div style={{ fontSize: '0.95rem', fontWeight: 'bold', color: textColor }}>
                               {member.achievements}
                             </div>
                           </div>
                         )}
                         {member.joinedDate && (
                           <div>
-                            <div style={{ fontSize: '0.75rem', color: 'rgba(255, 255, 255, 0.6)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '4px' }}>
+                            <div style={{ fontSize: '0.75rem', color: secondaryTextColor, textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '4px' }}>
                               Joined
                             </div>
-                            <div style={{ fontSize: '0.95rem', fontWeight: 'bold', color: '#ffffff' }}>
+                            <div style={{ fontSize: '0.95rem', fontWeight: 'bold', color: textColor }}>
                               {new Date(member.joinedDate).toLocaleDateString()}
                             </div>
                           </div>
                         )}
                         {member.status && (
                           <div>
-                            <div style={{ fontSize: '0.75rem', color: 'rgba(255, 255, 255, 0.6)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '4px' }}>
+                            <div style={{ fontSize: '0.75rem', color: secondaryTextColor, textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '4px' }}>
                               Status
                             </div>
-                            <div style={{ fontSize: '0.95rem', fontWeight: 'bold', color: '#ffffff', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <div style={{ fontSize: '0.95rem', fontWeight: 'bold', color: textColor, display: 'flex', alignItems: 'center', gap: '8px' }}>
                               <div
                                 style={{
                                   width: '8px',
