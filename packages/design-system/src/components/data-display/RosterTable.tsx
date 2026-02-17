@@ -260,8 +260,7 @@ export const RosterTable = React.forwardRef<HTMLDivElement, RosterTableProps>(
                             </div>
                           </div>
                         )}
-                      </div>
-                    </motion.div>
+                      </motion.div>
                     </motion.div>
                   )}
                 </Badge>
