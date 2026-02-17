@@ -125,37 +125,11 @@ export const RosterTable = React.forwardRef<HTMLDivElement, RosterTableProps>(
       onMemberClick?.(member);
     };
 
-    const SortHeader = ({ column, label }: { column: string; label: string }) => (
-      <button
-        className={styles.sortHeader}
-        onClick={() => handleSort(column)}
-        type="button"
-      >
-        <span>{label}</span>
-        {sortBy === column && sortDirection && (
-          <Icon
-            name={sortDirection === 'asc' ? 'arrow-up' : 'arrow-down'}
-            size={12}
-            animation="none"
-          />
-        )}
-      </button>
-    );
-
     return (
       <div
         ref={ref}
         className={`${styles.rosterTable} ${loading ? styles.loading : ''} ${className || ''}`}
       >
-        {/* Sorting controls */}
-        <div className={styles.header}>
-          <SortHeader column="name" label="Name" />
-          <SortHeader column="spec" label="Spec" />
-          <SortHeader column="ilvl" label="iLvl" />
-          <SortHeader column="role" label="Role" />
-          <SortHeader column="status" label="Status" />
-        </div>
-
         {/* Members list */}
         <div className={styles.body}>
           {loading ? (

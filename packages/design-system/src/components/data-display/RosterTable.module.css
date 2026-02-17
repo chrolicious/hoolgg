@@ -9,46 +9,6 @@
   flex: 1;
 }
 
-/* Header - sorting controls */
-.header {
-  display: flex;
-  gap: var(--hool-space-4);
-  padding: var(--hool-space-3) var(--hool-space-4);
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.04) 100%);
-  border-bottom: var(--hool-border-thin) solid rgba(255, 255, 255, 0.1);
-  font-weight: var(--font-weight-semibold);
-  font-size: 0.8125rem;
-  color: rgba(255, 255, 255, 0.7);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  user-select: none;
-  flex-shrink: 0;
-}
-
-/* Sortable header button */
-.sortHeader {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 0;
-  background: none;
-  border: none;
-  color: rgba(255, 255, 255, 0.7);
-  font-family: inherit;
-  font-size: inherit;
-  font-weight: inherit;
-  text-transform: inherit;
-  letter-spacing: inherit;
-  cursor: pointer;
-  transition: color var(--hool-duration-fast) ease;
-  white-space: nowrap;
-  flex: 0 0 auto;
-}
-
-.sortHeader:hover {
-  color: rgba(255, 255, 255, 0.9);
-}
-
 /* Body - list of member badges */
 .body {
   display: flex;
