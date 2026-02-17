@@ -178,18 +178,6 @@ export const RosterTable = React.forwardRef<HTMLDivElement, RosterTableProps>(
                       </span>
                     </div>
 
-                    {/* Status column */}
-                    <div className={styles.column}>
-                      <div className={styles.status}>
-                        <div
-                          className={styles.statusDot}
-                          style={{ backgroundColor: statusColors[member.status] }}
-                        />
-                        <span className={styles.statusText}>
-                          {member.status.charAt(0).toUpperCase() + member.status.slice(1)}
-                        </span>
-                      </div>
-                    </div>
                   </div>
                 </Badge>
               </motion.div>
