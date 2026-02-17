@@ -5,14 +5,8 @@
 .rosterTable {
   display: flex;
   flex-direction: column;
-  border-radius: var(--hool-radius-sm);
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.02) 100%);
-  border: var(--hool-border-medium) solid rgba(255, 255, 255, 0.1);
-  box-shadow:
-    inset var(--hool-border-thin) var(--hool-border-thin) 0 rgba(255, 255, 255, 0.15),
-    inset calc(var(--hool-border-thin) * -1) calc(var(--hool-border-thin) * -1) 0 rgba(0, 0, 0, 0.1),
-    0 4px 12px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
+  gap: 0;
+  flex: 1;
 }
 
 /* Header - sorting controls */
@@ -48,13 +42,14 @@
   cursor: pointer;
   transition: color var(--hool-duration-fast) ease;
   white-space: nowrap;
+  flex: 0 0 auto;
 }
 
 .sortHeader:hover {
   color: rgba(255, 255, 255, 0.9);
 }
 
-/* Body */
+/* Body - list of member badges */
 .body {
   display: flex;
   flex-direction: column;
@@ -64,11 +59,12 @@
   padding: var(--hool-space-3);
 }
 
-/* Member card - full width badge/card row */
-.memberCard {
+/* Member badge - full width with all columns inside */
+.memberBadge {
   position: relative;
   display: flex;
   flex-direction: column;
+  width: 100%;
   border-radius: var(--hool-radius-sm);
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.04) 100%);
   border: var(--hool-border-medium) solid rgba(255, 255, 255, 0.15);
@@ -80,7 +76,7 @@
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.memberCard::before {
+.memberBadge::before {
   content: '';
   position: absolute;
   inset: 0;
@@ -108,74 +104,56 @@
   flex-shrink: 0;
 }
 
-/* Card content area */
-.content {
+/* Badge content area - horizontal layout for all columns */
+.badgeContent {
   position: relative;
   z-index: 2;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: var(--hool-space-4);
+  gap: var(--hool-space-3);
   padding: var(--hool-space-3) var(--hool-space-4);
-}
-
-/* Main info - name, spec, ilvl */
-.mainInfo {
-  display: flex;
-  flex-direction: column;
-  gap: var(--hool-space-2);
-  flex: 1;
   min-width: 0;
 }
 
-.nameSection {
+/* Column - each piece of info */
+.column {
   display: flex;
-  flex-direction: column;
-  gap: var(--hool-space-1);
+  align-items: center;
+  gap: var(--hool-space-2);
+  flex: 0 0 auto;
+  min-width: 0;
+}
+
+.column:first-child {
+  flex: 1 1 200px;
+  min-width: 100px;
 }
 
 .name {
   font-family: var(--font-sans);
-  font-size: 1rem;
+  font-size: 0.875rem;
   font-weight: var(--font-weight-bold);
   color: #ffffff;
   letter-spacing: -0.5px;
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-  word-break: break-word;
-}
-
-.metaInfo {
-  display: flex;
-  gap: var(--hool-space-3);
-  align-items: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .spec {
   font-family: var(--font-sans);
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   color: rgba(255, 255, 255, 0.8);
   white-space: nowrap;
 }
 
 .ilvl {
   font-family: var(--font-mono, 'Monaco', 'Courier New', monospace);
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   font-weight: var(--font-weight-bold);
   color: rgba(255, 255, 255, 0.9);
   white-space: nowrap;
-}
-
-/* Right side - role and status */
-.sideInfo {
-  display: flex;
-  gap: var(--hool-space-3);
-  align-items: center;
-  flex-shrink: 0;
-}
-
-.role {
-  display: flex;
-  flex-shrink: 0;
 }
 
 /* Status */
@@ -184,7 +162,6 @@
   align-items: center;
   gap: 6px;
   white-space: nowrap;
-  flex-shrink: 0;
 }
 
 .statusDot {

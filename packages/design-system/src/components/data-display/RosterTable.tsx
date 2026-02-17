@@ -153,39 +153,45 @@ export const RosterTable = React.forwardRef<HTMLDivElement, RosterTableProps>(
             members.map((member, index) => (
               <motion.div
                 key={member.id}
-                className={`${styles.memberCard} ${onMemberClick ? styles.interactive : ''}`}
+                className={`${styles.memberBadge} ${onMemberClick ? styles.interactive : ''}`}
                 onClick={() => onMemberClick?.(member)}
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.02, duration: 0.2 }}
                 whileHover={onMemberClick ? { y: -4 } : undefined}
               >
-                {/* Class color indicator */}
+                {/* Class color indicator bar */}
                 <div
                   className={styles.classBar}
                   style={{ backgroundColor: classColors[member.class] }}
                 />
 
-                {/* Card content */}
-                <div className={styles.content}>
-                  {/* Main info - name, spec, ilvl */}
-                  <div className={styles.mainInfo}>
-                    <div className={styles.nameSection}>
-                      <span className={styles.name}>{member.name}</span>
-                    </div>
-                    <div className={styles.metaInfo}>
-                      <span className={styles.spec}>{member.spec}</span>
-                      <span className={styles.ilvl}>{member.ilvl} iLvl</span>
-                    </div>
+                {/* Badge content - all columns inside */}
+                <div className={styles.badgeContent}>
+                  {/* Name column */}
+                  <div className={styles.column}>
+                    <span className={styles.name}>{member.name}</span>
                   </div>
 
-                  {/* Right side - role and status */}
-                  <div className={styles.sideInfo}>
-                    <div className={styles.role}>
-                      <Badge variant={roleColors[member.role] as any} size="sm">
-                        {member.role.toUpperCase()}
-                      </Badge>
-                    </div>
+                  {/* Spec column */}
+                  <div className={styles.column}>
+                    <span className={styles.spec}>{member.spec}</span>
+                  </div>
+
+                  {/* iLvl column */}
+                  <div className={styles.column}>
+                    <span className={styles.ilvl}>{member.ilvl}</span>
+                  </div>
+
+                  {/* Role column */}
+                  <div className={styles.column}>
+                    <Badge variant={roleColors[member.role] as any} size="sm">
+                      {member.role.toUpperCase()}
+                    </Badge>
+                  </div>
+
+                  {/* Status column */}
+                  <div className={styles.column}>
                     <div className={styles.status}>
                       <div
                         className={styles.statusDot}
