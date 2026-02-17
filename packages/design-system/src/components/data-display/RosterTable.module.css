@@ -198,7 +198,8 @@
   backdrop-filter: blur(20px);
   border-top: var(--hool-border-thin) solid rgba(255, 255, 255, 0.1);
   border-radius: var(--hool-radius-sm);
-  margin: var(--hool-space-2) var(--hool-space-3) var(--hool-space-3) var(--hool-space-3);
+  margin: var(--hool-space-3);
+  overflow: hidden;
 }
 
 .body::-webkit-scrollbar-thumb:hover {
