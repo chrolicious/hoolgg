@@ -219,7 +219,7 @@ export const RosterTable = React.forwardRef<HTMLDivElement, RosterTableProps>(
                       transition={{ duration: 0.3 }}
                       style={{ overflow: 'hidden', width: '100%', borderRadius: 'var(--hool-radius-sm)' }}
                     >
-                      <div className={styles.expandedContent} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--hool-space-4)', padding: 'var(--hool-space-4)', width: '100%', boxSizing: 'border-box' }}>
+                      <div className={styles.expandedContent} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--hool-space-4)', paddingTop: 'var(--hool-space-4)', paddingBottom: 'var(--hool-space-4)', paddingLeft: 'var(--hool-space-4)', paddingRight: 'var(--hool-space-6)', width: '100%', boxSizing: 'border-box' }}>
                         <div>
                           <div style={{ fontSize: '0.75rem', color: secondaryTextColor, textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '4px' }}>
                             Class
