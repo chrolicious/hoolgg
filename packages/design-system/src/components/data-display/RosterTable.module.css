@@ -15,10 +15,10 @@
   overflow: hidden;
 }
 
-/* Header */
+/* Header - sorting controls */
 .header {
   display: flex;
-  gap: var(--hool-space-3);
+  gap: var(--hool-space-4);
   padding: var(--hool-space-3) var(--hool-space-4);
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.04) 100%);
   border-bottom: var(--hool-border-thin) solid rgba(255, 255, 255, 0.1);
@@ -31,19 +31,11 @@
   flex-shrink: 0;
 }
 
-/* Column */
-.col {
-  display: flex;
-  align-items: center;
-  min-width: 0;
-}
-
 /* Sortable header button */
 .sortHeader {
   display: flex;
   align-items: center;
   gap: 6px;
-  width: 100%;
   padding: 0;
   background: none;
   border: none;
@@ -66,62 +58,98 @@
 .body {
   display: flex;
   flex-direction: column;
+  gap: var(--hool-space-3);
   flex: 1;
   overflow-y: auto;
+  padding: var(--hool-space-3);
 }
 
-/* Row */
-.row {
+/* Member card - full width badge/card row */
+.memberCard {
+  position: relative;
   display: flex;
-  gap: var(--hool-space-3);
-  padding: var(--hool-space-3) var(--hool-space-4);
-  border-bottom: var(--hool-border-thin) solid rgba(255, 255, 255, 0.05);
-  align-items: center;
-  transition: background-color var(--hool-duration-fast) ease;
+  flex-direction: column;
+  border-radius: var(--hool-radius-sm);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.04) 100%);
+  border: var(--hool-border-medium) solid rgba(255, 255, 255, 0.15);
+  box-shadow:
+    inset var(--hool-border-thin) var(--hool-border-thin) 0 rgba(255, 255, 255, 0.2),
+    inset calc(var(--hool-border-thin) * -1) calc(var(--hool-border-thin) * -1) 0 rgba(0, 0, 0, 0.2),
+    0 4px 12px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.row:last-child {
-  border-bottom: none;
-}
-
-.row:hover {
-  background-color: rgba(255, 255, 255, 0.04);
+.memberCard::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0) 100%);
+  pointer-events: none;
+  z-index: 1;
 }
 
 .interactive {
   cursor: pointer;
 }
 
-.interactive:active {
-  background-color: rgba(255, 255, 255, 0.06);
+.interactive:hover {
+  border-color: rgba(255, 255, 255, 0.25);
+  box-shadow:
+    inset var(--hool-border-thin) var(--hool-border-thin) 0 rgba(255, 255, 255, 0.25),
+    inset calc(var(--hool-border-thin) * -1) calc(var(--hool-border-thin) * -1) 0 rgba(0, 0, 0, 0.25),
+    0 8px 16px rgba(0, 0, 0, 0.25);
 }
 
-/* Name column */
-.nameCol {
+/* Class color indicator bar */
+.classBar {
+  height: var(--hool-space-1);
+  width: 100%;
+  flex-shrink: 0;
+}
+
+/* Card content area */
+.content {
+  position: relative;
+  z-index: 2;
   display: flex;
   align-items: center;
-  gap: 10px;
+  justify-content: space-between;
+  gap: var(--hool-space-4);
+  padding: var(--hool-space-3) var(--hool-space-4);
+}
+
+/* Main info - name, spec, ilvl */
+.mainInfo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hool-space-2);
+  flex: 1;
   min-width: 0;
 }
 
-.classIndicator {
-  flex-shrink: 0;
-  width: var(--hool-space-2);
-  height: 24px;
-  border-radius: var(--hool-border-thin);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+.nameSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hool-space-1);
 }
 
 .name {
-  font-weight: var(--font-weight-semibold);
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  font-weight: var(--font-weight-bold);
   color: #ffffff;
+  letter-spacing: -0.5px;
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  word-break: break-word;
 }
 
-/* Spec */
+.metaInfo {
+  display: flex;
+  gap: var(--hool-space-3);
+  align-items: center;
+}
+
 .spec {
   font-family: var(--font-sans);
   font-size: 0.875rem;
@@ -129,14 +157,25 @@
   white-space: nowrap;
 }
 
-/* iLvl */
 .ilvl {
   font-family: var(--font-mono, 'Monaco', 'Courier New', monospace);
   font-size: 0.875rem;
   font-weight: var(--font-weight-bold);
   color: rgba(255, 255, 255, 0.9);
-  text-align: right;
-  width: 100%;
+  white-space: nowrap;
+}
+
+/* Right side - role and status */
+.sideInfo {
+  display: flex;
+  gap: var(--hool-space-3);
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.role {
+  display: flex;
+  flex-shrink: 0;
 }
 
 /* Status */
@@ -145,6 +184,7 @@
   align-items: center;
   gap: 6px;
   white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .statusDot {

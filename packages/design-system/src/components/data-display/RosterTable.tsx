@@ -130,26 +130,16 @@ export const RosterTable = React.forwardRef<HTMLDivElement, RosterTableProps>(
         ref={ref}
         className={`${styles.rosterTable} ${loading ? styles.loading : ''} ${className || ''}`}
       >
-        {/* Table header */}
+        {/* Sorting controls */}
         <div className={styles.header}>
-          <div className={styles.col} style={{ flex: '1 1 200px' }}>
-            <SortHeader column="name" label="Name" />
-          </div>
-          <div className={styles.col} style={{ flex: '0 0 120px' }}>
-            <SortHeader column="spec" label="Spec" />
-          </div>
-          <div className={styles.col} style={{ flex: '0 0 100px' }}>
-            <SortHeader column="ilvl" label="iLvl" />
-          </div>
-          <div className={styles.col} style={{ flex: '0 0 80px' }}>
-            Role
-          </div>
-          <div className={styles.col} style={{ flex: '0 0 80px' }}>
-            Status
-          </div>
+          <SortHeader column="name" label="Name" />
+          <SortHeader column="spec" label="Spec" />
+          <SortHeader column="ilvl" label="iLvl" />
+          <SortHeader column="role" label="Role" />
+          <SortHeader column="status" label="Status" />
         </div>
 
-        {/* Table body */}
+        {/* Members list */}
         <div className={styles.body}>
           {loading ? (
             <div className={styles.placeholder}>
@@ -163,52 +153,48 @@ export const RosterTable = React.forwardRef<HTMLDivElement, RosterTableProps>(
             members.map((member, index) => (
               <motion.div
                 key={member.id}
-                className={`${styles.row} ${onMemberClick ? styles.interactive : ''}`}
+                className={`${styles.memberCard} ${onMemberClick ? styles.interactive : ''}`}
                 onClick={() => onMemberClick?.(member)}
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.02, duration: 0.2 }}
-                whileHover={onMemberClick ? { x: 4 } : undefined}
+                whileHover={onMemberClick ? { y: -4 } : undefined}
               >
-                {/* Name with class color */}
-                <div className={styles.col} style={{ flex: '1 1 200px' }}>
-                  <div className={styles.nameCol}>
-                    <div
-                      className={styles.classIndicator}
-                      style={{ backgroundColor: classColors[member.class] }}
-                      title={member.class}
-                    />
-                    <span className={styles.name}>{member.name}</span>
+                {/* Class color indicator */}
+                <div
+                  className={styles.classBar}
+                  style={{ backgroundColor: classColors[member.class] }}
+                />
+
+                {/* Card content */}
+                <div className={styles.content}>
+                  {/* Main info - name, spec, ilvl */}
+                  <div className={styles.mainInfo}>
+                    <div className={styles.nameSection}>
+                      <span className={styles.name}>{member.name}</span>
+                    </div>
+                    <div className={styles.metaInfo}>
+                      <span className={styles.spec}>{member.spec}</span>
+                      <span className={styles.ilvl}>{member.ilvl} iLvl</span>
+                    </div>
                   </div>
-                </div>
 
-                {/* Spec */}
-                <div className={styles.col} style={{ flex: '0 0 120px' }}>
-                  <span className={styles.spec}>{member.spec}</span>
-                </div>
-
-                {/* iLvl */}
-                <div className={styles.col} style={{ flex: '0 0 100px' }}>
-                  <span className={styles.ilvl}>{member.ilvl}</span>
-                </div>
-
-                {/* Role badge */}
-                <div className={styles.col} style={{ flex: '0 0 80px' }}>
-                  <Badge variant={roleColors[member.role] as any} size="sm">
-                    {member.role.toUpperCase()}
-                  </Badge>
-                </div>
-
-                {/* Status indicator */}
-                <div className={styles.col} style={{ flex: '0 0 80px' }}>
-                  <div className={styles.status}>
-                    <div
-                      className={styles.statusDot}
-                      style={{ backgroundColor: statusColors[member.status] }}
-                    />
-                    <span className={styles.statusText}>
-                      {member.status.charAt(0).toUpperCase() + member.status.slice(1)}
-                    </span>
+                  {/* Right side - role and status */}
+                  <div className={styles.sideInfo}>
+                    <div className={styles.role}>
+                      <Badge variant={roleColors[member.role] as any} size="sm">
+                        {member.role.toUpperCase()}
+                      </Badge>
+                    </div>
+                    <div className={styles.status}>
+                      <div
+                        className={styles.statusDot}
+                        style={{ backgroundColor: statusColors[member.status] }}
+                      />
+                      <span className={styles.statusText}>
+                        {member.status.charAt(0).toUpperCase() + member.status.slice(1)}
+                      </span>
+                    </div>
                   </div>
                 </div>
               </motion.div>
