@@ -50,12 +50,20 @@ const classColors: Record<PlayerClass, string> = {
   evoker: '#00FF96',
 };
 
-// Role badges
-const roleBadgeVariants: Record<PlayerRole, any> = {
-  tank: 'purple',
-  healer: 'primary',
-  mdps: 'destructive',
-  rdps: 'warning',
+// Class badge variants (matching Button.shared.tsx class colors)
+const classBadgeVariants: Record<PlayerClass, any> = {
+  warrior: 'warrior',
+  paladin: 'paladin',
+  hunter: 'hunter',
+  rogue: 'rogue',
+  priest: 'priest',
+  shaman: 'shaman',
+  mage: 'mage',
+  warlock: 'warlock',
+  druid: 'druid',
+  deathknight: 'deathknight',
+  demonhunter: 'demonhunter',
+  evoker: 'evoker',
 };
 
 /**
@@ -117,15 +125,25 @@ export const PlayerCard = React.forwardRef<HTMLDivElement, PlayerCardProps>(
             </div>
           </div>
 
-          {/* Spec and role section */}
+          {/* Class badge - full width */}
+          <div className={styles.badgeWrapper}>
+            <Badge variant={classBadgeVariants[playerClass]} size="sm">
+              {playerClass.charAt(0).toUpperCase() + playerClass.slice(1)}
+            </Badge>
+          </div>
+
+          {/* Spec section */}
           <div className={styles.specSection}>
             <div className={styles.specInfo}>
               <span className={styles.specLabel}>Spec</span>
               <span className={styles.specValue}>{spec}</span>
             </div>
-            <Badge variant={roleBadgeVariants[role]} size="sm">
-              {role.toUpperCase()}
-            </Badge>
+            <div className={styles.roleLabel}>
+              {role === 'tank' && '🛡️'}
+              {role === 'healer' && '✨'}
+              {role === 'mdps' && '⚔️'}
+              {role === 'rdps' && '🔥'}
+            </div>
           </div>
 
           {/* Stats footer */}

@@ -75,7 +75,7 @@
     radial-gradient(2.2px 2.2px at 78% 62%, rgba(255, 255, 255, 0.4) 1.1px, transparent 1.1px);
   background-size: 100% 100%;
   background-repeat: no-repeat;
-  animation: floatParticles var(--hool-duration-slower) ease-in-out infinite;
+  animation: floatParticles 5s ease-in-out infinite;
   pointer-events: none;
   border-radius: var(--hool-radius-sm);
 }

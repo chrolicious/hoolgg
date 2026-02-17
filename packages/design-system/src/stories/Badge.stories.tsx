@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import React from 'react';
 import { Badge, BadgeHeader, BadgeBody, BadgeFooter } from '../components/primitives/Badge';
 import { Icon } from '../components/primitives/Icon';
+import { StickerIcon } from '../components/primitives/StickerIcon';
 
 const meta: Meta<typeof Badge> = {
   title: 'Primitives/Badge',
@@ -96,13 +97,27 @@ export const SoftVariants: Story = {
 };
 
 export const NoProfileIcon: Story = {
-  render: () => (
-    <Badge variant="primary">
-      <BadgeHeader>Treasure</BadgeHeader>
-      <BadgeBody>✨ Rare Item</BadgeBody>
-      <BadgeFooter>⭐⭐⭐</BadgeFooter>
-    </Badge>
-  ),
+  render: () => {
+    const stickerStyle = {
+      textShadow: `
+        -1px 0 0 white, 1px 0 0 white, 0 -1px 0 white, 0 1px 0 white,
+        2px 4px 6px rgba(0, 0, 0, 0.4)
+      `,
+    };
+    return (
+      <Badge variant="primary" profileIcon={<StickerIcon name="gem" size={40} style={stickerStyle} />}>
+        <BadgeHeader>Treasure</BadgeHeader>
+        <BadgeBody>Rare Item</BadgeBody>
+        <BadgeFooter>
+          <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', alignItems: 'center' }}>
+            <StickerIcon name="star" size={20} style={stickerStyle} />
+            <StickerIcon name="star" size={20} style={stickerStyle} />
+            <StickerIcon name="star" size={20} style={stickerStyle} />
+          </div>
+        </BadgeFooter>
+      </Badge>
+    );
+  },
 };
 
 export const WithoutSections: Story = {

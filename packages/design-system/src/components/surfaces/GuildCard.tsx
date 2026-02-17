@@ -72,13 +72,17 @@ export const GuildCard = React.forwardRef<HTMLDivElement, GuildCardProps>(
         />
 
         <div className={styles.content}>
-          {/* Header with guild name and recruiting status */}
+          {/* Header with guild name */}
           <div className={styles.header}>
             <div className={styles.titleSection}>
               <h3 className={styles.guildName}>{name}</h3>
               <p className={styles.realm}>{realm}</p>
             </div>
-            {recruitingStatus && (
+          </div>
+
+          {/* Recruiting status badge - full width */}
+          {recruitingStatus && (
+            <div className={styles.badgeWrapper}>
               <Badge variant={recruitingBadgeVariant} size="sm">
                 {recruitingStatus === 'open'
                   ? 'Recruiting'
@@ -86,8 +90,8 @@ export const GuildCard = React.forwardRef<HTMLDivElement, GuildCardProps>(
                     ? 'Selective'
                     : 'Closed'}
               </Badge>
-            )}
-          </div>
+            </div>
+          )}
 
           {/* Description */}
           {description && <p className={styles.description}>{description}</p>}

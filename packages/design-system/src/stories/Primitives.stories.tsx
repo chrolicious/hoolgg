@@ -1,46 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import React from 'react';
-import { Icon } from '../components/primitives/Icon';
 import { InputWithArrows } from '../components/primitives/InputWithArrows';
 import { InputWithDropdown } from '../components/primitives/InputWithDropdown';
 import { InputWithLabel } from '../components/primitives/InputWithLabel';
 import { LinkButton } from '../components/primitives/LinkButton';
-
-// ============================================================================
-// Icon Stories
-// ============================================================================
-
-const IconMeta: Meta<typeof Icon> = {
-  title: 'Primitives/Icon',
-  component: Icon,
-  parameters: {
-    layout: 'centered',
-  },
-};
-
-export const IconDefault: StoryObj<typeof Icon> = {
-  render: () => (
-    <div style={{ display: 'flex', gap: '24px', alignItems: 'center' }}>
-      <Icon name="Heart" size="sm" />
-      <Icon name="Star" size="md" />
-      <Icon name="Shield" size="lg" />
-      <Icon name="Zap" size="xl" />
-    </div>
-  ),
-};
-
-export const IconVariants: StoryObj<typeof Icon> = {
-  render: () => (
-    <div style={{ display: 'flex', gap: '32px', flexWrap: 'wrap', padding: '24px' }}>
-      {['Heart', 'Star', 'Shield', 'Zap', 'Flame', 'Sword', 'Crown', 'User'].map((icon) => (
-        <div key={icon} style={{ textAlign: 'center' }}>
-          <Icon name={icon as any} size="lg" />
-          <div style={{ fontSize: '0.75rem', marginTop: '8px', color: '#999' }}>{icon}</div>
-        </div>
-      ))}
-    </div>
-  ),
-};
 
 // ============================================================================
 // InputWithArrows Stories
@@ -178,4 +141,4 @@ export const LinkButtonSizes: StoryObj<typeof LinkButton> = {
   ),
 };
 
-export default IconMeta;
+export default InputWithArrowsMeta;

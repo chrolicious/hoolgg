@@ -126,3 +126,69 @@
   opacity: 0.5;
   pointer-events: none;
 }
+
+/* Variant-specific menu item hover colors */
+
+.menu-primary .menuItem:hover {
+  background: rgba(255, 235, 153, 0.3);
+}
+
+.menu-primary .menuItem.selected {
+  background: rgba(255, 235, 153, 0.4);
+}
+
+.menu-secondary .menuItem:hover {
+  background: rgba(229, 204, 255, 0.3);
+}
+
+.menu-secondary .menuItem.selected {
+  background: rgba(229, 204, 255, 0.4);
+}
+
+.menu-purple .menuItem:hover {
+  background: rgba(240, 168, 255, 0.3);
+}
+
+.menu-purple .menuItem.selected {
+  background: rgba(240, 168, 255, 0.4);
+}
+
+.menu-warning .menuItem:hover {
+  background: rgba(165, 216, 255, 0.3);
+}
+
+.menu-warning .menuItem.selected {
+  background: rgba(165, 216, 255, 0.4);
+}
+
+.menu-destructive .menuItem:hover {
+  background: rgba(255, 179, 153, 0.3);
+}
+
+.menu-destructive .menuItem.selected {
+  background: rgba(255, 179, 153, 0.4);
+}
+
+.menu-primary-soft .menuItem:hover {
+  background: rgba(255, 250, 204, 0.4);
+}
+
+.menu-primary-soft .menuItem.selected {
+  background: rgba(255, 250, 204, 0.5);
+}
+
+.menu-purple-soft .menuItem:hover {
+  background: rgba(240, 168, 255, 0.3);
+}
+
+.menu-purple-soft .menuItem.selected {
+  background: rgba(240, 168, 255, 0.4);
+}
+
+.menu-destructive-soft .menuItem:hover {
+  background: rgba(255, 217, 179, 0.3);
+}
+
+.menu-destructive-soft .menuItem.selected {
+  background: rgba(255, 217, 179, 0.4);
+}

@@ -8,6 +8,7 @@ export interface CardProps {
   variant?: 'default' | 'elevated' | 'filled';
   padding?: 'sm' | 'md' | 'lg';
   interactive?: boolean;
+  background?: 'dark' | 'light';
   className?: string;
 }
 
@@ -28,6 +29,7 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
       variant = 'default',
       padding = 'md',
       interactive = false,
+      background = 'dark',
       className,
     },
     ref,
@@ -35,7 +37,7 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
     return (
       <div
         ref={ref}
-        className={`${styles.card} ${styles[variant]} ${styles[`padding-${padding}`]} ${
+        className={`${styles.card} ${styles[variant]} ${styles[`padding-${padding}`]} ${styles[`bg-${background}`]} ${
           interactive ? styles.interactive : ''
         } ${className || ''}`}
       >

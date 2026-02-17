@@ -381,3 +381,67 @@ export const FormModal: Story = {
     );
   },
 };
+
+export const GradientVariants: Story = {
+  render: () => {
+    type GradientType = 'purple-pink' | 'blue-purple' | 'cyan-blue' | 'orange-red' | 'pink-orange' | 'green-yellow' | 'purple-orange';
+    const [openGradient, setOpenGradient] = useState<GradientType | null>(null);
+    const variants: GradientType[] = [
+      'purple-pink',
+      'blue-purple',
+      'cyan-blue',
+      'orange-red',
+      'pink-orange',
+      'green-yellow',
+      'purple-orange',
+    ];
+
+    return (
+      <Container padding="lg">
+        <div
+          style={{
+            display: 'flex',
+            gap: '8px',
+            flexWrap: 'wrap',
+            marginBottom: '16px',
+          }}
+        >
+          {variants.map((variant) => (
+            <Button
+              key={variant}
+              variant="primary"
+              size="sm"
+              onClick={() => setOpenGradient(variant)}
+            >
+              {variant}
+            </Button>
+          ))}
+        </div>
+
+        {variants.map((variant) => (
+          <Modal
+            key={variant}
+            isOpen={openGradient === variant}
+            onClose={() => setOpenGradient(null)}
+            title={`${variant} Gradient`}
+            subtitle="2-color gradient border"
+            gradientVariant={variant}
+            size="md"
+            padding="lg"
+          >
+            <p
+              style={{
+                margin: 0,
+                fontSize: '0.95rem',
+                color: 'rgba(255, 255, 255, 0.8)',
+                lineHeight: 1.5,
+              }}
+            >
+              This modal uses the {variant} gradient variant for the border.
+            </p>
+          </Modal>
+        ))}
+      </Container>
+    );
+  },
+};

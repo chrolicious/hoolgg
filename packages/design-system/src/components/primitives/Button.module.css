@@ -189,6 +189,13 @@
   color: var(--btn-hover-color, #fff);
 }
 
+/* Soft variants: show halftone on hover */
+.button.soft:hover:not(:disabled) .inside::after,
+.button.soft:focus-visible .inside::after {
+  opacity: 1;
+  animation: scrollHalftone 1s linear infinite;
+}
+
 /* --- Selected state: colored + extended, no halftone --- */
 
 /* Colored fill */

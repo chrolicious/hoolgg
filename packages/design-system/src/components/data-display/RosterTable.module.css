@@ -103,7 +103,6 @@
   font-weight: var(--font-weight-bold);
   color: #ffffff;
   letter-spacing: -0.5px;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -197,9 +196,6 @@
   background: rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(20px);
   border-top: var(--hool-border-thin) solid rgba(255, 255, 255, 0.1);
-  border-radius: var(--hool-radius-sm);
-  margin: var(--hool-space-3);
-  overflow: hidden;
 }
 
 .body::-webkit-scrollbar-thumb:hover {

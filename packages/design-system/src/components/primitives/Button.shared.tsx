@@ -71,7 +71,7 @@ export const variantVars = {
     '--btn-outline-color': colors.sticker.outline,
     '--btn-hover-bg': '#E91EFF',
     '--btn-hover-bg-fade': `rgba(233, 30, 255, 0.9)`,
-    '--btn-dot-color': '#E91EFF',
+    '--btn-dot-color': '#8800BB',
     '--btn-hover-color': '#FFFFFF',
   },
   'destructive-soft': {
@@ -81,7 +81,7 @@ export const variantVars = {
     '--btn-outline-color': colors.sticker.outline,
     '--btn-hover-bg': '#FFA500',
     '--btn-hover-bg-fade': 'rgba(255, 165, 0, 0.9)',
-    '--btn-dot-color': '#FFA500',
+    '--btn-dot-color': '#CC7000',
     '--btn-hover-color': '#fff',
   },
   // WoW Class Variants

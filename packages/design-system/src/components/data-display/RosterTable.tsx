@@ -217,7 +217,7 @@ export const RosterTable = React.forwardRef<HTMLDivElement, RosterTableProps>(
                       animate={{ opacity: 1, height: 'auto' }}
                       exit={{ opacity: 0, height: 0 }}
                       transition={{ duration: 0.3 }}
-                      style={{ overflow: 'hidden', width: '100%' }}
+                      style={{ overflow: 'hidden', width: '100%', borderRadius: 'var(--hool-radius-sm)', margin: 'var(--hool-space-2) var(--hool-space-3)' }}
                     >
                       <div className={styles.expandedContent} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--hool-space-4)', padding: 'var(--hool-space-4)', width: '100%', boxSizing: 'border-box' }}>
                         <div>

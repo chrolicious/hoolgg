@@ -4,6 +4,9 @@ export type { ButtonProps, ButtonVariant, ButtonSize, ButtonShape } from './Butt
 export { Icon } from './Icon';
 export type { IconProps } from './Icon';
 
+export { StickerIcon } from './StickerIcon';
+export type { StickerIconProps } from './StickerIcon';
+
 export { Input } from './Input';
 export type { InputProps, InputVariant, InputSize } from './Input';
 

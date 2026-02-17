@@ -6,6 +6,8 @@ import { Icon } from './Icon';
 import styles from './InputWithLabel.module.css';
 import dropdownStyles from './InputWithDropdown.module.css';
 
+import { ButtonVariant } from './Button.shared';
+
 export interface InputWithDropdownProps {
   label: string;
   description?: string;
@@ -14,10 +16,11 @@ export interface InputWithDropdownProps {
   onChange?: (value: string) => void;
   placeholder?: string;
   disabled?: boolean;
+  variant?: ButtonVariant;
 }
 
 export const InputWithDropdown = React.forwardRef<HTMLDivElement, InputWithDropdownProps>(
-  ({ label, description, options, value, onChange, placeholder = 'Select...', disabled = false }, ref) => {
+  ({ label, description, options, value, onChange, placeholder = 'Select...', disabled = false, variant = 'primary' }, ref) => {
     const [isOpen, setIsOpen] = useState(false);
     const [isHovered, setIsHovered] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
@@ -81,7 +84,7 @@ export const InputWithDropdown = React.forwardRef<HTMLDivElement, InputWithDropd
         <AnimatePresence>
           {isOpen && (
             <motion.div
-              className={dropdownStyles.menu}
+              className={`${dropdownStyles.menu} ${dropdownStyles[`menu-${variant}`]}`}
               initial={{ opacity: 0, y: -8 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}

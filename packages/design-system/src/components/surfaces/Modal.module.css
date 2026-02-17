@@ -27,16 +27,6 @@
   max-height: 90vh;
   overflow-y: auto;
   border: var(--hool-border-medium) solid transparent;
-  background-image:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.04) 100%),
-    linear-gradient(
-      45deg,
-      #EF4444 0%,
-      #A855F7 25%,
-      #FB923C 50%,
-      #EC4899 75%,
-      #EF4444 100%
-    );
   background-origin: border-box;
   background-clip: padding-box, border-box;
   background-size: auto, 200% 200%;
@@ -45,6 +35,49 @@
     inset 1px 1px 0 rgba(255, 255, 255, 0.3),
     inset -1px -1px 0 rgba(0, 0, 0, 0.3),
     0 20px 60px rgba(0, 0, 0, 0.4);
+}
+
+/* Gradient variants */
+.gradient-purple-pink {
+  background-image:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.04) 100%),
+    linear-gradient(45deg, #C81EE8, #EC4899);
+}
+
+.gradient-blue-purple {
+  background-image:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.04) 100%),
+    linear-gradient(45deg, #0070E6, #C81EE8);
+}
+
+.gradient-cyan-blue {
+  background-image:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.04) 100%),
+    linear-gradient(45deg, #3FC7EB, #0070E6);
+}
+
+.gradient-orange-red {
+  background-image:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.04) 100%),
+    linear-gradient(45deg, #FF8C2F, #EF4444);
+}
+
+.gradient-pink-orange {
+  background-image:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.04) 100%),
+    linear-gradient(45deg, #EC4899, #FF8C2F);
+}
+
+.gradient-green-yellow {
+  background-image:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.04) 100%),
+    linear-gradient(45deg, #00FF98, #FFD700);
+}
+
+.gradient-purple-orange {
+  background-image:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.04) 100%),
+    linear-gradient(45deg, #C81EE8, #FF8C2F, #EC4899);
 }
 
 /* Skull background container */

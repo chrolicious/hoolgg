@@ -119,6 +119,19 @@
   white-space: nowrap;
 }
 
+/* Badge wrapper - full width */
+.badgeWrapper {
+  display: flex;
+  width: 100%;
+  margin: 0 calc(var(--hool-space-3) * -1);
+  padding: 0 var(--hool-space-3);
+}
+
+.badgeWrapper > :global(div) {
+  flex: 1;
+  width: 100%;
+}
+
 /* Spec and role section */
 .specSection {
   display: flex;
@@ -135,6 +148,13 @@
   flex-direction: column;
   gap: var(--hool-space-1);
   flex: 1;
+}
+
+.roleLabel {
+  font-size: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .specLabel {

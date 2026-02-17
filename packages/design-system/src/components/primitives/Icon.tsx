@@ -2,11 +2,17 @@
 
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import {
+  Heart, Star, Shield, Search, User, Menu, Home, Settings,
+  Zap, Flame, Sword, Crown, AlertCircle,
+  ArrowRight, ArrowLeft, ArrowUp, ArrowDown, ChevronRight, ChevronDown, ChevronLeft,
+  Plus, Check, Link, Pencil, Trash2, X, Minus,
+} from 'lucide-react';
 
 export interface IconProps {
-  /** Icon name (without 'fi-br-' prefix, e.g., 'user', 'home', 'heart') */
+  /** Icon name (from Lucide, e.g., 'user', 'home', 'heart') */
   name: string;
-  /** Icon size in pixels — defaults to 1em (inherits from parent) */
+  /** Icon size in pixels — defaults to 24 */
   size?: number | string;
   /** Animation style — only applies on hover */
   animation?: 'bounce' | 'spin' | 'pulse' | 'wiggle' | 'slide' | 'shake' | 'swing' | 'spin-once' | 'pop' | 'none';
@@ -17,13 +23,43 @@ export interface IconProps {
 }
 
 /**
- * Icon component using Flaticon Uicons Bold Rounded
+ * Icon component using Lucide React icons
  *
  * Usage: <Icon name="user" size={24} animation="bounce" />
  *
- * Available icons: https://www.flaticon.com/packs/uicons-bold-rounded
- * (4000+ icons available)
+ * Available icons: https://lucide.dev
+ * (1000+ icons available)
  */
+
+const iconMap: Record<string, React.ComponentType<any>> = {
+  heart: Heart,
+  star: Star,
+  shield: Shield,
+  search: Search,
+  user: User,
+  menu: Menu,
+  home: Home,
+  settings: Settings,
+  zap: Zap,
+  flame: Flame,
+  sword: Sword,
+  crown: Crown,
+  'alert-circle': AlertCircle,
+  'arrow-right': ArrowRight,
+  'arrow-left': ArrowLeft,
+  'arrow-up': ArrowUp,
+  'arrow-down': ArrowDown,
+  'chevron-right': ChevronRight,
+  'chevron-left': ChevronLeft,
+  'chevron-down': ChevronDown,
+  plus: Plus,
+  check: Check,
+  link: Link,
+  pencil: Pencil,
+  trash: Trash2,
+  'x-mark': X,
+  minus: Minus,
+};
 
 const animations: Record<string, any> = {
   bounce: {
@@ -162,9 +198,13 @@ export const Icon = React.forwardRef<HTMLElement, IconProps>(
       };
     }, []);
 
-    const sizeStyle = size !== undefined
-      ? { fontSize: typeof size === 'number' ? `${size}px` : size }
-      : { fontSize: '1em' };
+    const sizePixels = typeof size === 'number' ? size : 24;
+    const LucideIcon = iconMap[name.toLowerCase()];
+
+    if (!LucideIcon) {
+      console.warn(`Icon "${name}" not found in icon map`);
+      return null;
+    }
 
     return (
       <motion.div
@@ -178,13 +218,11 @@ export const Icon = React.forwardRef<HTMLElement, IconProps>(
           justifyContent: 'center',
         }}
       >
-        <i
-          ref={ref}
-          className={`fi fi-br-${name} ${className || ''}`.trim()}
-          style={{
-            ...sizeStyle,
-            ...style,
-          }}
+        <LucideIcon
+          size={sizePixels}
+          className={className || ''}
+          style={style}
+          strokeWidth={2}
         />
       </motion.div>
     );

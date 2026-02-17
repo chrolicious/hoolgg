@@ -113,6 +113,8 @@ const SkullBackground: React.FC = () => {
   );
 };
 
+export type GradientVariant = 'purple-pink' | 'blue-purple' | 'cyan-blue' | 'orange-red' | 'pink-orange' | 'green-yellow' | 'purple-orange';
+
 export interface ModalProps {
   children?: React.ReactNode;
   isOpen: boolean;
@@ -124,6 +126,7 @@ export interface ModalProps {
   closeOnEscapeKey?: boolean;
   size?: 'sm' | 'md' | 'lg' | 'xl';
   padding?: 'sm' | 'md' | 'lg';
+  gradientVariant?: GradientVariant;
   className?: string;
 }
 
@@ -149,6 +152,7 @@ export const Modal = React.forwardRef<HTMLDivElement, ModalProps>(
       closeOnEscapeKey = true,
       size = 'md',
       padding = 'lg',
+      gradientVariant = 'purple-pink',
       className,
       ...props
     },
@@ -213,7 +217,7 @@ export const Modal = React.forwardRef<HTMLDivElement, ModalProps>(
               {/* Modal content */}
               <div
                 ref={ref}
-                className={`${styles.modal} ${styles[`size-${size}`]} ${className || ''}`}
+                className={`${styles.modal} ${styles[`size-${size}`]} ${styles[`gradient-${gradientVariant}`]} ${className || ''}`}
                 onClick={(e) => e.stopPropagation()}
                 {...props}
               >

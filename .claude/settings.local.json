@@ -50,7 +50,10 @@
       "Bash(comm:*)",
       "Bash(npx stylelint:*)",
       "Bash(grep:*)",
-      "Bash(pnpm run typecheck:*)"
+      "Bash(pnpm run typecheck:*)",
+      "Bash(netstat:*)",
+      "Bash(pnpm --filter @hool/design-system run storybook:*)",
+      "Bash(npx storybook dev:*)"
     ]
   }
 }
