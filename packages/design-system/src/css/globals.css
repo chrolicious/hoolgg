@@ -56,10 +56,6 @@
 }
 
 /* Global Typography */
-html {
-  scrollbar-gutter: stable;
-}
-
 html,
 body {
   font-family: var(--font-sans);
@@ -67,6 +63,7 @@ body {
   line-height: var(--text-body-line-height);
   font-weight: var(--text-body-font-weight);
   color: #fff;
+  overflow-y: scroll;
 }
 
 /* Headings */
