@@ -213,14 +213,14 @@ export const RosterTable = React.forwardRef<HTMLDivElement, RosterTableProps>(
                   {/* Expanded content */}
                   {isExpanded && (
                     <motion.div
-                      layout
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      transition={{ duration: 0.2 }}
+                      layout="position"
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      transition={{ duration: 0.15, ease: 'easeOut' }}
                       style={{ overflow: 'hidden', width: '100%', borderRadius: 'var(--hool-radius-sm)' }}
                     >
-                      <div className={styles.expandedContent} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--hool-space-4)', paddingTop: 'var(--hool-space-5)', paddingBottom: 'var(--hool-space-5)', paddingLeft: 'var(--hool-space-5)', paddingRight: 'var(--hool-space-8)', width: '100%', boxSizing: 'border-box' }}>
+                      <motion.div layout className={styles.expandedContent} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--hool-space-4)', paddingTop: 'var(--hool-space-5)', paddingBottom: 'var(--hool-space-5)', paddingLeft: 'var(--hool-space-5)', paddingRight: 'var(--hool-space-8)', width: '100%', boxSizing: 'border-box' }}>
                         <div>
                           <div style={{ fontSize: '0.75rem', color: secondaryTextColor, textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '4px' }}>
                             Class
@@ -261,6 +261,7 @@ export const RosterTable = React.forwardRef<HTMLDivElement, RosterTableProps>(
                           </div>
                         )}
                       </div>
+                    </motion.div>
                     </motion.div>
                   )}
                 </Badge>
