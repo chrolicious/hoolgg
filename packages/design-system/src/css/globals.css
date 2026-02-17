@@ -56,6 +56,10 @@
 }
 
 /* Global Typography */
+html {
+  scrollbar-gutter: stable;
+}
+
 html,
 body {
   font-family: var(--font-sans);
