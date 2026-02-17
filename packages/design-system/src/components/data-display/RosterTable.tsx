@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Badge } from '../primitives/Badge';
 import { StatusIndicator } from '../primitives/StatusIndicator';
 import styles from './RosterTable.module.css';
@@ -211,14 +211,16 @@ export const RosterTable = React.forwardRef<HTMLDivElement, RosterTableProps>(
                   </div>
 
                   {/* Expanded content */}
-                  {isExpanded && (
-                    <motion.div
-                      initial={{ opacity: 0, maxHeight: 0 }}
-                      animate={{ opacity: 1, maxHeight: 500 }}
-                      exit={{ opacity: 0, maxHeight: 0 }}
-                      transition={{ duration: 0.25, ease: 'easeInOut' }}
-                      style={{ overflow: 'hidden', width: '100%', borderRadius: 'var(--hool-radius-sm)' }}
-                    >
+                  <AnimatePresence mode="wait">
+                    {isExpanded && (
+                      <motion.div
+                        key={`expanded-${member.id}`}
+                        initial={{ opacity: 0, maxHeight: 0 }}
+                        animate={{ opacity: 1, maxHeight: 500 }}
+                        exit={{ opacity: 0, maxHeight: 0 }}
+                        transition={{ duration: 0.2, ease: 'easeInOut' }}
+                        style={{ overflow: 'hidden', width: '100%', borderRadius: 'var(--hool-radius-sm)' }}
+                      >
                       <div className={styles.expandedContent} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--hool-space-4)', paddingTop: 'var(--hool-space-5)', paddingBottom: 'var(--hool-space-5)', paddingLeft: 'var(--hool-space-5)', paddingRight: 'var(--hool-space-8)', width: '100%', boxSizing: 'border-box' }}>
                         <div>
                           <div style={{ fontSize: '0.75rem', color: secondaryTextColor, textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '4px' }}>
@@ -261,7 +263,8 @@ export const RosterTable = React.forwardRef<HTMLDivElement, RosterTableProps>(
                         )}
                       </div>
                     </motion.div>
-                  )}
+                    )}
+                  </AnimatePresence>
                 </Badge>
                 </motion.div>
               </motion.div>
