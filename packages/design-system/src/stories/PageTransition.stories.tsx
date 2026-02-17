@@ -9,7 +9,7 @@ const meta: Meta<typeof PageTransition> = {
   title: 'Animation/PageTransition',
   component: PageTransition,
   parameters: {
-    layout: 'centered',
+    layout: 'fullscreen',
   },
   argTypes: {
     mode: {
