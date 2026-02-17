@@ -192,6 +192,13 @@
   border-radius: 3px;
 }
 
+/* Expanded content section - frosted glass effect */
+.expandedContent {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(20px);
+  border-top: var(--hool-border-thin) solid rgba(255, 255, 255, 0.1);
+}
+
 .body::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.25);
 }
