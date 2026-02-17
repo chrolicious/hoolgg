@@ -129,6 +129,7 @@ export const PageTransition = React.forwardRef<
         variants={variants}
         transition={transition}
         className={className}
+        style={{ width: '100%' }}
       >
         {children}
       </motion.div>
