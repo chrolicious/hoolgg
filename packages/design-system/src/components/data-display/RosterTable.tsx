@@ -153,56 +153,59 @@ export const RosterTable = React.forwardRef<HTMLDivElement, RosterTableProps>(
             members.map((member, index) => (
               <motion.div
                 key={member.id}
-                className={`${styles.memberBadge} ${onMemberClick ? styles.interactive : ''}`}
-                onClick={() => onMemberClick?.(member)}
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.02, duration: 0.2 }}
                 whileHover={onMemberClick ? { y: -4 } : undefined}
               >
-                {/* Class color indicator bar */}
-                <div
-                  className={styles.classBar}
-                  style={{ backgroundColor: classColors[member.class] }}
-                />
+                <Badge
+                  className={`${styles.memberBadge} ${onMemberClick ? styles.interactive : ''}`}
+                  onClick={() => onMemberClick?.(member)}
+                >
+                  {/* Class color indicator bar */}
+                  <div
+                    className={styles.classBar}
+                    style={{ backgroundColor: classColors[member.class] }}
+                  />
 
-                {/* Badge content - all columns inside */}
-                <div className={styles.badgeContent}>
-                  {/* Name column */}
-                  <div className={styles.column}>
-                    <span className={styles.name}>{member.name}</span>
-                  </div>
+                  {/* Badge content - all columns inside */}
+                  <div className={styles.badgeContent}>
+                    {/* Name column */}
+                    <div className={styles.column}>
+                      <span className={styles.name}>{member.name}</span>
+                    </div>
 
-                  {/* Spec column */}
-                  <div className={styles.column}>
-                    <span className={styles.spec}>{member.spec}</span>
-                  </div>
+                    {/* Spec column */}
+                    <div className={styles.column}>
+                      <span className={styles.spec}>{member.spec}</span>
+                    </div>
 
-                  {/* iLvl column */}
-                  <div className={styles.column}>
-                    <span className={styles.ilvl}>{member.ilvl}</span>
-                  </div>
+                    {/* iLvl column */}
+                    <div className={styles.column}>
+                      <span className={styles.ilvl}>{member.ilvl}</span>
+                    </div>
 
-                  {/* Role column */}
-                  <div className={styles.column}>
-                    <Badge variant={roleColors[member.role] as any} size="sm">
-                      {member.role.toUpperCase()}
-                    </Badge>
-                  </div>
+                    {/* Role column */}
+                    <div className={styles.column}>
+                      <Badge variant={roleColors[member.role] as any} size="sm">
+                        {member.role.toUpperCase()}
+                      </Badge>
+                    </div>
 
-                  {/* Status column */}
-                  <div className={styles.column}>
-                    <div className={styles.status}>
-                      <div
-                        className={styles.statusDot}
-                        style={{ backgroundColor: statusColors[member.status] }}
-                      />
-                      <span className={styles.statusText}>
-                        {member.status.charAt(0).toUpperCase() + member.status.slice(1)}
-                      </span>
+                    {/* Status column */}
+                    <div className={styles.column}>
+                      <div className={styles.status}>
+                        <div
+                          className={styles.statusDot}
+                          style={{ backgroundColor: statusColors[member.status] }}
+                        />
+                        <span className={styles.statusText}>
+                          {member.status.charAt(0).toUpperCase() + member.status.slice(1)}
+                        </span>
+                      </div>
                     </div>
                   </div>
-                </div>
+                </Badge>
               </motion.div>
             ))
           )}

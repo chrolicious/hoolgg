@@ -13,6 +13,7 @@ export interface BadgeProps {
   profileIcon?: React.ReactNode;
   className?: string;
   children?: React.ReactNode;
+  onClick?: () => void;
 }
 
 interface BadgeSectionProps {
@@ -28,6 +29,7 @@ export const Badge = React.forwardRef<HTMLDivElement, BadgeProps>(
       profileIcon,
       className,
       children,
+      onClick,
     },
     ref,
   ) => {
@@ -37,6 +39,7 @@ export const Badge = React.forwardRef<HTMLDivElement, BadgeProps>(
         className={`${styles.badge} ${styles[size]} ${className || ''}`}
         style={variantVars[variant] as React.CSSProperties}
         data-variant={variant}
+        onClick={onClick}
       >
         {/* Outline layer */}
         <div className={styles.outline}>

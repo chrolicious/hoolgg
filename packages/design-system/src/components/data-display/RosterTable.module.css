@@ -59,42 +59,39 @@
   padding: var(--hool-space-3);
 }
 
-/* Member badge - full width with all columns inside */
+/* Member badge - full width override of Badge component */
 .memberBadge {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  border-radius: var(--hool-radius-sm);
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.04) 100%);
-  border: var(--hool-border-medium) solid rgba(255, 255, 255, 0.15);
-  box-shadow:
-    inset var(--hool-border-thin) var(--hool-border-thin) 0 rgba(255, 255, 255, 0.2),
-    inset calc(var(--hool-border-thin) * -1) calc(var(--hool-border-thin) * -1) 0 rgba(0, 0, 0, 0.2),
-    0 4px 12px rgba(0, 0, 0, 0.15);
-  overflow: hidden;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  /* Override Badge fixed dimensions */
+  width: 100% !important;
+  height: auto !important;
+  max-width: none !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0 !important;
 }
 
-.memberBadge::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0) 100%);
-  pointer-events: none;
-  z-index: 1;
+.memberBadge > div {
+  display: flex !important;
+  flex-direction: column !important;
+  flex: 1 !important;
+  height: auto !important;
+}
+
+/* Override inside content to be horizontal */
+.memberBadge :global(.inside) {
+  flex-direction: row !important;
+  gap: 0 !important;
+  padding: 0 !important;
+  align-items: center;
+}
+
+/* Override profileIcon to be the class bar */
+.memberBadge :global(.profileIcon) {
+  display: none !important;
 }
 
 .interactive {
   cursor: pointer;
-}
-
-.interactive:hover {
-  border-color: rgba(255, 255, 255, 0.25);
-  box-shadow:
-    inset var(--hool-border-thin) var(--hool-border-thin) 0 rgba(255, 255, 255, 0.25),
-    inset calc(var(--hool-border-thin) * -1) calc(var(--hool-border-thin) * -1) 0 rgba(0, 0, 0, 0.25),
-    0 8px 16px rgba(0, 0, 0, 0.25);
 }
 
 /* Class color indicator bar */
@@ -102,17 +99,18 @@
   height: var(--hool-space-1);
   width: 100%;
   flex-shrink: 0;
+  order: -1;
 }
 
 /* Badge content area - horizontal layout for all columns */
 .badgeContent {
-  position: relative;
-  z-index: 2;
   display: flex;
   align-items: center;
   gap: var(--hool-space-3);
   padding: var(--hool-space-3) var(--hool-space-4);
+  width: 100%;
   min-width: 0;
+  flex: 1;
 }
 
 /* Column - each piece of info */
