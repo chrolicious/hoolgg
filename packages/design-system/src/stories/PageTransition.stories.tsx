@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { PageTransition } from '../components/animation/PageTransition';
+import { Container } from '../components/layout/Container';
 import { Stack } from '../components/layout/Stack';
 import { useState } from 'react';
 import { Button } from '../components/primitives/Button';
@@ -70,13 +71,15 @@ export const FadeMode: Story = {
     isVisible: true,
   },
   render: (args) => (
-    <div style={{ padding: 'var(--hool-space-6)' }}>
+    <div style={{ padding: 'var(--hool-space-6)', height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <Container padding="lg" style={{ maxWidth: '800px' }}>
       <PageTransition {...args}>
         <PageContent
           title="Fade Transition"
           color="linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
         />
       </PageTransition>
+      </Container>
     </div>
   ),
 };
@@ -89,13 +92,15 @@ export const SlideMode: Story = {
     isVisible: true,
   },
   render: (args) => (
-    <div style={{ padding: 'var(--hool-space-6)' }}>
+    <div style={{ padding: 'var(--hool-space-6)', height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <Container padding="lg" style={{ maxWidth: '800px' }}>
       <PageTransition {...args}>
         <PageContent
           title="Slide Transition"
           color="linear-gradient(135deg, #f093fb 0%, #f5576c 100%)"
         />
       </PageTransition>
+      </Container>
     </div>
   ),
 };
@@ -108,24 +113,28 @@ export const ZigzagWipeMode: Story = {
     isVisible: true,
   },
   render: (args) => (
-    <div style={{ padding: 'var(--hool-space-6)' }}>
+    <div style={{ padding: 'var(--hool-space-6)', height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <Container padding="lg" style={{ maxWidth: '800px' }}>
       <PageTransition {...args}>
         <PageContent
           title="Zigzag Wipe (Mario Wonder Style)"
           color="linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)"
         />
       </PageTransition>
+      </Container>
     </div>
   ),
 };
 
 export const AllDirections: Story = {
   render: () => (
-    <div style={{ padding: 'var(--hool-space-6)' }}>
+    <div style={{ padding: 'var(--hool-space-6)', height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <Container padding="lg" style={{ maxWidth: '800px' }}>
       <Stack direction="vertical" gap="lg">
         <div style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: '0.75rem' }}>
           Fade from all directions
-        </div>
+          </Container>
+    </div>
 
         <PageTransition mode="fade" direction="left" isVisible={true}>
           <PageContent title="From Left" color="rgba(100, 200, 255, 0.3)" />
@@ -143,17 +152,20 @@ export const AllDirections: Story = {
           <PageContent title="From Bottom" color="rgba(100, 255, 200, 0.3)" />
         </PageTransition>
       </Stack>
+      </Container>
     </div>
   ),
 };
 
 export const SlideAllDirections: Story = {
   render: () => (
-    <div style={{ padding: 'var(--hool-space-6)' }}>
+    <div style={{ padding: 'var(--hool-space-6)', height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <Container padding="lg" style={{ maxWidth: '800px' }}>
       <Stack direction="vertical" gap="lg">
         <div style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: '0.75rem' }}>
           Slide transitions from all directions
-        </div>
+          </Container>
+    </div>
 
         <PageTransition mode="slide" direction="left" isVisible={true}>
           <PageContent
@@ -183,6 +195,7 @@ export const SlideAllDirections: Story = {
           />
         </PageTransition>
       </Stack>
+      </Container>
     </div>
   ),
 };
@@ -208,7 +221,8 @@ export const InteractivePageSwitch: Story = {
     const currentPage = pages[page];
 
     return (
-      <div style={{ padding: 'var(--hool-space-6)' }}>
+      <div style={{ padding: 'var(--hool-space-6)', height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <Container padding="lg" style={{ maxWidth: '800px' }}>
         <Stack direction="vertical" gap="lg">
           <div style={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>
             {pages.map((_, idx) => (
@@ -222,7 +236,8 @@ export const InteractivePageSwitch: Story = {
                 Page {idx + 1}
               </Button>
             ))}
-          </div>
+            </Container>
+    </div>
 
           <PageTransition
             key={page}
@@ -233,7 +248,8 @@ export const InteractivePageSwitch: Story = {
             <PageContent title={currentPage.title} color={currentPage.color} />
           </PageTransition>
         </Stack>
-      </div>
+        </Container>
+    </div>
     );
   },
 };
@@ -260,7 +276,8 @@ export const DirectionalPageSwitch: Story = {
     const direction = page > 1 ? 'left' : 'right';
 
     return (
-      <div style={{ padding: 'var(--hool-space-6)' }}>
+      <div style={{ padding: 'var(--hool-space-6)', height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <Container padding="lg" style={{ maxWidth: '800px' }}>
         <Stack direction="vertical" gap="lg">
           <div style={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>
             <Button
@@ -279,7 +296,8 @@ export const DirectionalPageSwitch: Story = {
             >
               Next
             </Button>
-          </div>
+            </Container>
+    </div>
 
           <PageTransition
             key={page}
@@ -294,18 +312,21 @@ export const DirectionalPageSwitch: Story = {
             />
           </PageTransition>
         </Stack>
-      </div>
+        </Container>
+    </div>
     );
   },
 };
 
 export const DurationVariants: Story = {
   render: () => (
-    <div style={{ padding: 'var(--hool-space-6)' }}>
+    <div style={{ padding: 'var(--hool-space-6)', height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <Container padding="lg" style={{ maxWidth: '800px' }}>
       <Stack direction="vertical" gap="lg">
         <div style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: '0.75rem' }}>
           0.2s (Quick)
-        </div>
+          </Container>
+    </div>
         <PageTransition mode="fade" duration={0.2} isVisible={true}>
           <PageContent
             title="Quick Transition"
@@ -315,7 +336,8 @@ export const DurationVariants: Story = {
 
         <div style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: '0.75rem' }}>
           0.6s (Normal)
-        </div>
+          </Container>
+    </div>
         <PageTransition mode="fade" duration={0.6} isVisible={true}>
           <PageContent
             title="Normal Transition"
@@ -325,7 +347,8 @@ export const DurationVariants: Story = {
 
         <div style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: '0.75rem' }}>
           1.2s (Slow)
-        </div>
+          </Container>
+    </div>
         <PageTransition mode="fade" duration={1.2} isVisible={true}>
           <PageContent
             title="Slow Transition"
@@ -333,6 +356,7 @@ export const DurationVariants: Story = {
           />
         </PageTransition>
       </Stack>
+      </Container>
     </div>
   ),
 };
