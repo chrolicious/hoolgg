@@ -213,10 +213,11 @@ export const RosterTable = React.forwardRef<HTMLDivElement, RosterTableProps>(
                   {/* Expanded content */}
                   {isExpanded && (
                     <motion.div
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: 'auto' }}
-                      exit={{ opacity: 0, height: 0 }}
-                      transition={{ duration: 0.3 }}
+                      layout
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.2 }}
                       style={{ overflow: 'hidden', width: '100%', borderRadius: 'var(--hool-radius-sm)' }}
                     >
                       <div className={styles.expandedContent} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--hool-space-4)', paddingTop: 'var(--hool-space-5)', paddingBottom: 'var(--hool-space-5)', paddingLeft: 'var(--hool-space-5)', paddingRight: 'var(--hool-space-8)', width: '100%', boxSizing: 'border-box' }}>
