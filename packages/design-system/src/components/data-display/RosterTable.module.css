@@ -196,7 +196,7 @@
   background: rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(20px);
   border-top: var(--hool-border-thin) solid rgba(255, 255, 255, 0.1);
-  margin: var(--hool-space-2) var(--hool-space-3);
+  margin: var(--hool-space-2) var(--hool-space-6) var(--hool-space-2) var(--hool-space-3);
 }
 
 .body::-webkit-scrollbar-thumb:hover {
