@@ -61,11 +61,20 @@ const classColors: Record<PlayerClass, string> = {
   evoker: '#00FF96',
 };
 
-const roleColors: Record<PlayerRole, string> = {
-  tank: 'purple',
-  healer: 'primary',
-  mdps: 'destructive',
-  rdps: 'warning',
+// Map each class to its Badge variant
+const classBadgeVariants: Record<PlayerClass, any> = {
+  warrior: 'warrior',
+  paladin: 'paladin',
+  hunter: 'hunter',
+  rogue: 'rogue',
+  priest: 'priest',
+  shaman: 'shaman',
+  mage: 'mage',
+  warlock: 'warlock',
+  druid: 'druid',
+  deathknight: 'deathknight',
+  demonhunter: 'demonhunter',
+  evoker: 'evoker',
 };
 
 const statusColors: Record<PlayerStatus, string> = {
@@ -159,15 +168,10 @@ export const RosterTable = React.forwardRef<HTMLDivElement, RosterTableProps>(
                 whileHover={onMemberClick ? { y: -4 } : undefined}
               >
                 <Badge
+                  variant={classBadgeVariants[member.class]}
                   className={`${styles.memberBadge} ${onMemberClick ? styles.interactive : ''}`}
                   onClick={() => onMemberClick?.(member)}
                 >
-                  {/* Class color indicator bar */}
-                  <div
-                    className={styles.classBar}
-                    style={{ backgroundColor: classColors[member.class] }}
-                  />
-
                   {/* Badge content - all columns inside */}
                   <div className={styles.badgeContent}>
                     {/* Name column */}
@@ -187,10 +191,7 @@ export const RosterTable = React.forwardRef<HTMLDivElement, RosterTableProps>(
 
                     {/* Role column */}
                     <div className={styles.column}>
-                      <span
-                        className={styles.role}
-                        style={{ color: classColors[member.class] }}
-                      >
+                      <span className={styles.role}>
                         {member.role.toUpperCase()}
                       </span>
                     </div>
