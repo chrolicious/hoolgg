@@ -34,6 +34,8 @@ export interface RosterMember {
   achievements?: number;
   status: PlayerStatus;
   joinedDate?: string;
+  guild?: string;
+  herotalent?: string;
 }
 
 export interface RosterTableProps {
@@ -156,14 +158,28 @@ export const RosterTable = React.forwardRef<HTMLDivElement, RosterTableProps>(
                 >
                   {/* Badge content - all columns inside */}
                   <div className={styles.badgeContent}>
-                    {/* Name column */}
+                    {/* Name + Guild column */}
                     <div className={styles.column}>
-                      <span className={styles.name}>{member.name}</span>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                        <span className={styles.name}>{member.name}</span>
+                        {member.guild && (
+                          <span style={{ fontSize: '0.7rem', color: 'rgba(255, 255, 255, 0.6)' }}>
+                            {member.guild}
+                          </span>
+                        )}
+                      </div>
                     </div>
 
-                    {/* Spec column */}
+                    {/* Spec + Hero Talent column */}
                     <div className={styles.column}>
-                      <span className={styles.spec}>{member.spec}</span>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                        <span className={styles.spec}>{member.spec}</span>
+                        {member.herotalent && (
+                          <span style={{ fontSize: '0.7rem', color: 'rgba(255, 255, 255, 0.6)' }}>
+                            {member.herotalent}
+                          </span>
+                        )}
+                      </div>
                     </div>
 
                     {/* iLvl column */}
