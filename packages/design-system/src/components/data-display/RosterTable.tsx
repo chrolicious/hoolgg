@@ -1,8 +1,9 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Badge } from '../primitives/Badge';
+import { StatusIndicator } from '../primitives/StatusIndicator';
 import styles from './RosterTable.module.css';
 
 // Determine if a color is light or dark for better text contrast
@@ -90,12 +91,6 @@ const classBadgeVariants: Record<PlayerClass, any> = {
   deathknight: 'deathknight',
   demonhunter: 'demonhunter',
   evoker: 'evoker',
-};
-
-const statusColors: Record<PlayerStatus, string> = {
-  online: '#10B981',
-  offline: '#6B7280',
-  away: '#F59E0B',
 };
 
 /**
@@ -259,14 +254,7 @@ export const RosterTable = React.forwardRef<HTMLDivElement, RosterTableProps>(
                               Status
                             </div>
                             <div style={{ fontSize: '0.95rem', fontWeight: 'bold', color: textColor, display: 'flex', alignItems: 'center', gap: '8px' }}>
-                              <div
-                                style={{
-                                  width: '8px',
-                                  height: '8px',
-                                  borderRadius: '50%',
-                                  backgroundColor: statusColors[member.status],
-                                }}
-                              />
+                              <StatusIndicator status={member.status} />
                               {member.status.charAt(0).toUpperCase() + member.status.slice(1)}
                             </div>
                           </div>
