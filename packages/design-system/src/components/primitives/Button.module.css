@@ -40,6 +40,7 @@
   --b1: calc((var(--bevel) + var(--bw) * 2) - (var(--bw) * 0.4142) * 2);
   --b2: calc(var(--b1) + var(--bw));
   --b3: calc(var(--b2) + var(--bw));
+  --outline-duration: var(--hool-duration-normal);
   display: block;
   margin-top: calc(var(--bw) * -1);
   margin-left: calc(var(--bw) * -1);
@@ -55,11 +56,12 @@
     var(--bw) calc(100% - var(--b2)),
     var(--bw) var(--b2)
   );
-  transition: clip-path var(--hool-duration-normal) cubic-bezier(0.4, 0, 0.2, 1);
+  transition: clip-path var(--outline-duration) cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .button:hover:not(:active):not(:disabled) .outline,
 .button:focus-visible:not(:active) .outline {
+  --outline-duration: var(--hool-duration-fast);
   clip-path: polygon(
     var(--b1) 0,
     calc(100% - var(--b3)) 0,
@@ -70,7 +72,6 @@
     0 calc(100% - var(--b3)),
     0 var(--b1)
   );
-  transition: clip-path var(--hool-duration-fast) cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* --- Layer 2: Dark border + shadow --- */
@@ -79,6 +80,7 @@
   --b1: calc((var(--bevel) + var(--bw)) - var(--bw) * 0.4142);
   --b2: calc(var(--b1) + var(--bw));
   --b3: calc(var(--b2) + var(--bw));
+  --darkLayer-duration: var(--hool-duration-normal);
   display: block;
   padding: calc(var(--bw) * 2);
   background-color: var(--btn-border-color, #1d2119);
@@ -92,11 +94,12 @@
     var(--bw) calc(100% - var(--b2)),
     var(--bw) var(--b2)
   );
-  transition: clip-path var(--hool-duration-normal) cubic-bezier(0.4, 0, 0.2, 1);
+  transition: clip-path var(--darkLayer-duration) cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .button:hover:not(:active):not(:disabled) .darkLayer,
 .button:focus-visible:not(:active) .darkLayer {
+  --darkLayer-duration: var(--hool-duration-fast);
   clip-path: polygon(
     var(--b1) 0,
     calc(100% - var(--b3)) 0,
@@ -107,12 +110,12 @@
     0 calc(100% - var(--b3)),
     0 var(--b1)
   );
-  transition: clip-path var(--hool-duration-fast) cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* --- Layer 3: Fill (inside) --- */
 
 .inside {
+  --inside-duration: var(--hool-duration-normal);
   position: relative;
   display: flex;
   align-items: center;
@@ -131,12 +134,12 @@
     0 var(--bevel)
   );
   text-align: center;
-  transition: transform var(--hool-duration-normal) cubic-bezier(0.4, 0, 0.2, 1), background-color var(--hool-duration-normal) cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform var(--inside-duration) cubic-bezier(0.4, 0, 0.2, 1), background-color var(--inside-duration) cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Faster transition in (hover), slower out (return) */
 .button:hover:not(:disabled) .inside {
-  transition: transform var(--hool-duration-fast) cubic-bezier(0.4, 0, 0.2, 1), background-color var(--hool-duration-fast) cubic-bezier(0.4, 0, 0.2, 1);
+  --inside-duration: var(--hool-duration-fast);
 }
 
 /* Halftone overlay — separate pseudo-element so it can fade in/out */
