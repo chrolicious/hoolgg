@@ -14,7 +14,6 @@ import {
   Modal,
   StatCard,
 } from '@hool/design-system';
-import { FadeIn, StaggerGroup } from '@hool/design-system';
 import { useGuild } from '../../../../lib/guild-context';
 import { api, ApiError } from '../../../../lib/api';
 import { ErrorMessage } from '../../../../components/error-message';
@@ -210,29 +209,26 @@ function GeneralTab({
   };
 
   return (
-    <FadeIn duration={0.4}>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-        {/* Guild Info Stats */}
-        <StaggerGroup staggerDelay={0.08}>
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-              gap: '1rem',
-            }}
-          >
-            <StatCard
-              label="Members"
-              value={memberCount}
-              icon={<Icon name="user" size={20} style={{ color: '#8b5cf6' }} />}
-            />
-            <StatCard
-              label="Created"
-              value={formatDate(createdAt)}
-              icon={<Icon name="calendar" size={20} style={{ color: '#8b5cf6' }} />}
-            />
-          </div>
-        </StaggerGroup>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+      {/* Guild Info Stats */}
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+          gap: '1rem',
+        }}
+      >
+        <StatCard
+          label="Members"
+          value={memberCount}
+          icon={<Icon name="user" size={20} style={{ color: '#8b5cf6' }} />}
+        />
+        <StatCard
+          label="Created"
+          value={formatDate(createdAt)}
+          icon={<Icon name="calendar" size={20} style={{ color: '#8b5cf6' }} />}
+        />
+      </div>
 
         {/* Edit Guild Details */}
         <Card padding="lg" variant="elevated">
@@ -331,8 +327,7 @@ function GeneralTab({
             </div>
           </div>
         </Card>
-      </div>
-    </FadeIn>
+    </div>
   );
 }
 
@@ -421,32 +416,30 @@ function ToolsTab({
   };
 
   return (
-    <FadeIn duration={0.4}>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-        <div style={{ marginBottom: '0.5rem' }}>
-          <h3
-            style={{
-              fontSize: '1rem',
-              fontWeight: 700,
-              color: '#ffffff',
-              margin: '0 0 0.25rem',
-            }}
-          >
-            Tool Configuration
-          </h3>
-          <p
-            style={{
-              fontSize: '0.8125rem',
-              color: 'rgba(255, 255, 255, 0.5)',
-              margin: 0,
-            }}
-          >
-            Enable or disable tools and set the minimum rank required to access each one.
-          </p>
-        </div>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+      <div style={{ marginBottom: '0.5rem' }}>
+        <h3
+          style={{
+            fontSize: '1rem',
+            fontWeight: 700,
+            color: '#ffffff',
+            margin: '0 0 0.25rem',
+          }}
+        >
+          Tool Configuration
+        </h3>
+        <p
+          style={{
+            fontSize: '0.8125rem',
+            color: 'rgba(255, 255, 255, 0.5)',
+            margin: 0,
+          }}
+        >
+          Enable or disable tools and set the minimum rank required to access each one.
+        </p>
+      </div>
 
-        <StaggerGroup staggerDelay={0.1}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             {toolNames.map((toolName) => {
               const info = TOOL_LABELS[toolName] || {
                 label: toolName,
@@ -596,10 +589,8 @@ function ToolsTab({
                 </Card>
               );
             })}
-          </div>
-        </StaggerGroup>
       </div>
-    </FadeIn>
+    </div>
   );
 }
 
@@ -685,42 +676,41 @@ function MembersTab() {
   );
 
   return (
-    <FadeIn duration={0.4}>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            flexWrap: 'wrap',
-            gap: '0.5rem',
-          }}
-        >
-          <div>
-            <h3
-              style={{
-                fontSize: '1rem',
-                fontWeight: 700,
-                color: '#ffffff',
-                margin: '0 0 0.25rem',
-              }}
-            >
-              Guild Roster
-            </h3>
-            <p
-              style={{
-                fontSize: '0.8125rem',
-                color: 'rgba(255, 255, 255, 0.5)',
-                margin: 0,
-              }}
-            >
-              {memberCount} member{memberCount !== 1 ? 's' : ''} in this guild
-            </p>
-          </div>
-          <Badge variant="secondary" size="sm">
-            {memberCount} total
-          </Badge>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          flexWrap: 'wrap',
+          gap: '0.5rem',
+        }}
+      >
+        <div>
+          <h3
+            style={{
+              fontSize: '1rem',
+              fontWeight: 700,
+              color: '#ffffff',
+              margin: '0 0 0.25rem',
+            }}
+          >
+            Guild Roster
+          </h3>
+          <p
+            style={{
+              fontSize: '0.8125rem',
+              color: 'rgba(255, 255, 255, 0.5)',
+              margin: 0,
+            }}
+          >
+            {memberCount} member{memberCount !== 1 ? 's' : ''} in this guild
+          </p>
         </div>
+        <Badge variant="secondary" size="sm">
+          {memberCount} total
+        </Badge>
+      </div>
 
         <Card padding="none" variant="elevated">
           <div style={{ overflowX: 'auto' }}>
@@ -878,8 +868,7 @@ function MembersTab() {
             )}
           </div>
         </Card>
-      </div>
-    </FadeIn>
+    </div>
   );
 }
 
@@ -887,33 +876,31 @@ function MembersTab() {
 
 function PermissionsTab({ permissions }: { permissions: GuildPermission[] }) {
   return (
-    <FadeIn duration={0.4}>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-        <div>
-          <h3
-            style={{
-              fontSize: '1rem',
-              fontWeight: 700,
-              color: '#ffffff',
-              margin: '0 0 0.25rem',
-            }}
-          >
-            Permission Summary
-          </h3>
-          <p
-            style={{
-              fontSize: '0.8125rem',
-              color: 'rgba(255, 255, 255, 0.5)',
-              margin: 0,
-            }}
-          >
-            Overview of who can access each tool in your guild.
-          </p>
-        </div>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+      <div>
+        <h3
+          style={{
+            fontSize: '1rem',
+            fontWeight: 700,
+            color: '#ffffff',
+            margin: '0 0 0.25rem',
+          }}
+        >
+          Permission Summary
+        </h3>
+        <p
+          style={{
+            fontSize: '0.8125rem',
+            color: 'rgba(255, 255, 255, 0.5)',
+            margin: 0,
+          }}
+        >
+          Overview of who can access each tool in your guild.
+        </p>
+      </div>
 
-        {/* Permissions matrix */}
-        <StaggerGroup staggerDelay={0.08}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+      {/* Permissions matrix */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             {permissions.map((perm) => {
               const info = TOOL_LABELS[perm.tool_name] || {
                 label: perm.tool_name,
@@ -1006,46 +993,44 @@ function PermissionsTab({ permissions }: { permissions: GuildPermission[] }) {
                 </Card>
               );
             })}
-          </div>
-        </StaggerGroup>
+      </div>
 
-        {/* Activity log placeholder */}
-        <Card padding="lg" variant="default">
-          <div
+      {/* Activity log placeholder */}
+      <Card padding="lg" variant="elevated">
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: '0.75rem',
+            textAlign: 'center',
+            padding: '1.5rem 0',
+          }}
+        >
+          <Icon name="clock" size={32} style={{ color: 'rgba(255, 255, 255, 0.2)' }} />
+          <h4
             style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              gap: '0.75rem',
-              textAlign: 'center',
-              padding: '1.5rem 0',
+              fontSize: '0.9375rem',
+              fontWeight: 700,
+              color: 'rgba(255, 255, 255, 0.6)',
+              margin: 0,
             }}
           >
-            <Icon name="clock" size={32} style={{ color: 'rgba(255, 255, 255, 0.2)' }} />
-            <h4
-              style={{
-                fontSize: '0.9375rem',
-                fontWeight: 700,
-                color: 'rgba(255, 255, 255, 0.6)',
-                margin: 0,
-              }}
-            >
-              Activity Log
-            </h4>
-            <p
-              style={{
-                fontSize: '0.8125rem',
-                color: 'rgba(255, 255, 255, 0.4)',
-                margin: 0,
-                maxWidth: 300,
-              }}
-            >
-              Permission change history and audit log coming in a future update.
-            </p>
-          </div>
-        </Card>
-      </div>
-    </FadeIn>
+            Activity Log
+          </h4>
+          <p
+            style={{
+              fontSize: '0.8125rem',
+              color: 'rgba(255, 255, 255, 0.4)',
+              margin: 0,
+              maxWidth: 300,
+            }}
+          >
+            Permission change history and audit log coming in a future update.
+          </p>
+        </div>
+      </Card>
+    </div>
   );
 }
 
@@ -1271,16 +1256,15 @@ export default function SettingsPage() {
   // GM-only gate
   if (!isGM) {
     return (
-      <FadeIn duration={0.4}>
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            minHeight: 400,
-            padding: '2rem',
-          }}
-        >
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          minHeight: 400,
+          padding: '2rem',
+        }}
+      >
           <Card padding="lg" variant="elevated">
             <div
               style={{
@@ -1326,40 +1310,36 @@ export default function SettingsPage() {
               </Button>
             </div>
           </Card>
-        </div>
-      </FadeIn>
+      </div>
     );
   }
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
       {/* Page Header */}
-      <FadeIn duration={0.4}>
-        <div>
-          <h1
-            style={{
-              fontSize: '1.5rem',
-              fontWeight: 800,
-              color: '#ffffff',
-              margin: 0,
-            }}
-          >
-            Guild Settings
-          </h1>
-          <p
-            style={{
-              fontSize: '0.875rem',
-              color: 'rgba(255, 255, 255, 0.5)',
-              margin: '0.25rem 0 0',
-            }}
-          >
-            Manage {guild?.name} configuration, tools, and members.
-          </p>
-        </div>
-      </FadeIn>
+      <div>
+        <h1
+          style={{
+            fontSize: '1.5rem',
+            fontWeight: 800,
+            color: '#ffffff',
+            margin: 0,
+          }}
+        >
+          Guild Settings
+        </h1>
+        <p
+          style={{
+            fontSize: '0.875rem',
+            color: 'rgba(255, 255, 255, 0.5)',
+            margin: '0.25rem 0 0',
+          }}
+        >
+          Manage {guild?.name} configuration, tools, and members.
+        </p>
+      </div>
 
       {/* Tab Navigation */}
-      <FadeIn duration={0.4} delay={0.1}>
         <div
           style={{
             display: 'flex',
@@ -1379,8 +1359,7 @@ export default function SettingsPage() {
               onClick={() => setActiveTab(tab.key)}
             />
           ))}
-        </div>
-      </FadeIn>
+      </div>
 
       {/* Tab Content */}
       <div style={{ minHeight: 300 }}>
