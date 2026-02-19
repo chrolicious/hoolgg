@@ -202,6 +202,16 @@ export const variantVars = {
     '--btn-hover-bg-fade': 'rgba(213, 171, 127, 0.9)',
     '--btn-dot-color': 'rgba(0, 0, 0, 0.2)',
   },
+  // Gradient variants
+  'blue-gradient': {
+    '--btn-bg': 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+    '--btn-color': '#FFFFFF',
+    '--btn-border-color': colors.sticker.border,
+    '--btn-outline-color': colors.sticker.outline,
+    '--btn-hover-bg': 'linear-gradient(135deg, #7c8ff5 0%, #8a5cb5 100%)',
+    '--btn-hover-bg-fade': 'rgba(124, 143, 245, 0.9)',
+    '--btn-dot-color': 'rgba(255, 255, 255, 0.3)',
+  },
 } as const;
 
 // --- Types ---
