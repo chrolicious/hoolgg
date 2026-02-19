@@ -10,6 +10,7 @@ import { useAuth } from '../../../lib/auth-context';
 import { api } from '../../../lib/api';
 import type { Guild, GuildListResponse } from '../../../lib/types';
 import { DashboardHeader } from '../../../components/dashboard-header';
+import { SectionHeader } from '../../../components/section-header';
 
 // ── Sidebar Navigation Item ─────────────────────────────────
 
@@ -19,6 +20,21 @@ interface NavItemProps {
   label: string;
   active: boolean;
   onClick: () => void;
+}
+
+interface NavItemData {
+  href: string;
+  icon: string;
+  label: string;
+  alwaysShow?: boolean;
+  gmOnly?: boolean;
+  officerOnly?: boolean;
+  tool?: string;
+}
+
+interface NavSection {
+  header: string;
+  items: NavItemData[];
 }
 
 function NavItem({ href, icon, label, active, onClick }: NavItemProps) {
@@ -132,23 +148,30 @@ function GuildLayoutInner({ children }: { children: React.ReactNode }) {
 
   const basePath = `/guilds/${guildId}`;
 
-  const navItems = [
-    { href: basePath, icon: 'home', label: 'Dashboard', alwaysShow: true },
-    { href: `${basePath}/progress`, icon: 'zap', label: 'Progress', tool: 'progress' },
-    { href: `${basePath}/recruitment`, icon: 'search', label: 'Recruitment', tool: 'recruitment' },
-    { href: `${basePath}/settings`, icon: 'settings', label: 'Settings', gmOnly: true },
+  const navSections: NavSection[] = [
+    {
+      header: 'MY ROSTER',
+      items: [
+        { href: `${basePath}/roster`, icon: 'users', label: 'Overview', alwaysShow: true },
+      ],
+    },
+    {
+      header: 'GUILD MANAGEMENT',
+      items: [
+        { href: `${basePath}/dashboard`, icon: 'home', label: 'Dashboard', officerOnly: true },
+        { href: `${basePath}/team-progress`, icon: 'zap', label: 'Team Progress', officerOnly: true },
+        { href: `${basePath}/recruitment`, icon: 'search', label: 'Recruitment', tool: 'recruitment' },
+        { href: `${basePath}/settings`, icon: 'settings', label: 'Settings', gmOnly: true },
+      ],
+    },
   ];
-
-  const visibleNavItems = navItems.filter((item) => {
-    if (item.alwaysShow) return true;
-    if (item.gmOnly) return isGM;
-    if (item.tool) return canAccess(item.tool);
-    return true;
-  });
 
   const isActivePath = (href: string) => {
     if (href === basePath) {
       return pathname === basePath || pathname === basePath + '/';
+    }
+    if (href === `${basePath}/roster`) {
+      return pathname.startsWith(`${basePath}/roster`);
     }
     return pathname.startsWith(href);
   };
@@ -352,16 +375,33 @@ function GuildLayoutInner({ children }: { children: React.ReactNode }) {
 
         {/* Navigation links */}
         <nav style={{ display: 'flex', flexDirection: 'column', gap: '0.125rem', flex: 1 }}>
-          {visibleNavItems.map((item) => (
-            <NavItem
-              key={item.href}
-              href={item.href}
-              icon={item.icon}
-              label={item.label}
-              active={isActivePath(item.href)}
-              onClick={() => router.push(item.href)}
-            />
-          ))}
+          {navSections.map((section) => {
+            const visibleItems = section.items.filter((item) => {
+              if (item.alwaysShow) return true;
+              if (item.gmOnly) return isGM;
+              if (item.officerOnly) return isOfficer;
+              if (item.tool) return canAccess(item.tool);
+              return true;
+            });
+
+            if (visibleItems.length === 0) return null;
+
+            return (
+              <div key={section.header}>
+                <SectionHeader label={section.header} />
+                {visibleItems.map((item) => (
+                  <NavItem
+                    key={item.href}
+                    href={item.href}
+                    icon={item.icon}
+                    label={item.label}
+                    active={isActivePath(item.href)}
+                    onClick={() => router.push(item.href)}
+                  />
+                ))}
+              </div>
+            );
+          })}
         </nav>
 
         {/* Guild switcher at bottom */}
