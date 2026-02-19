@@ -13,7 +13,10 @@ interface SectionHeaderProps {
 
 export function SectionHeader({ label }: SectionHeaderProps) {
   return (
-    <div className="text-xs uppercase tracking-wider text-white/30 px-4 py-3 pb-2 font-bold">
+    <div
+      className="uppercase tracking-wider text-white/30 px-4 py-3 pb-2 font-bold"
+      style={{ fontSize: '0.625rem' }}
+    >
       {label}
     </div>
   );
