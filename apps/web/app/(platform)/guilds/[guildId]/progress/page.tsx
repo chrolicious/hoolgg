@@ -312,65 +312,63 @@ function ProgressContent() {
       }}
     >
       {/* Page Header */}
-      <FadeIn duration={0.4}>
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          flexWrap: 'wrap',
-          gap: '0.75rem',
-        }}>
-          <div>
-            <h1 style={{
-              fontSize: '1.5rem',
-              fontWeight: 700,
-              color: '#ffffff',
-              margin: 0,
-            }}>
-              Progress Tracker
-            </h1>
-            <p style={{
-              fontSize: '0.8125rem',
-              color: 'rgba(255, 255, 255, 0.45)',
-              margin: '0.25rem 0 0 0',
-            }}>
-              {guild?.name || 'Guild'} &mdash; {characters?.expansion || 'Current Expansion'}
-              {characters?.current_week ? `, Week ${characters.current_week}` : ''}
-            </p>
-          </div>
-          <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }} data-no-print>
-            <ExportPdfButton
-              characterName={selectedCharacter}
-              guildName={guild?.name}
-            />
-            <RoleGate minRank={0}>
-              <a
-                href={`/guilds/${guildId}/progress/settings`}
-                style={{ textDecoration: 'none' }}
-              >
-                <span
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '0.375rem',
-                    padding: '0.5rem 0.75rem',
-                    borderRadius: 8,
-                    background: 'rgba(255, 255, 255, 0.04)',
-                    border: '1px solid rgba(255, 255, 255, 0.08)',
-                    fontSize: '0.8125rem',
-                    color: 'rgba(255, 255, 255, 0.6)',
-                    cursor: 'pointer',
-                    transition: 'all 0.2s ease',
-                  }}
-                >
-                  <Icon name="settings" size={14} />
-                  Settings
-                </span>
-              </a>
-            </RoleGate>
-          </div>
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        flexWrap: 'wrap',
+        gap: '0.75rem',
+      }}>
+        <div>
+          <h1 style={{
+            fontSize: '1.5rem',
+            fontWeight: 700,
+            color: '#ffffff',
+            margin: 0,
+          }}>
+            Progress Tracker
+          </h1>
+          <p style={{
+            fontSize: '0.8125rem',
+            color: 'rgba(255, 255, 255, 0.45)',
+            margin: '0.25rem 0 0 0',
+          }}>
+            {guild?.name || 'Guild'} &mdash; {characters?.expansion || 'Current Expansion'}
+            {characters?.current_week ? `, Week ${characters.current_week}` : ''}
+          </p>
         </div>
-      </FadeIn>
+        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }} data-no-print>
+          <ExportPdfButton
+            characterName={selectedCharacter}
+            guildName={guild?.name}
+          />
+          <RoleGate minRank={0}>
+            <a
+              href={`/guilds/${guildId}/progress/settings`}
+              style={{ textDecoration: 'none' }}
+            >
+              <span
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.375rem',
+                  padding: '0.5rem 0.75rem',
+                  borderRadius: 8,
+                  background: 'rgba(255, 255, 255, 0.04)',
+                  border: '1px solid rgba(255, 255, 255, 0.08)',
+                  fontSize: '0.8125rem',
+                  color: 'rgba(255, 255, 255, 0.6)',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                }}
+              >
+                <Icon name="settings" size={14} />
+                Settings
+              </span>
+            </a>
+          </RoleGate>
+        </div>
+      </div>
 
       {/* Stat Cards */}
       {stats && (
@@ -379,36 +377,34 @@ function ProgressContent() {
           gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
           gap: '1rem',
         }}>
-          <StaggerGroup staggerDelay={0.06}>
-            <StatCard
-              label="Total Characters"
-              value={stats.totalChars}
-              icon={<Icon name="user" size={20} />}
-              variant="default"
-              subtitle="In this guild"
-            />
-            <StatCard
-              label="Average iLvl"
-              value={stats.avgIlvl.toFixed(1)}
-              icon={<Icon name="zap" size={20} />}
-              variant="highlighted"
-              subtitle="Across all members"
-            />
-            <StatCard
-              label="On Track"
-              value={stats.onTrack}
-              icon={<Icon name="check" size={20} />}
-              variant="success"
-              subtitle={`${stats.totalChars > 0 ? ((stats.onTrack / stats.totalChars) * 100).toFixed(0) : 0}% of roster`}
-            />
-            <StatCard
-              label="Behind Schedule"
-              value={stats.behind}
-              icon={<Icon name="alert-circle" size={20} />}
-              variant={stats.behind > 0 ? 'danger' : 'default'}
-              subtitle={stats.behind > 0 ? 'Need attention' : 'No one behind'}
-            />
-          </StaggerGroup>
+          <StatCard
+            label="Total Characters"
+            value={stats.totalChars}
+            icon={<Icon name="user" size={20} />}
+            variant="default"
+            subtitle="In this guild"
+          />
+          <StatCard
+            label="Average iLvl"
+            value={stats.avgIlvl.toFixed(1)}
+            icon={<Icon name="zap" size={20} />}
+            variant="highlighted"
+            subtitle="Across all members"
+          />
+          <StatCard
+            label="On Track"
+            value={stats.onTrack}
+            icon={<Icon name="check" size={20} />}
+            variant="success"
+            subtitle={`${stats.totalChars > 0 ? ((stats.onTrack / stats.totalChars) * 100).toFixed(0) : 0}% of roster`}
+          />
+          <StatCard
+            label="Behind Schedule"
+            value={stats.behind}
+            icon={<Icon name="alert-circle" size={20} />}
+            variant={stats.behind > 0 ? 'danger' : 'default'}
+            subtitle={stats.behind > 0 ? 'Need attention' : 'No one behind'}
+          />
         </div>
       )}
 

@@ -168,158 +168,145 @@ function RecruitmentContent() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
       {/* Page header */}
-      <FadeIn duration={0.5}>
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'flex-start',
-            justifyContent: 'space-between',
-            flexWrap: 'wrap',
-            gap: '1rem',
-          }}
-        >
-          <div>
-            <h1
-              style={{
-                fontSize: '1.5rem',
-                fontWeight: 800,
-                color: '#ffffff',
-                margin: 0,
-              }}
-            >
-              Recruitment
-            </h1>
-            <p
-              style={{
-                fontSize: '0.875rem',
-                color: 'rgba(255, 255, 255, 0.5)',
-                margin: '0.25rem 0 0',
-              }}
-            >
-              Find, evaluate, and manage recruitment candidates
-            </p>
-          </div>
-
-          <RoleGate minRank={0}>
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={() =>
-                router.push(`/guilds/${guildId}/recruitment/settings`)
-              }
-              icon={<Icon name="settings" size={16} />}
-            >
-              Settings
-            </Button>
-          </RoleGate>
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'flex-start',
+          justifyContent: 'space-between',
+          flexWrap: 'wrap',
+          gap: '1rem',
+        }}
+      >
+        <div>
+          <h1
+            style={{
+              fontSize: '1.5rem',
+              fontWeight: 800,
+              color: '#ffffff',
+              margin: 0,
+            }}
+          >
+            Recruitment
+          </h1>
+          <p
+            style={{
+              fontSize: '0.875rem',
+              color: 'rgba(255, 255, 255, 0.5)',
+              margin: '0.25rem 0 0',
+            }}
+          >
+            Find, evaluate, and manage recruitment candidates
+          </p>
         </div>
-      </FadeIn>
+
+        <RoleGate minRank={0}>
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={() =>
+              router.push(`/guilds/${guildId}/recruitment/settings`)
+            }
+            icon={<Icon name="settings" size={16} />}
+          >
+            Settings
+          </Button>
+        </RoleGate>
+      </div>
 
       {/* Tab navigation */}
-      <FadeIn duration={0.4} delay={0.1}>
-        <div
-          style={{
-            display: 'flex',
-            gap: '0.25rem',
-            padding: '0.25rem',
-            borderRadius: 10,
-            background: 'rgba(255, 255, 255, 0.03)',
-            border: '1px solid rgba(255, 255, 255, 0.06)',
-            overflow: 'auto',
-          }}
-        >
-          {tabs.map((tab) => {
-            const isActive = activeTab === tab.id;
-            return (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.375rem',
-                  padding: '0.5rem 1rem',
-                  borderRadius: 8,
-                  border: 'none',
-                  background: isActive
-                    ? 'rgba(139, 92, 246, 0.15)'
-                    : 'transparent',
-                  color: isActive ? '#ffffff' : 'rgba(255, 255, 255, 0.5)',
-                  fontSize: '0.8125rem',
-                  fontWeight: isActive ? 700 : 500,
-                  cursor: 'pointer',
-                  transition: 'all 0.15s ease',
-                  whiteSpace: 'nowrap',
-                  flexShrink: 0,
-                }}
-                onMouseEnter={(e) => {
-                  if (!isActive) {
-                    e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
-                    e.currentTarget.style.color = 'rgba(255, 255, 255, 0.8)';
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (!isActive) {
-                    e.currentTarget.style.background = 'transparent';
-                    e.currentTarget.style.color = 'rgba(255, 255, 255, 0.5)';
-                  }
-                }}
-              >
-                <Icon name={tab.icon} size={14} />
-                {tab.label}
-              </button>
-            );
-          })}
-        </div>
-      </FadeIn>
+      <div
+        style={{
+          display: 'flex',
+          gap: '0.25rem',
+          padding: '0.25rem',
+          borderRadius: 10,
+          background: 'rgba(255, 255, 255, 0.03)',
+          border: '1px solid rgba(255, 255, 255, 0.06)',
+          overflow: 'auto',
+        }}
+      >
+        {tabs.map((tab) => {
+          const isActive = activeTab === tab.id;
+          return (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.375rem',
+                padding: '0.5rem 1rem',
+                borderRadius: 8,
+                border: 'none',
+                background: isActive
+                  ? 'rgba(139, 92, 246, 0.15)'
+                  : 'transparent',
+                color: isActive ? '#ffffff' : 'rgba(255, 255, 255, 0.5)',
+                fontSize: '0.8125rem',
+                fontWeight: isActive ? 700 : 500,
+                cursor: 'pointer',
+                transition: 'all 0.15s ease',
+                whiteSpace: 'nowrap',
+                flexShrink: 0,
+              }}
+              onMouseEnter={(e) => {
+                if (!isActive) {
+                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
+                  e.currentTarget.style.color = 'rgba(255, 255, 255, 0.8)';
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (!isActive) {
+                  e.currentTarget.style.background = 'transparent';
+                  e.currentTarget.style.color = 'rgba(255, 255, 255, 0.5)';
+                }
+              }}
+            >
+              <Icon name={tab.icon} size={14} />
+              {tab.label}
+            </button>
+          );
+        })}
+      </div>
 
       {/* Stats row (visible on all tabs) */}
-      <StaggerGroup staggerDelay={0.06}>
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-            gap: '0.75rem',
-          }}
-        >
-          <StatCard
-            label="Total Candidates"
-            value={candidateCount}
-            icon={<Icon name="user" size={20} style={{ color: '#8b5cf6' }} />}
-          />
-          <StatCard
-            label="New This Week"
-            value={stats.recentCount}
-            icon={<Icon name="clock" size={20} style={{ color: '#3b82f6' }} />}
-          />
-          {Object.entries(stats.roleBreakdown)
-            .slice(0, 2)
-            .map(([role, count]) => (
-              <StatCard
-                key={role}
-                label={role}
-                value={count}
-                icon={
-                  <Icon
-                    name={role.toLowerCase().includes('tank') ? 'shield' : role.toLowerCase().includes('heal') ? 'plus' : 'target'}
-                    size={20}
-                    style={{ color: '#f59e0b' }}
-                  />
-                }
-              />
-            ))}
-        </div>
-      </StaggerGroup>
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+          gap: '0.75rem',
+        }}
+      >
+        <StatCard
+          label="Total Candidates"
+          value={candidateCount}
+          icon={<Icon name="user" size={20} style={{ color: '#8b5cf6' }} />}
+        />
+        <StatCard
+          label="New This Week"
+          value={stats.recentCount}
+          icon={<Icon name="clock" size={20} style={{ color: '#3b82f6' }} />}
+        />
+        {Object.entries(stats.roleBreakdown)
+          .slice(0, 2)
+          .map(([role, count]) => (
+            <StatCard
+              key={role}
+              label={role}
+              value={count}
+              icon={
+                <Icon
+                  name={role.toLowerCase().includes('tank') ? 'shield' : role.toLowerCase().includes('heal') ? 'plus' : 'target'}
+                  size={20}
+                  style={{ color: '#f59e0b' }}
+                />
+              }
+            />
+          ))}
+      </div>
 
       {/* Tab content */}
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={activeTab}
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -10 }}
-          transition={{ duration: 0.2 }}
-        >
+      <div>
           {/* ── Candidates tab ─────────────────────────── */}
           {activeTab === 'candidates' && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
@@ -496,8 +483,7 @@ function RecruitmentContent() {
               refreshTrigger={refreshTrigger}
             />
           )}
-        </motion.div>
-      </AnimatePresence>
+      </div>
 
       {/* ── Candidate Detail Panel (slide-in from right) ───── */}
       <AnimatePresence>
