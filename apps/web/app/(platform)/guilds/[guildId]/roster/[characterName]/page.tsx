@@ -9,6 +9,11 @@ import { Breadcrumb } from '../../../../../components/breadcrumb';
 import { Card, Icon } from '@hool/design-system';
 import { PageSkeleton } from '../../../../../components/loading-skeleton';
 import { ErrorMessage } from '../../../../../components/error-message';
+import { CharacterProgressCard } from '../../progress/components/character-progress-card';
+import type { CharacterProgressData } from '../../progress/components/character-progress-card';
+import { IlvlTracker } from '../../progress/components/ilvl-tracker';
+import { GearPriorityList } from '../../progress/components/gear-priority-list';
+import type { GearSlotPriority } from '../../progress/components/gear-priority-list';
 
 // WoW class colors from official Blizzard palette
 const CLASS_COLORS: Record<string, string> = {
@@ -46,9 +51,17 @@ interface CharacterData {
   character_name: string;
   class_name: string;
   spec: string;
-  role: 'Tank' | 'Healer' | 'DPS';
+  role?: 'Tank' | 'Healer' | 'DPS';
   current_ilvl: number;
   bnet_id: string;
+  target_ilvl?: number;
+  gear_priorities?: GearSlotPriority[];
+  progress?: {
+    target_ilvl: number;
+    current_week: number;
+    status: 'ahead' | 'behind' | 'unknown';
+    message?: string;
+  };
 }
 
 export default function CharacterDetailPage() {
@@ -77,10 +90,32 @@ export default function CharacterDetailPage() {
     setError(null);
 
     try {
-      const data = await progressApi.get<CharacterData>(
+      // Fetch character detail data (includes gear priorities)
+      const data = await progressApi.get<{
+        character: {
+          character_name: string;
+          class_name: string;
+          spec_name: string;
+          current_ilvl: number;
+          bnet_id: string;
+        };
+        target_ilvl: number;
+        current_week: number;
+        gear_priorities: GearSlotPriority[];
+      }>(
         `/guilds/${guildId}/progress/character/${encodeURIComponent(characterName)}`
       );
-      setCharacterData(data);
+
+      // Transform to CharacterData format
+      setCharacterData({
+        character_name: data.character.character_name,
+        class_name: data.character.class_name,
+        spec: data.character.spec_name,
+        current_ilvl: data.character.current_ilvl,
+        bnet_id: data.character.bnet_id,
+        target_ilvl: data.target_ilvl,
+        gear_priorities: data.gear_priorities || [],
+      });
     } catch (err) {
       console.error('Failed to fetch character data:', err);
       setError(
@@ -165,8 +200,12 @@ export default function CharacterDetailPage() {
           <span className="text-sm">
             {characterData.spec} {characterData.class_name}
           </span>
-          <span className="text-white/30">•</span>
-          <span className="text-sm">{characterData.role}</span>
+          {characterData.role && (
+            <>
+              <span className="text-white/30">•</span>
+              <span className="text-sm">{characterData.role}</span>
+            </>
+          )}
           <span className="text-white/30">•</span>
           <div className="flex items-center gap-1.5">
             <Icon name="zap" size={14} />
@@ -219,17 +258,37 @@ export default function CharacterDetailPage() {
         transition={{ duration: 0.3 }}
       >
         {activeTab === 'overview' && (
-          <Card padding="lg" variant="elevated">
-            <div className="flex flex-col items-center gap-3 text-center p-8">
-              <Icon name="grid" size={48} className="text-white/15" />
-              <h3 className="text-base font-bold text-white m-0">
-                Overview
-              </h3>
-              <p className="text-sm text-white/50 m-0 max-w-80">
-                Overview content coming soon
-              </p>
+          <div className="grid grid-cols-1 md:grid-cols-[minmax(280px,1fr)_minmax(300px,2fr)] gap-4">
+            {/* Left column: Character card and ilvl tracker */}
+            <div className="flex flex-col gap-4">
+              <CharacterProgressCard
+                character={{
+                  character_name: characterData.character_name,
+                  class_name: characterData.class_name,
+                  spec: characterData.spec,
+                  role: characterData.role || 'DPS',
+                  current_ilvl: characterData.current_ilvl,
+                  target_ilvl: characterData.target_ilvl || characterData.current_ilvl,
+                  status: characterData.progress?.status || 'unknown',
+                  message: characterData.progress?.message,
+                }}
+                isSelected
+              />
+              <IlvlTracker
+                currentIlvl={characterData.current_ilvl}
+                targetIlvl={characterData.target_ilvl || characterData.current_ilvl}
+                characterName={characterData.character_name}
+              />
             </div>
-          </Card>
+
+            {/* Right column: Gear priorities */}
+            <div>
+              <GearPriorityList
+                priorities={characterData.gear_priorities || []}
+                characterName={characterData.character_name}
+              />
+            </div>
+          </div>
         )}
 
         {activeTab === 'bis' && (
