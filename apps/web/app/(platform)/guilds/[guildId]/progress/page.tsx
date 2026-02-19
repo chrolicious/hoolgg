@@ -278,7 +278,7 @@ function ProgressContent() {
   // Loading state
   if (isLoading) {
     return (
-      <div style={{ padding: '1.5rem', maxWidth: 1200, margin: '0 auto' }}>
+      <div>
         <PageSkeleton />
       </div>
     );
@@ -288,7 +288,6 @@ function ProgressContent() {
   if (error && !characters) {
     return (
       <div style={{
-        padding: '2rem',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
@@ -307,9 +306,6 @@ function ProgressContent() {
     <div
       data-print-area
       style={{
-        padding: '1.5rem',
-        maxWidth: 1200,
-        margin: '0 auto',
         display: 'flex',
         flexDirection: 'column',
         gap: '1.5rem',
