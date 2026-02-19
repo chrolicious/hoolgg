@@ -43,11 +43,12 @@ def create_app() -> Flask:
     init_redis(app)
 
     # Register blueprints
-    from app.routes import auth, health, guilds
+    from app.routes import auth, health, guilds, tracked_characters
 
     app.register_blueprint(auth.bp)
     app.register_blueprint(health.bp)
     app.register_blueprint(guilds.bp)
+    app.register_blueprint(tracked_characters.bp)
 
     # Start background scheduler (6-hourly guild sync)
     # Note: Only start in production/non-debug mode to avoid duplicate jobs during development

@@ -46,5 +46,6 @@ from app.models.user import User
 from app.models.guild import Guild
 from app.models.guild_member import GuildMember
 from app.models.guild_permission import GuildPermission
+from app.models.user_tracked_character import UserTrackedCharacter
 
-__all__ = ["Base", "init_db", "get_db", "User", "Guild", "GuildMember", "GuildPermission"]
+__all__ = ["Base", "init_db", "get_db", "User", "Guild", "GuildMember", "GuildPermission", "UserTrackedCharacter"]

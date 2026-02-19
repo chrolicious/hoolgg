@@ -257,7 +257,7 @@ function SettingsContent() {
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
               <a
-                href={`/guilds/${guildId}/progress`}
+                href={`/guilds/${guildId}/roster`}
                 style={{
                   display: 'inline-flex',
                   alignItems: 'center',
@@ -268,7 +268,7 @@ function SettingsContent() {
                 }}
               >
                 <Icon name="arrow-left" size={12} />
-                Back to Progress
+                Back to Roster
               </a>
             </div>
             <h1 style={{

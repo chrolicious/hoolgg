@@ -229,3 +229,63 @@ def fetch_guild_rank_names(
     except requests.RequestException as e:
         current_app.logger.error(f"Failed to fetch guild rank names: {e}")
         raise BlizzardAPIError(f"Failed to fetch guild rank names: {str(e)}")
+
+
+@with_rate_limit_and_circuit_breaker
+def fetch_guild_crest(
+    access_token: str, guild_name: str, realm_slug: str, region: str = "us"
+) -> Optional[Dict]:
+    """
+    Fetch guild crest/emblem data from Blizzard API
+
+    Args:
+        access_token: Blizzard OAuth access token
+        guild_name: Guild name
+        realm_slug: Realm slug
+        region: API region
+
+    Returns:
+        Dictionary with emblem_id, colors, and render_url, or None if not found
+
+    Raises:
+        BlizzardAPIError: If API call fails
+    """
+    api_base = get_api_base_url(region)
+    guild_lower = guild_name.lower().replace(" ", "-")
+    url = f"{api_base}/data/wow/guild/{realm_slug}/{guild_lower}"
+
+    headers = {"Authorization": f"Bearer {access_token}"}
+    params = {"namespace": f"profile-{region}", "locale": "en_US"}
+
+    try:
+        response = requests.get(url, headers=headers, params=params, timeout=10)
+        response.raise_for_status()
+        data = response.json()
+
+        crest = data.get("crest")
+        if not crest:
+            return None
+
+        emblem = crest.get("emblem", {})
+        border = crest.get("border", {})
+        background = crest.get("background", {})
+
+        emblem_id = emblem.get("id", 0)
+
+        return {
+            "emblem_id": emblem_id,
+            "emblem_color": emblem.get("color", {}).get("rgba", {}),
+            "border_id": border.get("id", 0),
+            "border_color": border.get("color", {}).get("rgba", {}),
+            "background_color": background.get("color", {}).get("rgba", {}),
+            "render_url": f"https://render.worldofwarcraft.com/{region}/guild/crest/emblem/{emblem_id}.png",
+        }
+
+    except requests.HTTPError as e:
+        if e.response.status_code == 404:
+            return None
+        current_app.logger.error(f"Failed to fetch guild crest: {e}")
+        raise BlizzardAPIError(f"Failed to fetch guild crest: {str(e)}")
+    except requests.RequestException as e:
+        current_app.logger.error(f"Failed to fetch guild crest: {e}")
+        raise BlizzardAPIError(f"Failed to fetch guild crest: {str(e)}")

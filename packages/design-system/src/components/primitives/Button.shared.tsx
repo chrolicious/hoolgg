@@ -202,6 +202,16 @@ export const variantVars = {
     '--btn-hover-bg-fade': 'rgba(213, 171, 127, 0.9)',
     '--btn-dot-color': 'rgba(0, 0, 0, 0.2)',
   },
+  // Blue variant
+  blue: {
+    '--btn-bg': '#3B82F6',
+    '--btn-color': '#FFFFFF',
+    '--btn-border-color': colors.sticker.border,
+    '--btn-outline-color': colors.sticker.outline,
+    '--btn-hover-bg': '#60A5FA',
+    '--btn-hover-bg-fade': 'rgba(96, 165, 250, 0.9)',
+    '--btn-dot-color': 'rgba(255, 255, 255, 0.3)',
+  },
 } as const;
 
 // --- Types ---

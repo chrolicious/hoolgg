@@ -7,7 +7,7 @@ from app.models.guild_permission import GuildPermission
 from app.models.guild_member import GuildMember
 from app.services.jwt_service import verify_token
 from app.middleware.permissions import check_permission_cached
-from datetime import datetime
+from datetime import datetime, timezone
 
 bp = Blueprint("guilds", __name__, url_prefix="/guilds")
 
@@ -65,6 +65,48 @@ def check_user_rank(bnet_id: int, guild_id: int = None) -> dict:
         db.close()
 
 
+@bp.route("", methods=["GET"])
+def list_guilds():
+    """
+    List all guilds the current user is a member of
+
+    Returns a list of guilds with basic info and user's rank.
+    """
+    bnet_id = get_current_user()
+    if not bnet_id:
+        return jsonify({"error": "Not authenticated"}), 401
+
+    db = next(get_db())
+
+    try:
+        # Get all guilds user is a member of
+        # Only return one member per guild (use dictionary to deduplicate)
+        memberships = (
+            db.query(GuildMember, Guild)
+            .join(Guild, GuildMember.guild_id == Guild.id)
+            .filter(GuildMember.bnet_id == bnet_id, Guild.deleted_at == None)
+            .order_by(Guild.id, GuildMember.rank_id.asc())  # Order by rank to get highest first
+            .all()
+        )
+
+        # Deduplicate by guild_id, keeping the first (highest rank) per guild
+        guilds_dict = {}
+        for member, guild in memberships:
+            if guild.id not in guilds_dict:
+                guild_data = guild.to_dict()
+                guild_data["user_rank"] = {
+                    "rank_id": member.rank_id,
+                    "rank_name": member.rank_name,
+                    "character_name": member.character_name,
+                }
+                guilds_dict[guild.id] = guild_data
+
+        return jsonify({"guilds": list(guilds_dict.values())}), 200
+
+    finally:
+        db.close()
+
+
 @bp.route("", methods=["POST"])
 def create_guild():
     """
@@ -76,21 +118,24 @@ def create_guild():
         "realm": "area-52"
     }
 
-    Only Officers (rank_id <= 1) can create guilds.
+    In production: Only Officers (rank_id <= 1) can create guilds.
+    In development: Anyone can create their first guild.
     """
     bnet_id = get_current_user()
     if not bnet_id:
         return jsonify({"error": "Not authenticated"}), 401
 
-    # Check if user is Officer or GM in any guild
-    rank_check = check_user_rank(bnet_id)
-    if not rank_check["allowed"]:
-        return (
-            jsonify(
-                {"error": "Only Officers or Guild Masters can create guild instances"}
-            ),
-            403,
-        )
+    # In production, check if user is Officer or GM in any guild
+    # In development, allow anyone to create their first guild
+    if not current_app.config.get("DEBUG"):
+        rank_check = check_user_rank(bnet_id)
+        if not rank_check["allowed"]:
+            return (
+                jsonify(
+                    {"error": "Only Officers or Guild Masters can create guild instances"}
+                ),
+                403,
+            )
 
     data = request.get_json()
     if not data:
@@ -122,6 +167,16 @@ def create_guild():
         guild = Guild(name=guild_name, realm=realm, gm_bnet_id=bnet_id)
         db.add(guild)
         db.flush()  # Get guild.id
+
+        # Add creator as Guild Master
+        creator_member = GuildMember(
+            guild_id=guild.id,
+            bnet_id=bnet_id,
+            character_name="GuildMaster",  # Placeholder, will be updated on sync
+            rank_id=0,
+            rank_name="Guild Master",
+        )
+        db.add(creator_member)
 
         # Initialize recommended default permissions (task 0.19)
         # Progress: enabled for all members (rank_id 9 = everyone)
@@ -401,6 +456,62 @@ def check_permissions(guild_id: int):
     result = check_permission_cached(bnet_id, guild_id, tool)
 
     return jsonify(result), 200
+
+
+@bp.route("/<int:guild_id>/sync-crest", methods=["POST"])
+def sync_guild_crest(guild_id: int):
+    """
+    Sync guild crest from Blizzard API (GM only)
+
+    Fetches the guild's crest/emblem data from Blizzard and stores it.
+    Returns the updated guild data with crest_data and crest_updated_at.
+    """
+    bnet_id = get_current_user()
+    if not bnet_id:
+        return jsonify({"error": "Not authenticated"}), 401
+
+    db = next(get_db())
+
+    try:
+        # Fetch guild
+        guild = db.query(Guild).filter(Guild.id == guild_id).first()
+        if not guild or guild.deleted_at:
+            return jsonify({"error": "Guild not found"}), 404
+
+        # Verify user is GM of this guild
+        if guild.gm_bnet_id != bnet_id:
+            return jsonify({"error": "Only Guild Master can sync guild crest"}), 403
+
+        # Get access token from cookie
+        access_token = request.cookies.get("access_token")
+        if not access_token:
+            return jsonify({"error": "No Blizzard access token"}), 401
+
+        # Fetch crest from Blizzard
+        from app.services.blizzard_service import fetch_guild_crest
+
+        crest_data = fetch_guild_crest(
+            access_token, guild.name, guild.realm, region="us"  # TODO: Make region configurable
+        )
+
+        if not crest_data:
+            return jsonify({"error": "Guild crest not found on Blizzard API"}), 404
+
+        # Update guild
+        guild.crest_data = crest_data
+        guild.crest_updated_at = datetime.now(timezone.utc)
+        db.commit()
+
+        current_app.logger.info(f"Guild crest synced: {guild_id} by bnet_id={bnet_id}")
+
+        return jsonify(guild.to_dict()), 200
+
+    except Exception as e:
+        db.rollback()
+        current_app.logger.error(f"Failed to sync guild crest: {e}")
+        return jsonify({"error": "Failed to sync guild crest"}), 500
+    finally:
+        db.close()
 
 
 @bp.route("/<int:guild_id>", methods=["DELETE"])

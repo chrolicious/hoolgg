@@ -14,9 +14,9 @@ export class ApiError extends Error {
 const GUILD_API_URL =
   process.env.NEXT_PUBLIC_GUILD_API_URL || 'http://localhost:5000';
 const PROGRESS_API_URL =
-  process.env.NEXT_PUBLIC_PROGRESS_API_URL || 'http://localhost:5001';
+  process.env.NEXT_PUBLIC_PROGRESS_API_URL || 'http://localhost:5002';
 const RECRUITMENT_API_URL =
-  process.env.NEXT_PUBLIC_RECRUITMENT_API_URL || 'http://localhost:5002';
+  process.env.NEXT_PUBLIC_RECRUITMENT_API_URL || 'http://localhost:5001';
 
 type RequestOptions = Omit<RequestInit, 'method' | 'body'> & {
   params?: Record<string, string>;
@@ -130,6 +130,9 @@ function createClient(baseUrl: string) {
     },
     delete<T>(path: string, options?: RequestOptions): Promise<T> {
       return request<T>(baseUrl, 'DELETE', path, undefined, options);
+    },
+    patch<T>(path: string, body?: unknown, options?: RequestOptions): Promise<T> {
+      return request<T>(baseUrl, 'PATCH', path, body, options);
     },
   };
 }
