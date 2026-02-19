@@ -100,7 +100,7 @@ export function CharacterCard({
         {/* Spec, Class, Role */}
         <div className="flex flex-col gap-1">
           <p className="m-0 text-sm text-white/60">
-            {spec} {className}
+            {spec} • {className}
           </p>
           <p className="m-0 text-sm text-white/50">{role}</p>
         </div>
