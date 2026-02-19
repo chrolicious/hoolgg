@@ -13,62 +13,26 @@ export default function RosterPage() {
   ];
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+    <div className="flex flex-col gap-6">
       <Breadcrumb items={breadcrumbItems} />
 
       <div>
-        <h1
-          style={{
-            fontSize: '1.5rem',
-            fontWeight: 700,
-            color: '#ffffff',
-            margin: 0,
-          }}
-        >
+        <h1 className="text-2xl font-bold text-white m-0">
           My Roster
         </h1>
-        <p
-          style={{
-            fontSize: '0.8125rem',
-            color: 'rgba(255, 255, 255, 0.45)',
-            margin: '0.25rem 0 0 0',
-          }}
-        >
+        <p className="text-white/45 mt-1" style={{ fontSize: '0.8125rem' }}>
           Track your characters, progress, and weekly goals
         </p>
       </div>
 
       {/* Empty state placeholder */}
       <Card padding="lg" variant="elevated">
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            gap: '0.75rem',
-            textAlign: 'center',
-            padding: '2rem',
-          }}
-        >
-          <Icon name="user" size={48} style={{ color: 'rgba(255, 255, 255, 0.15)' }} />
-          <h3
-            style={{
-              fontSize: '1rem',
-              fontWeight: 700,
-              color: '#ffffff',
-              margin: 0,
-            }}
-          >
+        <div className="flex flex-col items-center gap-3 text-center p-8">
+          <Icon name="user" size={48} className="text-white/15" />
+          <h3 className="text-base font-bold text-white m-0">
             No Characters Yet
           </h3>
-          <p
-            style={{
-              fontSize: '0.875rem',
-              color: 'rgba(255, 255, 255, 0.5)',
-              margin: 0,
-              maxWidth: 320,
-            }}
-          >
+          <p className="text-sm text-white/50 m-0 max-w-80">
             Add your characters to start tracking progress
           </p>
         </div>
