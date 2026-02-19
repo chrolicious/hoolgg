@@ -1,6 +1,5 @@
 .container {
   width: 100%;
-  margin-bottom: 2rem;
 }
 
 .emblem {
@@ -108,4 +107,16 @@
 .progress {
   font-size: 0.875rem;
   color: rgba(255, 255, 255, 0.8);
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 1rem;
+}
+
+.userMenu {
+  margin-left: auto;
 }

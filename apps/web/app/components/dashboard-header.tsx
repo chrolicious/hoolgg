@@ -11,12 +11,14 @@ export interface DashboardHeaderProps {
   guild: Guild;
   userRole: 'gm' | 'officer' | 'raider';
   onNavigate?: (section: string) => void;
+  userMenuButton?: React.ReactNode;
 }
 
 export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
   guild,
   userRole,
   onNavigate,
+  userMenuButton,
 }) => {
   const isGmOrOfficer = userRole === 'gm' || userRole === 'officer';
   const [showCharacterSelector, setShowCharacterSelector] = useState(false);
@@ -100,7 +102,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
     <>
       <div className={styles.container}>
         <Badge
-          variant="primary"
+          variant="secondary"
           size="md"
           orientation="horizontal"
           profileIcon={renderGuildEmblem()}
@@ -118,19 +120,26 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
           </BadgeBody>
 
           <BadgeFooter>
-            {isGmOrOfficer && (
-              <div className={styles.viewToggle}>
-                <button className={styles.arrow} onClick={toggleView}>
-                  ←
-                </button>
-                <div className={styles.dots}>
-                  {viewMode === 'team' ? '•○' : '○•'}
+            <div className={styles.footer}>
+              {isGmOrOfficer && (
+                <div className={styles.viewToggle}>
+                  <button className={styles.arrow} onClick={toggleView}>
+                    ←
+                  </button>
+                  <div className={styles.dots}>
+                    {viewMode === 'team' ? '•○' : '○•'}
+                  </div>
+                  <button className={styles.arrow} onClick={toggleView}>
+                    →
+                  </button>
                 </div>
-                <button className={styles.arrow} onClick={toggleView}>
-                  →
-                </button>
-              </div>
-            )}
+              )}
+              {userMenuButton && (
+                <div className={styles.userMenu}>
+                  {userMenuButton}
+                </div>
+              )}
+            </div>
           </BadgeFooter>
         </Badge>
       </div>
