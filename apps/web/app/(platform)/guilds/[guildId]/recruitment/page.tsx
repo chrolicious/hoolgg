@@ -3,8 +3,7 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button, Icon, StatCard, Card } from '@hool/design-system';
-import { FadeIn, StaggerGroup } from '@hool/design-system';
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence } from 'framer-motion';
 import { ProtectedRoute } from '../../../../components/protected-route';
 import { RoleGate } from '../../../../components/role-gate';
 import { ErrorMessage } from '../../../../components/error-message';
@@ -368,11 +367,7 @@ function RecruitmentContent() {
               </AnimatePresence>
 
               {/* Loading */}
-              {isLoadingCandidates && (
-                <FadeIn duration={0.3}>
-                  <PageSkeleton />
-                </FadeIn>
-              )}
+              {isLoadingCandidates && <PageSkeleton />}
 
               {/* Error */}
               {candidatesError && (
@@ -386,8 +381,7 @@ function RecruitmentContent() {
               {!isLoadingCandidates &&
                 !candidatesError &&
                 candidates.length === 0 && (
-                  <FadeIn duration={0.3}>
-                    <Card padding="lg" variant="default">
+                  <Card padding="lg" variant="elevated">
                       <div
                         style={{
                           display: 'flex',
@@ -433,32 +427,29 @@ function RecruitmentContent() {
                         </Button>
                       </div>
                     </Card>
-                  </FadeIn>
                 )}
 
               {/* Candidate list */}
               {!isLoadingCandidates &&
                 !candidatesError &&
                 candidates.length > 0 && (
-                  <StaggerGroup staggerDelay={0.04}>
-                    <div
-                      style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: '0.5rem',
-                      }}
-                    >
-                      {candidates.map((candidate) => (
-                        <CandidateCard
-                          key={candidate.id}
-                          candidate={candidate}
-                          onClick={handleCandidateClick}
-                          isSelected={comparedIds.has(candidate.id)}
-                          onSelectToggle={handleSelectToggle}
-                        />
-                      ))}
-                    </div>
-                  </StaggerGroup>
+                  <div
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '0.5rem',
+                    }}
+                  >
+                    {candidates.map((candidate) => (
+                      <CandidateCard
+                        key={candidate.id}
+                        candidate={candidate}
+                        onClick={handleCandidateClick}
+                        isSelected={comparedIds.has(candidate.id)}
+                        onSelectToggle={handleSelectToggle}
+                      />
+                    ))}
+                  </div>
                 )}
             </div>
           )}

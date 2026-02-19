@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { StatCard, Card, Icon, Divider } from '@hool/design-system';
-import { FadeIn, StaggerGroup } from '@hool/design-system';
 import { ProtectedRoute } from '../../../../components/protected-route';
 import { RoleGate } from '../../../../components/role-gate';
 import { ErrorMessage } from '../../../../components/error-message';
@@ -428,41 +427,39 @@ function ProgressContent() {
       {/* Character Detail Section */}
       <div id="character-detail">
         {selectedCharData && (
-          <FadeIn duration={0.3}>
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'minmax(280px, 1fr) minmax(300px, 2fr)',
-              gap: '1rem',
-            }}>
-              {/* Left: Character Card */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                <CharacterProgressCard
-                  character={selectedCharData}
-                  isSelected
-                />
-                <IlvlTracker
-                  currentIlvl={selectedCharData.current_ilvl}
-                  targetIlvl={selectedCharData.target_ilvl}
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'minmax(280px, 1fr) minmax(300px, 2fr)',
+            gap: '1rem',
+          }}>
+            {/* Left: Character Card */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              <CharacterProgressCard
+                character={selectedCharData}
+                isSelected
+              />
+              <IlvlTracker
+                currentIlvl={selectedCharData.current_ilvl}
+                targetIlvl={selectedCharData.target_ilvl}
+                characterName={selectedCharData.character_name}
+              />
+            </div>
+
+            {/* Right: Gear Priorities */}
+            <div>
+              {isLoadingDetail ? (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                  <CardSkeleton />
+                  <CardSkeleton />
+                </div>
+              ) : (
+                <GearPriorityList
+                  priorities={selectedCharDetail?.gear_priorities || []}
                   characterName={selectedCharData.character_name}
                 />
-              </div>
-
-              {/* Right: Gear Priorities */}
-              <div>
-                {isLoadingDetail ? (
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                    <CardSkeleton />
-                    <CardSkeleton />
-                  </div>
-                ) : (
-                  <GearPriorityList
-                    priorities={selectedCharDetail?.gear_priorities || []}
-                    characterName={selectedCharData.character_name}
-                  />
-                )}
-              </div>
+              )}
             </div>
-          </FadeIn>
+          </div>
         )}
 
         {/* No character selected */}
@@ -511,16 +508,14 @@ function ProgressContent() {
 
       {/* Guild Overview Table (Officer+ can see all members) */}
       <RoleGate minRank={1}>
-        <FadeIn duration={0.4}>
-          <Divider spacing="md" />
-          <GuildOverviewTable
-            members={guildOverview?.members || []}
-            targetIlvl={guildOverview?.target_ilvl || 0}
-            currentWeek={guildOverview?.current_week || 1}
-            onMemberClick={handleMemberClick}
-            isLoading={isLoadingOverview}
-          />
-        </FadeIn>
+        <Divider spacing="md" />
+        <GuildOverviewTable
+          members={guildOverview?.members || []}
+          targetIlvl={guildOverview?.target_ilvl || 0}
+          currentWeek={guildOverview?.current_week || 1}
+          onMemberClick={handleMemberClick}
+          isLoading={isLoadingOverview}
+        />
       </RoleGate>
 
       {/* WarcraftLogs Comparison */}
