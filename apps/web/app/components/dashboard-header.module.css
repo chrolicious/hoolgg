@@ -81,3 +81,31 @@
   color: rgba(255, 255, 255, 0.6);
   letter-spacing: 0.25rem;
 }
+
+.stat {
+  font-size: 0.875rem;
+  color: var(--hool-ui-white);
+}
+
+.warning {
+  font-size: 0.875rem;
+  color: #ef4444;
+  font-weight: 700;
+}
+
+.characterName {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--hool-ui-white);
+}
+
+.ilvl {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--hool-ui-white);
+}
+
+.progress {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.8);
+}
