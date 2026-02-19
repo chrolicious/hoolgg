@@ -4,12 +4,21 @@ import { useRouter } from 'next/navigation';
 import { Card, StatCard, Button, Icon } from '@hool/design-system';
 import { FadeIn, StaggerGroup } from '@hool/design-system';
 import { useGuild } from '../../../lib/guild-context';
+import { DashboardHeader } from '../../../components/dashboard-header';
 
 export default function GuildDashboardPage() {
-  const { guild, memberCount, permissions, canAccess, guildId, isGM } = useGuild();
+  const { guild, memberCount, permissions, canAccess, guildId, isGM, isOfficer } = useGuild();
   const router = useRouter();
 
   const enabledTools = permissions.filter((p) => p.enabled);
+
+  // Determine user role for DashboardHeader
+  const userRole = isGM ? 'gm' : isOfficer ? 'officer' : 'raider';
+
+  const handleNavigate = (section: string) => {
+    console.log('Navigate to:', section);
+    // TODO: Implement navigation
+  };
 
   const availableTools = [
     {
@@ -28,30 +37,16 @@ export default function GuildDashboardPage() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-      {/* Welcome header */}
-      <FadeIn duration={0.5}>
-        <div>
-          <h1
-            style={{
-              fontSize: '1.5rem',
-              fontWeight: 800,
-              color: '#ffffff',
-              margin: 0,
-            }}
-          >
-            Welcome to {guild?.name}
-          </h1>
-          <p
-            style={{
-              fontSize: '0.875rem',
-              color: 'rgba(255, 255, 255, 0.5)',
-              margin: '0.25rem 0 0',
-            }}
-          >
-            {guild?.realm}
-          </p>
-        </div>
-      </FadeIn>
+      {/* Dashboard Header */}
+      {guild && (
+        <FadeIn duration={0.5}>
+          <DashboardHeader
+            guild={guild}
+            userRole={userRole}
+            onNavigate={handleNavigate}
+          />
+        </FadeIn>
+      )}
 
       {/* Quick stats */}
       <StaggerGroup staggerDelay={0.08}>
