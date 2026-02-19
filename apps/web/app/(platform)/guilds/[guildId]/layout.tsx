@@ -385,145 +385,151 @@ function GuildLayoutInner({ children }: { children: React.ReactNode }) {
         {/* Top bar */}
         <header
           style={{
-            borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
-            background: 'rgba(14, 11, 18, 0.95)',
-            backdropFilter: 'blur(8px)',
             position: 'sticky',
             top: 0,
             zIndex: 30,
-            padding: '0.75rem 1.5rem',
+            padding: '0.75rem 0',
           }}
         >
-          {/* Mobile hamburger */}
-          <button
-            onClick={() => setSidebarOpen(true)}
+          <div
             style={{
-              display: 'none',
-              alignItems: 'center',
-              justifyContent: 'center',
-              width: 36,
-              height: 36,
-              border: 'none',
-              background: 'rgba(255, 255, 255, 0.05)',
-              borderRadius: 8,
-              color: 'rgba(255, 255, 255, 0.7)',
-              cursor: 'pointer',
-              marginBottom: '0.75rem',
+              maxWidth: 1200,
+              width: '100%',
+              margin: '0 auto',
+              padding: '0 1.5rem',
             }}
-            className="mobile-menu-btn"
-            aria-label="Open navigation menu"
           >
-            <Icon name="menu" size={20} />
-          </button>
+            {/* Mobile hamburger */}
+            <button
+              onClick={() => setSidebarOpen(true)}
+              style={{
+                display: 'none',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: 36,
+                height: 36,
+                border: 'none',
+                background: 'rgba(255, 255, 255, 0.05)',
+                borderRadius: 8,
+                color: 'rgba(255, 255, 255, 0.7)',
+                cursor: 'pointer',
+                marginBottom: '0.75rem',
+              }}
+              className="mobile-menu-btn"
+              aria-label="Open navigation menu"
+            >
+              <Icon name="menu" size={20} />
+            </button>
 
-          {guild && (
-            <DashboardHeader
-              guild={guild}
-              userRole={userRole}
-              userMenuButton={
-                <div ref={userMenuRef} style={{ position: 'relative' }}>
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    onClick={() => setUserMenuOpen(!userMenuOpen)}
-                    icon={<Icon name="user" size={16} />}
-                  >
-                    {user?.username}
-                  </Button>
+            {guild && (
+              <DashboardHeader
+                guild={guild}
+                userRole={userRole}
+                userMenuButton={
+                  <div ref={userMenuRef} style={{ position: 'relative' }}>
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      onClick={() => setUserMenuOpen(!userMenuOpen)}
+                      icon={<Icon name="user" size={16} />}
+                    >
+                      {user?.username}
+                    </Button>
 
-                  <AnimatePresence>
-                    {userMenuOpen && (
-                      <motion.div
-                        initial={{ opacity: 0, y: -8, scale: 0.95 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: -8, scale: 0.95 }}
-                        transition={{ duration: 0.15 }}
-                        style={{
-                          position: 'absolute',
-                          top: '100%',
-                          right: 0,
-                          marginTop: 8,
-                          minWidth: 160,
-                          background: 'rgba(30, 25, 40, 0.95)',
-                          border: '1px solid rgba(255, 255, 255, 0.1)',
-                          borderRadius: 10,
-                          padding: '0.375rem',
-                          backdropFilter: 'blur(12px)',
-                          zIndex: 50,
-                        }}
-                      >
-                        <button
-                          onClick={() => {
-                            setUserMenuOpen(false);
-                            router.push('/guilds');
-                          }}
+                    <AnimatePresence>
+                      {userMenuOpen && (
+                        <motion.div
+                          initial={{ opacity: 0, y: -8, scale: 0.95 }}
+                          animate={{ opacity: 1, y: 0, scale: 1 }}
+                          exit={{ opacity: 0, y: -8, scale: 0.95 }}
+                          transition={{ duration: 0.15 }}
                           style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '0.5rem',
-                            width: '100%',
-                            padding: '0.5rem 0.75rem',
-                            border: 'none',
-                            background: 'transparent',
-                            color: 'rgba(255, 255, 255, 0.7)',
-                            fontSize: '0.8125rem',
-                            borderRadius: 6,
-                            cursor: 'pointer',
-                            textAlign: 'left',
-                          }}
-                          onMouseEnter={(e) => {
-                            e.currentTarget.style.background = 'rgba(255, 255, 255, 0.06)';
-                          }}
-                          onMouseLeave={(e) => {
-                            e.currentTarget.style.background = 'transparent';
+                            position: 'absolute',
+                            top: '100%',
+                            right: 0,
+                            marginTop: 8,
+                            minWidth: 160,
+                            background: 'rgba(30, 25, 40, 0.95)',
+                            border: '1px solid rgba(255, 255, 255, 0.1)',
+                            borderRadius: 10,
+                            padding: '0.375rem',
+                            backdropFilter: 'blur(12px)',
+                            zIndex: 50,
                           }}
                         >
-                          <Icon name="arrow-left" size={14} />
-                          Switch Guild
-                        </button>
-                        <div
-                          style={{
-                            height: 1,
-                            background: 'rgba(255, 255, 255, 0.06)',
-                            margin: '0.25rem 0',
-                          }}
-                        />
-                        <button
-                          onClick={() => {
-                            setUserMenuOpen(false);
-                            logout();
-                          }}
-                          style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '0.5rem',
-                            width: '100%',
-                            padding: '0.5rem 0.75rem',
-                            border: 'none',
-                            background: 'transparent',
-                            color: '#ef4444',
-                            fontSize: '0.8125rem',
-                            borderRadius: 6,
-                            cursor: 'pointer',
-                            textAlign: 'left',
-                          }}
-                          onMouseEnter={(e) => {
-                            e.currentTarget.style.background = 'rgba(239, 68, 68, 0.1)';
-                          }}
-                          onMouseLeave={(e) => {
-                            e.currentTarget.style.background = 'transparent';
-                          }}
-                        >
-                          <Icon name="x-mark" size={14} />
-                          Sign Out
-                        </button>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-              }
-            />
-          )}
+                          <button
+                            onClick={() => {
+                              setUserMenuOpen(false);
+                              router.push('/guilds');
+                            }}
+                            style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: '0.5rem',
+                              width: '100%',
+                              padding: '0.5rem 0.75rem',
+                              border: 'none',
+                              background: 'transparent',
+                              color: 'rgba(255, 255, 255, 0.7)',
+                              fontSize: '0.8125rem',
+                              borderRadius: 6,
+                              cursor: 'pointer',
+                              textAlign: 'left',
+                            }}
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.background = 'rgba(255, 255, 255, 0.06)';
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.background = 'transparent';
+                            }}
+                          >
+                            <Icon name="arrow-left" size={14} />
+                            Switch Guild
+                          </button>
+                          <div
+                            style={{
+                              height: 1,
+                              background: 'rgba(255, 255, 255, 0.06)',
+                              margin: '0.25rem 0',
+                            }}
+                          />
+                          <button
+                            onClick={() => {
+                              setUserMenuOpen(false);
+                              logout();
+                            }}
+                            style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: '0.5rem',
+                              width: '100%',
+                              padding: '0.5rem 0.75rem',
+                              border: 'none',
+                              background: 'transparent',
+                              color: '#ef4444',
+                              fontSize: '0.8125rem',
+                              borderRadius: 6,
+                              cursor: 'pointer',
+                              textAlign: 'left',
+                            }}
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.background = 'rgba(239, 68, 68, 0.1)';
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.background = 'transparent';
+                            }}
+                          >
+                            <Icon name="x-mark" size={14} />
+                            Sign Out
+                          </button>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                }
+              />
+            )}
+          </div>
         </header>
 
         {/* Page content */}
