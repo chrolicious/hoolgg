@@ -102,7 +102,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
     <>
       <div className={styles.container}>
         <Badge
-          variant="blue-gradient"
+          variant="blue"
           size="md"
           orientation="horizontal"
           profileIcon={renderGuildEmblem()}
