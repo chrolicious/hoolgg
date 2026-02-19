@@ -90,10 +90,14 @@ export default function DashboardPage() {
                   padding="lg"
                   variant="elevated"
                   interactive
-                  className="cursor-pointer h-full"
-                  onClick={() => router.push(tool.href)}
+                  className="h-full"
                 >
-                  <div className="flex flex-col gap-3">
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => router.push(tool.href)}
+                    className="w-full bg-transparent border-none cursor-pointer p-0 text-left flex flex-col gap-3"
+                  >
                     <div className="flex items-center gap-3">
                       <Icon
                         name={tool.icon}
@@ -107,7 +111,7 @@ export default function DashboardPage() {
                     <p className="text-sm text-white/50 m-0">
                       {tool.description}
                     </p>
-                  </div>
+                  </motion.button>
                 </Card>
               </motion.div>
             ))}
