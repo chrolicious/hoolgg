@@ -23,7 +23,7 @@ interface CharacterData {
 }
 
 export default function RosterPage() {
-  const { guild, guildId } = useGuild();
+  const { guild, guildId, members: guildMembers } = useGuild();
   const { user } = useAuth();
   const [characters, setCharacters] = useState<CharacterData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -35,7 +35,7 @@ export default function RosterPage() {
   ];
 
   const fetchCharacters = useCallback(async () => {
-    if (!guildId || !user) return;
+    if (!guildId || !user || !guildMembers) return;
 
     setIsLoading(true);
     setError(null);
@@ -45,8 +45,18 @@ export default function RosterPage() {
         `/guilds/${guildId}/progress/characters`
       );
 
-      // Filter to user's characters based on bnet_id match
-      const userCharacters = data.filter((char) => char.bnet_id === user.id);
+      // Filter to user's characters based on guild members cross-reference
+      const userGuildMembers = guildMembers.filter(
+        (m) => m.bnet_id === user.bnet_id
+      );
+      const userCharNames = new Set(
+        userGuildMembers.map((m) => m.character_name.toLowerCase())
+      );
+
+      const userCharacters = data.filter((c: CharacterData) =>
+        userCharNames.has(c.character_name.toLowerCase())
+      );
+
       setCharacters(userCharacters);
     } catch (err) {
       console.error('Failed to fetch characters:', err);
@@ -56,7 +66,7 @@ export default function RosterPage() {
     } finally {
       setIsLoading(false);
     }
-  }, [guildId, user]);
+  }, [guildId, user, guildMembers]);
 
   useEffect(() => {
     fetchCharacters();
