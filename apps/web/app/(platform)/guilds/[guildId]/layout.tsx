@@ -249,9 +249,24 @@ function GuildLayoutInner({ children }: { children: React.ReactNode }) {
       style={{
         display: 'flex',
         minHeight: '100vh',
-        background: 'linear-gradient(to bottom, #0e0b12 0%, #000000 100%)',
+        backgroundColor: '#0e0b12',
+        position: 'relative',
       }}
     >
+      {/* Gradient overlay */}
+      <div
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'linear-gradient(to bottom, transparent 0%, transparent 40vh, rgba(0,0,0,0.3) 70vh, rgba(0,0,0,0.7) 100vh, #000000 150vh)',
+          pointerEvents: 'none',
+          zIndex: 0,
+        }}
+      />
+
       {/* Mobile overlay */}
       <AnimatePresence>
         {sidebarOpen && (
