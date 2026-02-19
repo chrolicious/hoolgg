@@ -249,7 +249,7 @@ function GuildLayoutInner({ children }: { children: React.ReactNode }) {
       style={{
         display: 'flex',
         minHeight: '100vh',
-        backgroundColor: '#0e0b12',
+        background: 'linear-gradient(to bottom, #0e0b12 0%, #000000 100%)',
       }}
     >
       {/* Mobile overlay */}
