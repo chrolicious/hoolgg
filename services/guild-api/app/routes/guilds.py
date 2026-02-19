@@ -80,24 +80,28 @@ def list_guilds():
 
     try:
         # Get all guilds user is a member of
+        # Only return one member per guild (use dictionary to deduplicate)
         memberships = (
             db.query(GuildMember, Guild)
             .join(Guild, GuildMember.guild_id == Guild.id)
             .filter(GuildMember.bnet_id == bnet_id, Guild.deleted_at == None)
+            .order_by(Guild.id, GuildMember.rank_id.asc())  # Order by rank to get highest first
             .all()
         )
 
-        guilds = []
+        # Deduplicate by guild_id, keeping the first (highest rank) per guild
+        guilds_dict = {}
         for member, guild in memberships:
-            guild_data = guild.to_dict()
-            guild_data["user_rank"] = {
-                "rank_id": member.rank_id,
-                "rank_name": member.rank_name,
-                "character_name": member.character_name,
-            }
-            guilds.append(guild_data)
+            if guild.id not in guilds_dict:
+                guild_data = guild.to_dict()
+                guild_data["user_rank"] = {
+                    "rank_id": member.rank_id,
+                    "rank_name": member.rank_name,
+                    "character_name": member.character_name,
+                }
+                guilds_dict[guild.id] = guild_data
 
-        return jsonify({"guilds": guilds}), 200
+        return jsonify({"guilds": list(guilds_dict.values())}), 200
 
     finally:
         db.close()
