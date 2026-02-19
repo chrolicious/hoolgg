@@ -10,6 +10,7 @@ export type BadgeSize = 'sm' | 'md' | 'lg';
 export interface BadgeProps {
   variant?: BadgeVariant;
   size?: BadgeSize;
+  orientation?: 'vertical' | 'horizontal';
   profileIcon?: React.ReactNode;
   className?: string;
   children?: React.ReactNode;
@@ -26,6 +27,7 @@ export const Badge = React.forwardRef<HTMLDivElement, BadgeProps>(
     {
       variant = 'primary',
       size = 'md',
+      orientation = 'vertical',
       profileIcon,
       className,
       children,
@@ -36,7 +38,7 @@ export const Badge = React.forwardRef<HTMLDivElement, BadgeProps>(
     return (
       <div
         ref={ref}
-        className={`${styles.badge} ${styles[size]} ${className || ''}`}
+        className={`${styles.badge} ${styles[size]} ${orientation === 'horizontal' ? styles.horizontal : ''} ${className || ''}`}
         style={variantVars[variant] as React.CSSProperties}
         data-variant={variant}
         onClick={onClick}
