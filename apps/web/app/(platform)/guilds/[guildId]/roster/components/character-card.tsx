@@ -34,8 +34,8 @@ interface CharacterCardProps {
   role: 'Tank' | 'Healer' | 'DPS';
   /** Current item level */
   currentIlvl: number;
-  /** Progress status (ahead or behind) */
-  status: 'ahead' | 'behind';
+  /** Progress status (ahead, behind, or unknown) */
+  status: 'ahead' | 'behind' | 'unknown';
 }
 
 /**
@@ -89,10 +89,20 @@ export function CharacterCard({
             {characterName}
           </h3>
           <Icon
-            name={status === 'ahead' ? 'check' : 'alert-circle'}
+            name={
+              status === 'ahead'
+                ? 'check'
+                : status === 'behind'
+                  ? 'alert-circle'
+                  : 'help-circle'
+            }
             size={18}
             className={
-              status === 'ahead' ? 'text-green-400' : 'text-yellow-400'
+              status === 'ahead'
+                ? 'text-green-400'
+                : status === 'behind'
+                  ? 'text-yellow-400'
+                  : 'text-white/30'
             }
           />
         </div>
