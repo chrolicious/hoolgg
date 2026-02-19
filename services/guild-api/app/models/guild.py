@@ -24,6 +24,7 @@ class Guild(Base):
     # Relationships
     members = relationship("GuildMember", back_populates="guild")
     permissions = relationship("GuildPermission", back_populates="guild")
+    tracked_characters = relationship("UserTrackedCharacter", back_populates="guild", cascade="all, delete-orphan")
 
     def __repr__(self):
         return f"<Guild(id={self.id}, name={self.name}, realm={self.realm})>"
