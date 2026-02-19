@@ -1,20 +1,19 @@
-// apps/web/app/components/section-header.tsx
+/**
+ * SectionHeader — Visual separator and label for sidebar navigation sections
+ *
+ * Usage:
+ * <SectionHeader label="MY ROSTER" />
+ * <SectionHeader label="GUILD MANAGEMENT" />
+ */
+
 interface SectionHeaderProps {
+  /** Display label for the section (typically uppercase) */
   label: string;
 }
 
 export function SectionHeader({ label }: SectionHeaderProps) {
   return (
-    <div
-      style={{
-        fontSize: '0.625rem',
-        letterSpacing: '0.075rem',
-        textTransform: 'uppercase',
-        color: 'rgba(255, 255, 255, 0.3)',
-        padding: '0.75rem 1rem 0.5rem',
-        fontWeight: 700,
-      }}
-    >
+    <div className="text-xs uppercase tracking-wider text-white/30 px-4 py-3 pb-2 font-bold">
       {label}
     </div>
   );
