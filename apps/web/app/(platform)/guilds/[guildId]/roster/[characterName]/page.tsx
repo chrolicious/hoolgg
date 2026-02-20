@@ -13,6 +13,7 @@ import type {
   CharacterRoster,
   SeasonResponse,
   TasksResponse,
+  TasksSummaryResponse,
   VaultResponse,
   CrestsResponse,
   GearResponse,
@@ -36,6 +37,7 @@ import { WeeklyProgressGranular } from './components/weekly-progress-granular';
 interface SectionData {
   season: SeasonResponse | null;
   tasks: TasksResponse | null;
+  tasksSummary: TasksSummaryResponse | null;
   vault: VaultResponse | null;
   crests: CrestsResponse | null;
   gear: GearResponse | null;
@@ -102,6 +104,7 @@ export default function CharacterDetailPage() {
   const [sections, setSections] = useState<SectionData>({
     season: null,
     tasks: null,
+    tasksSummary: null,
     vault: null,
     crests: null,
     gear: null,
@@ -175,6 +178,7 @@ export default function CharacterDetailPage() {
     const [
       seasonResult,
       tasksResult,
+      tasksSummaryResult,
       vaultResult,
       crestsResult,
       gearResult,
@@ -184,6 +188,7 @@ export default function CharacterDetailPage() {
     ] = await Promise.allSettled([
       progressApi.get<SeasonResponse>(`/guilds/${guildId}/season`),
       progressApi.get<TasksResponse>(`/guilds/${guildId}/characters/${cid}/tasks`),
+      progressApi.get<TasksSummaryResponse>(`/guilds/${guildId}/characters/${cid}/tasks/summary`),
       progressApi.get<VaultResponse>(`/guilds/${guildId}/characters/${cid}/vault`),
       progressApi.get<CrestsResponse>(`/guilds/${guildId}/characters/${cid}/crests`),
       progressApi.get<GearResponse>(`/guilds/${guildId}/characters/${cid}/gear`),
@@ -193,7 +198,7 @@ export default function CharacterDetailPage() {
     ]);
 
     // Log failures for debugging
-    const results = { seasonResult, tasksResult, vaultResult, crestsResult, gearResult, bisResult, professionsResult, talentsResult };
+    const results = { seasonResult, tasksResult, tasksSummaryResult, vaultResult, crestsResult, gearResult, bisResult, professionsResult, talentsResult };
     for (const [name, result] of Object.entries(results)) {
       if (result.status === 'rejected') {
         console.error(`[CharacterDetail] ${name} failed:`, result.reason);
@@ -203,6 +208,7 @@ export default function CharacterDetailPage() {
     setSections({
       season: seasonResult.status === 'fulfilled' ? seasonResult.value : null,
       tasks: tasksResult.status === 'fulfilled' ? tasksResult.value : null,
+      tasksSummary: tasksSummaryResult.status === 'fulfilled' ? tasksSummaryResult.value : null,
       vault: vaultResult.status === 'fulfilled' ? vaultResult.value : null,
       crests: crestsResult.status === 'fulfilled' ? crestsResult.value : null,
       gear: gearResult.status === 'fulfilled' ? gearResult.value : null,
@@ -239,6 +245,26 @@ export default function CharacterDetailPage() {
   const handleDelete = useCallback(() => {
     router.push(`/guilds/${guildId}/roster`);
   }, [router, guildId]);
+
+  const handleTasksChange = useCallback((tasks: TasksResponse) => {
+    setSections((prev) => {
+      // Optimistically update the tasks summary for the current week
+      const weekKey = String(tasks.current_week);
+      const allTasks = [...tasks.weekly, ...tasks.daily];
+      const completed = allTasks.filter((t) => t.done).length;
+      const total = allTasks.length;
+
+      const updatedSummary = prev.tasksSummary ? {
+        ...prev.tasksSummary,
+        weeks: {
+          ...prev.tasksSummary.weeks,
+          [weekKey]: { completed, total, all_done: total > 0 && completed >= total },
+        },
+      } : null;
+
+      return { ...prev, tasks, tasksSummary: updatedSummary };
+    });
+  }, []);
 
   const handleVaultUpdate = useCallback(async () => {
     if (!guildId || !character) return;
@@ -338,6 +364,7 @@ export default function CharacterDetailPage() {
                 currentIlvl={character.current_ilvl}
                 selectedWeek={selectedWeek}
                 onWeekSelect={setSelectedWeek}
+                tasksSummary={sections.tasksSummary}
               />
             ) : sectionErrors.season ? (
               <SectionError label="Season Timeline" error={sectionErrors.season} />
@@ -351,6 +378,7 @@ export default function CharacterDetailPage() {
                 guildId={guildId}
                 classColor={classColor}
                 selectedWeek={selectedWeek}
+                onTasksChange={handleTasksChange}
               />
             ) : sectionErrors.tasks ? (
               <SectionError label="Weekly Tasks" error={sectionErrors.tasks} />
@@ -363,6 +391,7 @@ export default function CharacterDetailPage() {
               characterId={character.id}
               guildId={guildId}
               currentWeek={currentWeek}
+              selectedWeek={selectedWeek}
             />
 
             {/* 5. Equipment Grid */}

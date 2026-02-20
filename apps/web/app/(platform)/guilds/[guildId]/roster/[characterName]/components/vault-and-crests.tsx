@@ -11,6 +11,7 @@ interface VaultAndCrestsProps {
   characterId: number;
   guildId: string;
   currentWeek: number;
+  selectedWeek?: number;
 }
 
 // ─── Vault row configuration ───
@@ -160,11 +161,16 @@ interface CrestsProps {
   characterId: number;
   guildId: string;
   currentWeek: number;
+  selectedWeek?: number;
 }
 
-function Crests({ crestsData, characterId, guildId, currentWeek }: CrestsProps) {
-  const cap = crestsData?.crest_cap ?? 100;
-  const cumulativeCap = currentWeek >= 1 ? 100 * currentWeek : 0;
+const PER_WEEK_CAP = 100; // Fixed per-type weekly cap (raised from 90 to 100 in Midnight)
+
+function Crests({ crestsData, characterId, guildId, currentWeek, selectedWeek }: CrestsProps) {
+  // Cumulative cap increases by 100 each season week (e.g. W1=100, W2=200, W3=300)
+  // Computed purely from week number — allows catch-up on missed weeks
+  const displayWeek = selectedWeek ?? currentWeek;
+  const cumulativeCap = PER_WEEK_CAP * Math.max(displayWeek, 1);
 
   // Local state for each crest type's weekly collected value
   const [localValues, setLocalValues] = useState<Record<string, number>>({});
@@ -208,7 +214,7 @@ function Crests({ crestsData, characterId, guildId, currentWeek }: CrestsProps) 
   );
 
   const handleChange = (crestKey: string, value: number) => {
-    const clamped = Math.min(cap, Math.max(0, value));
+    const clamped = Math.min(PER_WEEK_CAP, Math.max(0, value));
     setLocalValues((prev) => ({ ...prev, [crestKey]: clamped }));
 
     // Debounce the save
@@ -234,8 +240,10 @@ function Crests({ crestsData, characterId, guildId, currentWeek }: CrestsProps) 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
         {CREST_TYPES.map((crest) => {
           const data = crestsData?.crests?.[crest.key] ?? null;
-          const totalCollected = data?.total_collected ?? 0;
           const weekValue = localValues[crest.key] ?? 0;
+          // Compute live cumulative total: replace the original week value with the local edit
+          const originalWeekValue = data?.current_week?.collected ?? 0;
+          const totalCollected = (data?.total_collected ?? 0) - originalWeekValue + weekValue;
 
           return (
             <div
@@ -273,12 +281,13 @@ function Crests({ crestsData, characterId, guildId, currentWeek }: CrestsProps) 
                 {crest.label}
               </span>
 
-              {/* Editable week collected / cap */}
+              {/* This week input */}
               <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <span style={{ fontSize: '10px', color: 'rgba(255,255,255,0.35)' }}>wk</span>
                 <input
                   type="number"
                   min={0}
-                  max={cap}
+                  max={PER_WEEK_CAP}
                   value={weekValue}
                   onChange={(e) =>
                     handleChange(crest.key, parseInt(e.target.value, 10) || 0)
@@ -286,21 +295,19 @@ function Crests({ crestsData, characterId, guildId, currentWeek }: CrestsProps) 
                   onBlur={() => handleBlur(crest.key)}
                   style={crestInputStyle}
                 />
-                <span style={{ fontSize: '14px', color: 'rgba(255,255,255,0.4)', fontWeight: 400 }}>
-                  / {cap}
-                </span>
               </div>
 
-              {/* Cumulative total / cap */}
+              {/* Cumulative total / cumulative cap (increases each week) */}
               <span
                 style={{
-                  fontSize: '11px',
-                  color: 'rgba(255,255,255,0.35)',
+                  fontSize: '13px',
+                  fontWeight: 600,
+                  color: 'rgba(255,255,255,0.5)',
                   minWidth: '70px',
                   textAlign: 'right',
                 }}
               >
-                {totalCollected}{cumulativeCap > 0 ? ` / ${cumulativeCap}` : ''} total
+                {totalCollected} / {cumulativeCap}
               </span>
             </div>
           );
@@ -312,7 +319,7 @@ function Crests({ crestsData, characterId, guildId, currentWeek }: CrestsProps) 
 
 // ─── Main export ───
 
-export function VaultAndCrests({ vaultData, crestsData, characterId, guildId, currentWeek }: VaultAndCrestsProps) {
+export function VaultAndCrests({ vaultData, crestsData, characterId, guildId, currentWeek, selectedWeek }: VaultAndCrestsProps) {
   return (
     <div
       style={{
@@ -327,6 +334,7 @@ export function VaultAndCrests({ vaultData, crestsData, characterId, guildId, cu
         characterId={characterId}
         guildId={guildId}
         currentWeek={currentWeek}
+        selectedWeek={selectedWeek}
       />
     </div>
   );

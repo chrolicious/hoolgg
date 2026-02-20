@@ -219,6 +219,34 @@ def sync_gear(gid: int, cid: int):
         # Calculate average ilvl
         avg_ilvl = calculate_avg_ilvl(parsed_gear)
 
+        # Fetch character profile (class, spec, level, avatar)
+        profile_data = blizzard.get_character_profile(
+            character.character_name, character.realm
+        )
+        if profile_data:
+            class_name = profile_data.get("character_class", {}).get("name")
+            spec_name = profile_data.get("active_spec", {}).get("name")
+            level = profile_data.get("level")
+
+            if class_name:
+                character.class_name = class_name
+            if spec_name:
+                character.spec = spec_name
+            if class_name and spec_name:
+                character.role = blizzard._determine_role(class_name, spec_name)
+            if level:
+                character.level = level
+
+            # Extract avatar URL from profile media
+            media = profile_data.get("media")
+            if media and isinstance(media, dict):
+                avatar_href = media.get("href")
+                if avatar_href:
+                    # Fetch the media endpoint for the actual avatar URL
+                    avatar_data = blizzard._fetch_media_avatar(avatar_href)
+                    if avatar_data:
+                        character.avatar_url = avatar_data
+
         # Fetch and parse character stats
         stats_data = blizzard.get_character_stats(
             character.character_name, character.realm
@@ -316,6 +344,32 @@ def sync_all_gear(gid: int, cid: int):
                 existing_gear = character.parsed_gear or create_empty_gear()
                 parsed_gear, _ = parse_equipment_response(equipment_data, existing_gear)
                 avg_ilvl = calculate_avg_ilvl(parsed_gear)
+
+                # Fetch profile for class/spec/role/level/avatar
+                profile_data = blizzard.get_character_profile(
+                    character.character_name, character.realm
+                )
+                if profile_data:
+                    class_name = profile_data.get("character_class", {}).get("name")
+                    spec_name = profile_data.get("active_spec", {}).get("name")
+                    level = profile_data.get("level")
+
+                    if class_name:
+                        character.class_name = class_name
+                    if spec_name:
+                        character.spec = spec_name
+                    if class_name and spec_name:
+                        character.role = blizzard._determine_role(class_name, spec_name)
+                    if level:
+                        character.level = level
+
+                    media = profile_data.get("media")
+                    if media and isinstance(media, dict):
+                        avatar_href = media.get("href")
+                        if avatar_href:
+                            avatar_url = blizzard._fetch_media_avatar(avatar_href)
+                            if avatar_url:
+                                character.avatar_url = avatar_url
 
                 character.parsed_gear = parsed_gear
                 character.gear_details = equipment_data

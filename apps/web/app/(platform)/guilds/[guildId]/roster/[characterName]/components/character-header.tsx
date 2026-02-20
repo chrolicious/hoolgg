@@ -68,6 +68,15 @@ export function CharacterHeader({
   const crestRuned = crestsData?.crests?.Runed?.current_week?.collected ?? 0;
   const crestGilded = crestsData?.crests?.Gilded?.current_week?.collected ?? 0;
 
+  // Crests: cumulative totals across all weeks
+  const crestWeatheredTotal = crestsData?.crests?.Weathered?.total_collected ?? 0;
+  const crestCarvedTotal = crestsData?.crests?.Carved?.total_collected ?? 0;
+  const crestRunedTotal = crestsData?.crests?.Runed?.total_collected ?? 0;
+  const crestGildedTotal = crestsData?.crests?.Gilded?.total_collected ?? 0;
+  // Cumulative cap: 100 per season week, computed from week number
+  const headerWeek = seasonData?.current_week ?? 0;
+  const cumulativeCap = 100 * Math.max(headerWeek, 1);
+
   // ---- Error auto-dismiss ----
   useEffect(() => {
     if (deleteError) {
@@ -155,7 +164,7 @@ export function CharacterHeader({
               src={character.avatar_url ?? undefined}
               fallback={character.character_name.substring(0, 2).toUpperCase()}
               alt={character.character_name}
-              size="lg"
+              size="xl"
             />
 
             <h2 style={{ color: '#fff', fontSize: '18px', fontWeight: 700, margin: '8px 0 4px 0' }}>
@@ -170,25 +179,27 @@ export function CharacterHeader({
               Synced {formatRelativeTime(gearData?.last_gear_sync)}
             </p>
 
-            {/* ilvl display — below character info */}
-            <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
-              <span style={{ fontSize: '28px', fontWeight: 700, color: '#fff' }}>
-                {character.current_ilvl != null ? character.current_ilvl.toFixed(1) : '\u2014'}
-              </span>
-              {character.current_ilvl != null && targetIlvl > 0 && (
-                <span style={{
-                  fontSize: '14px', fontWeight: 600, padding: '2px 8px', borderRadius: '4px',
-                  color: isDeltaPositive ? '#22c55e' : '#ef4444',
-                  backgroundColor: 'rgba(0,0,0,0.45)',
-                }}>
-                  {isDeltaPositive ? '+' : ''}{ilvlDelta.toFixed(1)}
+            {/* ilvl display — pushed to bottom of left column */}
+            <div style={{ marginTop: 'auto' }}>
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
+                <span style={{ fontSize: '28px', fontWeight: 700, color: '#fff' }}>
+                  {character.current_ilvl != null ? character.current_ilvl.toFixed(1) : '\u2014'}
                 </span>
-              )}
+                {character.current_ilvl != null && targetIlvl > 0 && (
+                  <span style={{
+                    fontSize: '14px', fontWeight: 600, padding: '2px 8px', borderRadius: '4px',
+                    color: isDeltaPositive ? '#22c55e' : '#ef4444',
+                    backgroundColor: 'rgba(0,0,0,0.45)',
+                  }}>
+                    {isDeltaPositive ? '+' : ''}{ilvlDelta.toFixed(1)}
+                  </span>
+                )}
+              </div>
             </div>
           </div>
 
           {/* ── Right Column ── */}
-          <div style={{ display: 'flex', flexDirection: 'column', flex: 1, alignItems: 'flex-end', gap: '12px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', flex: 1, alignItems: 'flex-end', gap: '12px', marginTop: '44px' }}>
             {/* Weekly progress bar */}
             <div style={{ width: '100%' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
@@ -251,15 +262,14 @@ export function CharacterHeader({
             <div style={{ width: '100%' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
                 <span style={{ fontSize: '12px', fontWeight: 600, color: 'rgba(255,255,255,0.7)' }}>Crests</span>
-                <span style={{ fontSize: '10px', color: 'rgba(255,255,255,0.4)' }}>/ {seasonData?.current_crest_cap ?? 90}</span>
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '6px' }}>
                 {[
-                  { label: 'Wth', value: crestWeathered, color: 'rgba(148,163,184,', textColor: '#94a3b8' },
-                  { label: 'Crv', value: crestCarved, color: 'rgba(34,197,94,', textColor: '#4ade80' },
-                  { label: 'Run', value: crestRuned, color: 'rgba(99,102,241,', textColor: '#818cf8' },
-                  { label: 'Gld', value: crestGilded, color: 'rgba(234,179,8,', textColor: '#facc15' },
-                ].map(({ label, value, color, textColor }) => (
+                  { label: 'Wth', value: crestWeathered, total: crestWeatheredTotal, color: 'rgba(148,163,184,', textColor: '#94a3b8' },
+                  { label: 'Crv', value: crestCarved, total: crestCarvedTotal, color: 'rgba(34,197,94,', textColor: '#4ade80' },
+                  { label: 'Run', value: crestRuned, total: crestRunedTotal, color: 'rgba(99,102,241,', textColor: '#818cf8' },
+                  { label: 'Gld', value: crestGilded, total: crestGildedTotal, color: 'rgba(234,179,8,', textColor: '#facc15' },
+                ].map(({ label, value, total, color, textColor }) => (
                   <div key={label} style={{
                     textAlign: 'center', padding: '6px 4px', borderRadius: '6px',
                     backgroundColor: value > 0 ? `${color}0.2)` : 'rgba(0,0,0,0.35)',
@@ -270,6 +280,9 @@ export function CharacterHeader({
                     </div>
                     <div style={{ fontSize: '13px', fontWeight: 700, color: value > 0 ? textColor : 'rgba(255,255,255,0.3)' }}>
                       {value > 0 ? value : '\u2014'}
+                    </div>
+                    <div style={{ fontSize: '9px', color: 'rgba(255,255,255,0.35)', marginTop: '2px' }}>
+                      {total}/{cumulativeCap}
                     </div>
                   </div>
                 ))}

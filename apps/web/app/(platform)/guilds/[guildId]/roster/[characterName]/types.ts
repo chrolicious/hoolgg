@@ -62,6 +62,20 @@ export interface TasksResponse {
   daily: TaskItem[];
 }
 
+// ─── Task Summary (from GET /guilds/{gid}/characters/{cid}/tasks/summary) ───
+
+export interface TaskWeekSummary {
+  completed: number;
+  total: number;
+  all_done: boolean;
+}
+
+export interface TasksSummaryResponse {
+  character_id: number;
+  current_week: number;
+  weeks: Record<string, TaskWeekSummary>;
+}
+
 // ─── Great Vault (from GET /guilds/{gid}/characters/{cid}/vault) ───
 
 export interface VaultSlot {

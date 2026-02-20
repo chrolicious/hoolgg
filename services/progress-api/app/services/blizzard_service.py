@@ -173,6 +173,58 @@ class BlizzardService:
             logger.error(f"Failed to fetch character profile: {e}")
             return None
 
+    def get_character_stats(
+        self, character_name: str, realm_slug: str
+    ) -> Optional[Dict[str, Any]]:
+        """
+        Fetch character statistics from Blizzard API
+
+        Args:
+            character_name: Character name
+            realm_slug: Realm slug
+
+        Returns:
+            Dict with character statistics data or None if failed
+        """
+        access_token = self._get_access_token()
+        if not access_token:
+            return None
+
+        api_url = self._get_api_url()
+        region = current_app.config.get("BLIZZARD_REGION", "us")
+        namespace = f"profile-{region}"
+
+        character_name_lower = character_name.lower()
+        realm_slug_lower = realm_slug.lower()
+
+        endpoint = (
+            f"{api_url}/profile/wow/character/{realm_slug_lower}/"
+            f"{character_name_lower}/statistics"
+        )
+
+        params = {"namespace": namespace, "locale": "en_US"}
+        headers = {"Authorization": f"Bearer {access_token}"}
+        timeout = current_app.config.get("BLIZZARD_API_TIMEOUT", 10)
+
+        try:
+            response = requests.get(endpoint, params=params, headers=headers, timeout=timeout)
+            response.raise_for_status()
+
+            data = response.json()
+            logger.info(f"Successfully fetched stats for {character_name}-{realm_slug}")
+            return data
+
+        except requests.HTTPError as e:
+            if e.response.status_code == 404:
+                logger.warning(f"Stats not found for character: {character_name}-{realm_slug}")
+            else:
+                logger.error(f"HTTP error fetching character stats: {e.response.status_code}")
+            return None
+
+        except requests.RequestException as e:
+            logger.error(f"Failed to fetch character stats: {e}")
+            return None
+
     def calculate_average_ilvl(self, equipment_data: Dict[str, Any]) -> Optional[float]:
         """
         Calculate average item level from equipment data
@@ -278,3 +330,45 @@ class BlizzardService:
             return "Healer"
         else:
             return "DPS"
+
+    def _fetch_media_avatar(self, media_href: str) -> Optional[str]:
+        """
+        Fetch the character avatar URL from the media endpoint.
+
+        The profile response contains a media.href that points to a
+        character-media endpoint with the actual render/avatar URLs.
+
+        Args:
+            media_href: Full URL to the character-media endpoint
+
+        Returns:
+            Avatar URL string or None
+        """
+        access_token = self._get_access_token()
+        if not access_token:
+            return None
+
+        headers = {"Authorization": f"Bearer {access_token}"}
+        timeout = current_app.config.get("BLIZZARD_API_TIMEOUT", 10)
+
+        try:
+            response = requests.get(media_href, headers=headers, timeout=timeout)
+            response.raise_for_status()
+            data = response.json()
+
+            # Look for avatar or inset avatar in assets
+            assets = data.get("assets", [])
+            for asset in assets:
+                if asset.get("key") == "avatar":
+                    return asset.get("value")
+
+            # Fallback: use render_url or bust_url
+            render_url = data.get("render_url")
+            if render_url:
+                return render_url
+
+            return None
+
+        except requests.RequestException as e:
+            logger.warning(f"Failed to fetch character avatar: {e}")
+            return None

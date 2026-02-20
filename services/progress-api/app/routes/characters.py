@@ -8,7 +8,7 @@ from app.models.weekly_task_completion import WeeklyTaskCompletion
 from app.models.great_vault_entry import GreatVaultEntry
 from app.models.crest_entry import CrestEntry
 from app.services.permission_service import PermissionService
-from app.services.season_service import calculate_current_week
+from app.services.season_service import calculate_current_week, get_weekly_crest_cap
 from app.services.task_definitions import get_task_definitions
 from app.services.vault_calculator import calculate_vault_slots
 import logging
@@ -121,7 +121,7 @@ def list_characters(gid: int):
                 }
 
         # Aggregate crest totals for current week
-        crest_map = {}
+        crest_week_map = {}
         if char_ids:
             crest_rows = (
                 db.query(
@@ -138,9 +138,32 @@ def list_characters(gid: int):
             )
             for row in crest_rows:
                 cid, ctype, total = row
-                if cid not in crest_map:
-                    crest_map[cid] = {}
-                crest_map[cid][ctype] = total or 0
+                if cid not in crest_week_map:
+                    crest_week_map[cid] = {}
+                crest_week_map[cid][ctype] = total or 0
+
+        # Aggregate cumulative crest totals (all weeks)
+        crest_cumulative_map = {}
+        if char_ids:
+            cumulative_rows = (
+                db.query(
+                    CrestEntry.character_id,
+                    CrestEntry.crest_type,
+                    sa_func.sum(CrestEntry.collected),
+                )
+                .filter(
+                    CrestEntry.character_id.in_(char_ids),
+                )
+                .group_by(CrestEntry.character_id, CrestEntry.crest_type)
+                .all()
+            )
+            for row in cumulative_rows:
+                cid, ctype, total = row
+                if cid not in crest_cumulative_map:
+                    crest_cumulative_map[cid] = {}
+                crest_cumulative_map[cid][ctype] = total or 0
+
+        crest_cap = get_weekly_crest_cap(current_week)  # cumulative cap (100 * week)
 
         # Build enriched character list
         enriched = []
@@ -149,7 +172,13 @@ def list_characters(gid: int):
             d["weekly_tasks_completed"] = task_counts.get(c.id, 0)
             d["weekly_tasks_total"] = total_tasks
             d["vault_summary"] = vault_map.get(c.id, None)
-            d["crests_summary"] = crest_map.get(c.id, None)
+            week_crests = crest_week_map.get(c.id, None)
+            cumulative_crests = crest_cumulative_map.get(c.id, None)
+            d["crests_summary"] = {
+                "week": week_crests,
+                "cumulative": cumulative_crests,
+                "cap": crest_cap,
+            } if (week_crests or cumulative_crests) else None
             enriched.append(d)
 
         return jsonify({

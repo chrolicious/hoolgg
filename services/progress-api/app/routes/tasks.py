@@ -228,6 +228,86 @@ def toggle_task(gid: int, cid: int):
         db.close()
 
 
+@bp.route("/<int:gid>/characters/<int:cid>/tasks/summary", methods=["GET"])
+def get_tasks_summary(gid: int, cid: int):
+    """
+    Get task completion summary per week.
+
+    Returns a dict of week_number -> { completed, total, all_done }
+    for all weeks that have any completions, plus the current week.
+    """
+    bnet_id = get_current_user_from_token()
+    if not bnet_id:
+        return jsonify({"error": "Not authenticated"}), 401
+
+    perm_check = check_permission(bnet_id, gid)
+    if not perm_check.get("allowed"):
+        return jsonify({"error": "Access denied"}), 403
+
+    db = next(get_db())
+
+    try:
+        character = (
+            db.query(CharacterProgress)
+            .filter(
+                CharacterProgress.id == cid,
+                CharacterProgress.guild_id == gid,
+            )
+            .first()
+        )
+
+        if not character:
+            return jsonify({"error": "Character not found"}), 404
+
+        current_week = calculate_current_week()
+
+        # Get all completions for this character
+        completions = (
+            db.query(WeeklyTaskCompletion)
+            .filter(
+                WeeklyTaskCompletion.character_id == cid,
+                WeeklyTaskCompletion.completed == True,
+            )
+            .all()
+        )
+
+        # Group by week
+        week_completions: dict[int, set[str]] = {}
+        for c in completions:
+            key = c.week_number
+            if key not in week_completions:
+                week_completions[key] = set()
+            week_completions[key].add(f"{c.task_type}:{c.task_id}")
+
+        # Build summary for each week that has data (+ current week)
+        weeks_to_check = set(week_completions.keys())
+        weeks_to_check.add(current_week)
+
+        summary = {}
+        for week_num in weeks_to_check:
+            task_defs = get_task_definitions(week_num)
+            total_tasks = len(task_defs.get("weekly", [])) + len(task_defs.get("daily", []))
+
+            # Count completed tasks for this week
+            completed_ids = week_completions.get(week_num, set())
+            completed_count = len(completed_ids)
+
+            summary[str(week_num)] = {
+                "completed": completed_count,
+                "total": total_tasks,
+                "all_done": total_tasks > 0 and completed_count >= total_tasks,
+            }
+
+        return jsonify({
+            "character_id": cid,
+            "current_week": current_week,
+            "weeks": summary,
+        }), 200
+
+    finally:
+        db.close()
+
+
 @bp.route("/<int:gid>/characters/<int:cid>/tasks/reset-daily", methods=["POST"])
 def reset_daily_tasks(gid: int, cid: int):
     """
