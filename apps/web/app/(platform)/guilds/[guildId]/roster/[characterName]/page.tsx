@@ -2,66 +2,86 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, useSearchParams, useRouter } from 'next/navigation';
-import { motion } from 'framer-motion';
+import Script from 'next/script';
 import { useGuild } from '../../../../../lib/guild-context';
 import { progressApi } from '../../../../../lib/api';
-import { Breadcrumb } from '../../../../../components/breadcrumb';
 import { Card, Icon } from '@hool/design-system';
 import { PageSkeleton } from '../../../../../components/loading-skeleton';
 import { ErrorMessage } from '../../../../../components/error-message';
-import { CharacterProgressCard } from '../../progress/components/character-progress-card';
-import type { CharacterProgressData } from '../../progress/components/character-progress-card';
-import { IlvlTracker } from '../../progress/components/ilvl-tracker';
-import { GearPriorityList } from '../../progress/components/gear-priority-list';
-import type { GearSlotPriority } from '../../progress/components/gear-priority-list';
+import { CLASS_COLORS } from './utils';
+import type {
+  CharacterRoster,
+  SeasonResponse,
+  TasksResponse,
+  VaultResponse,
+  CrestsResponse,
+  GearResponse,
+  BisResponse,
+  ProfessionsResponse,
+  TalentsResponse,
+} from './types';
 
-// WoW class colors from official Blizzard palette
-const CLASS_COLORS: Record<string, string> = {
-  'Death Knight': '#C41E3A',
-  'Demon Hunter': '#A330C9',
-  Druid: '#FF7C0A',
-  Evoker: '#33937F',
-  Hunter: '#AAD372',
-  Mage: '#3FC7EB',
-  Monk: '#00FF98',
-  Paladin: '#F48CBA',
-  Priest: '#FFFFFF',
-  Rogue: '#FFF468',
-  Shaman: '#0070DD',
-  Warlock: '#8788EE',
-  Warrior: '#C69B6D',
-};
+// Section components
+import { CharacterHeader } from './components/character-header';
+import { SeasonTimeline } from './components/season-timeline';
+import { WeeklyTasksSection } from './components/weekly-tasks-section';
+import { VaultAndCrests } from './components/vault-and-crests';
+import { EquipmentGrid } from './components/equipment-grid';
+import { BisTracker } from './components/bis-tracker';
+import { ProfessionsSection } from './components/professions-section';
+import { TalentBuildsSection } from './components/talent-builds-section';
+import { WeeklyProgressGranular } from './components/weekly-progress-granular';
 
-type Tab = 'overview' | 'bis' | 'vault' | 'professions';
-
-interface TabConfig {
-  id: Tab;
-  label: string;
-  icon: string;
+// Section data state — each section can be independently loaded or failed
+interface SectionData {
+  season: SeasonResponse | null;
+  tasks: TasksResponse | null;
+  vault: VaultResponse | null;
+  crests: CrestsResponse | null;
+  gear: GearResponse | null;
+  bis: BisResponse | null;
+  professions: ProfessionsResponse | null;
+  talents: TalentsResponse | null;
 }
 
-const TABS: TabConfig[] = [
-  { id: 'overview', label: 'Overview', icon: 'grid' },
-  { id: 'bis', label: 'BiS List', icon: 'target' },
-  { id: 'vault', label: 'Great Vault', icon: 'package' },
-  { id: 'professions', label: 'Professions', icon: 'briefcase' },
-];
+interface SectionErrors {
+  season: string | null;
+  tasks: string | null;
+  vault: string | null;
+  crests: string | null;
+  gear: string | null;
+  bis: string | null;
+  professions: string | null;
+  talents: string | null;
+}
 
-interface CharacterData {
-  character_name: string;
-  class_name: string;
-  spec: string;
-  role?: 'Tank' | 'Healer' | 'DPS';
-  current_ilvl: number;
-  bnet_id: string;
-  target_ilvl?: number;
-  gear_priorities?: GearSlotPriority[];
-  progress?: {
-    target_ilvl: number;
-    current_week: number;
-    status: 'ahead' | 'behind' | 'unknown';
-    message?: string;
-  };
+function SectionError({ label, error }: { label: string; error: string }) {
+  return (
+    <div
+      style={{
+        backgroundColor: 'rgba(239,68,68,0.08)',
+        border: '1px solid rgba(239,68,68,0.2)',
+        borderRadius: '12px',
+        padding: '16px 20px',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '10px',
+      }}
+    >
+      <Icon name="warning" size={16} className="text-red-400" />
+      <span style={{ fontSize: '13px', color: 'rgba(255,255,255,0.6)' }}>
+        <strong style={{ color: '#f87171' }}>{label}</strong> — {error}
+      </span>
+    </div>
+  );
+}
+
+function extractError(result: PromiseSettledResult<unknown>): string | null {
+  if (result.status === 'fulfilled') return null;
+  const reason = result.reason;
+  if (reason instanceof Error) return reason.message;
+  if (typeof reason === 'string') return reason;
+  return 'Failed to load';
 }
 
 export default function CharacterDetailPage() {
@@ -71,97 +91,187 @@ export default function CharacterDetailPage() {
   const { guild, guildId } = useGuild();
 
   const characterName = decodeURIComponent(params.characterName as string);
-  const activeTab = (searchParams.get('tab') as Tab) || 'overview';
+  const realm = searchParams.get('realm');
 
-  const [characterData, setCharacterData] = useState<CharacterData | null>(null);
+  // Phase 1: resolve character from roster
+  const [character, setCharacter] = useState<CharacterRoster | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const breadcrumbItems = [
-    { label: guild?.name || 'Guild', href: `/guilds/${guildId}` },
-    { label: 'My Roster', href: `/guilds/${guildId}/roster` },
-    { label: characterName },
-  ];
+  // Phase 2: section data
+  const [sections, setSections] = useState<SectionData>({
+    season: null,
+    tasks: null,
+    vault: null,
+    crests: null,
+    gear: null,
+    bis: null,
+    professions: null,
+    talents: null,
+  });
+  const [sectionErrors, setSectionErrors] = useState<SectionErrors>({
+    season: null,
+    tasks: null,
+    vault: null,
+    crests: null,
+    gear: null,
+    bis: null,
+    professions: null,
+    talents: null,
+  });
+  const [sectionsLoading, setSectionsLoading] = useState(true);
 
-  const fetchCharacterData = useCallback(async () => {
-    if (!guildId || !characterName) return;
+  // Week selection state for timeline ↔ tasks interaction
+  const [selectedWeek, setSelectedWeek] = useState<number | undefined>(undefined);
+
+  // Phase 1: Resolve characterId from roster list
+  const resolveCharacter = useCallback(async () => {
+    if (!guildId || !characterName || !realm) {
+      if (!realm) setError('Realm parameter is required');
+      setIsLoading(false);
+      return;
+    }
 
     setIsLoading(true);
     setError(null);
 
     try {
-      // Fetch character detail data (includes gear priorities)
       const data = await progressApi.get<{
-        character: {
-          character_name: string;
-          class_name: string;
-          spec_name: string;
-          current_ilvl: number;
-          bnet_id: string;
-        };
-        target_ilvl: number;
-        current_week: number;
-        gear_priorities: GearSlotPriority[];
-      }>(
-        `/guilds/${guildId}/progress/character/${encodeURIComponent(characterName)}`
+        characters: CharacterRoster[];
+      }>(`/guilds/${guildId}/characters`);
+
+      const match = data.characters.find(
+        (c) =>
+          c.character_name.toLowerCase() === characterName.toLowerCase() &&
+          c.realm.toLowerCase() === realm.toLowerCase()
       );
 
-      // Transform to CharacterData format
-      setCharacterData({
-        character_name: data.character.character_name,
-        class_name: data.character.class_name,
-        spec: data.character.spec_name,
-        current_ilvl: data.character.current_ilvl,
-        bnet_id: data.character.bnet_id,
-        target_ilvl: data.target_ilvl,
-        gear_priorities: data.gear_priorities || [],
-      });
+      if (!match) {
+        setError(`Character "${characterName}" on "${realm}" not found in this guild's roster.`);
+        setIsLoading(false);
+        return;
+      }
+
+      setCharacter(match);
     } catch (err) {
-      console.error('Failed to fetch character data:', err);
-      setError(
-        err instanceof Error ? err.message : 'Failed to load character data'
-      );
+      console.error('Failed to resolve character:', err);
+      setError(err instanceof Error ? err.message : 'Failed to load character');
     } finally {
       setIsLoading(false);
     }
-  }, [guildId, characterName]);
+  }, [guildId, characterName, realm]);
 
   useEffect(() => {
-    fetchCharacterData();
-  }, [fetchCharacterData]);
+    resolveCharacter();
+  }, [resolveCharacter]);
 
-  const handleTabClick = (tabId: Tab) => {
-    const url = new URL(window.location.href);
-    url.searchParams.set('tab', tabId);
-    router.push(url.pathname + url.search);
-  };
+  // Phase 2: Fetch all section data in parallel once character is resolved
+  const fetchSections = useCallback(async (char: CharacterRoster) => {
+    if (!guildId) return;
 
+    setSectionsLoading(true);
+    const cid = char.id;
+
+    const [
+      seasonResult,
+      tasksResult,
+      vaultResult,
+      crestsResult,
+      gearResult,
+      bisResult,
+      professionsResult,
+      talentsResult,
+    ] = await Promise.allSettled([
+      progressApi.get<SeasonResponse>(`/guilds/${guildId}/season`),
+      progressApi.get<TasksResponse>(`/guilds/${guildId}/characters/${cid}/tasks`),
+      progressApi.get<VaultResponse>(`/guilds/${guildId}/characters/${cid}/vault`),
+      progressApi.get<CrestsResponse>(`/guilds/${guildId}/characters/${cid}/crests`),
+      progressApi.get<GearResponse>(`/guilds/${guildId}/characters/${cid}/gear`),
+      progressApi.get<BisResponse>(`/guilds/${guildId}/characters/${cid}/bis`),
+      progressApi.get<ProfessionsResponse>(`/guilds/${guildId}/characters/${cid}/professions`),
+      progressApi.get<TalentsResponse>(`/guilds/${guildId}/characters/${cid}/talents`),
+    ]);
+
+    // Log failures for debugging
+    const results = { seasonResult, tasksResult, vaultResult, crestsResult, gearResult, bisResult, professionsResult, talentsResult };
+    for (const [name, result] of Object.entries(results)) {
+      if (result.status === 'rejected') {
+        console.error(`[CharacterDetail] ${name} failed:`, result.reason);
+      }
+    }
+
+    setSections({
+      season: seasonResult.status === 'fulfilled' ? seasonResult.value : null,
+      tasks: tasksResult.status === 'fulfilled' ? tasksResult.value : null,
+      vault: vaultResult.status === 'fulfilled' ? vaultResult.value : null,
+      crests: crestsResult.status === 'fulfilled' ? crestsResult.value : null,
+      gear: gearResult.status === 'fulfilled' ? gearResult.value : null,
+      bis: bisResult.status === 'fulfilled' ? bisResult.value : null,
+      professions: professionsResult.status === 'fulfilled' ? professionsResult.value : null,
+      talents: talentsResult.status === 'fulfilled' ? talentsResult.value : null,
+    });
+
+    setSectionErrors({
+      season: extractError(seasonResult),
+      tasks: extractError(tasksResult),
+      vault: extractError(vaultResult),
+      crests: extractError(crestsResult),
+      gear: extractError(gearResult),
+      bis: extractError(bisResult),
+      professions: extractError(professionsResult),
+      talents: extractError(talentsResult),
+    });
+
+    setSectionsLoading(false);
+  }, [guildId]);
+
+  useEffect(() => {
+    if (character) {
+      fetchSections(character);
+    }
+  }, [character, fetchSections]);
+
+  // Callbacks for cross-section updates
+  const handleSync = useCallback(() => {
+    if (character) fetchSections(character);
+  }, [character, fetchSections]);
+
+  const handleDelete = useCallback(() => {
+    router.push(`/guilds/${guildId}/roster`);
+  }, [router, guildId]);
+
+  const handleVaultUpdate = useCallback(async () => {
+    if (!guildId || !character) return;
+    try {
+      const vault = await progressApi.get<VaultResponse>(
+        `/guilds/${guildId}/characters/${character.id}/vault`
+      );
+      setSections((prev) => ({ ...prev, vault }));
+    } catch {
+      // silently fail — user will see stale data
+    }
+  }, [guildId, character]);
+
+  // Loading state
   if (isLoading) {
-    return (
-      <div className="flex flex-col gap-6">
-        <Breadcrumb items={breadcrumbItems} />
-        <PageSkeleton />
-      </div>
-    );
+    return <PageSkeleton />;
   }
 
+  // Error state
   if (error) {
     return (
-      <div className="flex flex-col gap-6">
-        <Breadcrumb items={breadcrumbItems} />
-        <ErrorMessage
-          title="Failed to Load Character"
-          message={error}
-          onRetry={fetchCharacterData}
-        />
-      </div>
+      <ErrorMessage
+        title="Failed to Load Character"
+        message={error}
+        onRetry={resolveCharacter}
+      />
     );
   }
 
-  if (!characterData) {
+  // Not found state
+  if (!character) {
     return (
       <div className="flex flex-col gap-6">
-        <Breadcrumb items={breadcrumbItems} />
         <Card padding="lg" variant="elevated">
           <div className="flex flex-col items-center gap-3 text-center p-8">
             <Icon name="user" size={48} className="text-white/15" />
@@ -169,7 +279,7 @@ export default function CharacterDetailPage() {
               Character Not Found
             </h3>
             <p className="text-sm text-white/50 m-0 max-w-80">
-              The character "{characterName}" could not be found.
+              The character &ldquo;{characterName}&rdquo; could not be found.
             </p>
           </div>
         </Card>
@@ -177,162 +287,121 @@ export default function CharacterDetailPage() {
     );
   }
 
-  const classColor = CLASS_COLORS[characterData.class_name] || '#FFFFFF';
+  const classColor = CLASS_COLORS[character.class_name ?? ''] || '#FFFFFF';
+  const currentWeek = sections.season?.current_week ?? 0;
 
   return (
-    <div className="flex flex-col gap-6">
-      <Breadcrumb items={breadcrumbItems} />
+    <>
+      {/* Wowhead tooltip script — lazy-loaded for equipment grid */}
+      <Script
+        id="wowhead-config"
+        strategy="beforeInteractive"
+        dangerouslySetInnerHTML={{
+          __html: `var whTooltips = {colorLinks: false, iconizeLinks: false, renameLinks: false};`,
+        }}
+      />
+      <Script
+        src="https://wow.zamimg.com/js/tooltips.js"
+        strategy="lazyOnload"
+      />
 
-      {/* Character Header */}
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
-        className="flex flex-col gap-2"
-      >
-        <h1
-          className="text-3xl font-bold m-0"
-          style={{ color: classColor }}
-        >
-          {characterData.character_name}
-        </h1>
-        <div className="flex items-center gap-3 text-white/60">
-          <span className="text-sm">
-            {characterData.spec} {characterData.class_name}
-          </span>
-          {characterData.role && (
-            <>
-              <span className="text-white/30">•</span>
-              <span className="text-sm">{characterData.role}</span>
-            </>
-          )}
-          <span className="text-white/30">•</span>
-          <div className="flex items-center gap-1.5">
-            <Icon name="zap" size={14} />
-            <span className="text-sm font-medium">
-              {characterData.current_ilvl} ilvl
-            </span>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+        {/* 1. Character Header */}
+        <CharacterHeader
+          character={character}
+          gearData={sections.gear}
+          vaultData={sections.vault}
+          crestsData={sections.crests}
+          tasksData={sections.tasks}
+          seasonData={sections.season}
+          guildId={guildId}
+          onSync={handleSync}
+          onDelete={handleDelete}
+          onRefresh={handleSync}
+        />
+
+        {sectionsLoading ? (
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '40px',
+          }}>
+            <Icon name="refresh" size={24} animation="spin" className="text-white/30" />
           </div>
-        </div>
-      </motion.div>
-
-      {/* Tab Navigation */}
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3, delay: 0.1 }}
-        className="flex gap-2 p-1 rounded-lg bg-white/5"
-      >
-        {TABS.map((tab) => {
-          const isActive = activeTab === tab.id;
-          return (
-            <motion.button
-              key={tab.id}
-              onClick={() => handleTabClick(tab.id)}
-              className={`
-                flex items-center gap-2 px-4 py-2 rounded-md border-none cursor-pointer
-                transition-colors flex-1
-                ${
-                  isActive
-                    ? 'bg-purple-600 text-white font-bold'
-                    : 'bg-transparent text-white/50 hover:text-white/80 hover:bg-white/5'
-                }
-              `}
-              whileHover={!isActive ? { scale: 1.02 } : undefined}
-              whileTap={{ scale: 0.98 }}
-              transition={{ duration: 0.15 }}
-              aria-pressed={isActive}
-            >
-              <Icon name={tab.icon} size={16} />
-              <span className="text-sm">{tab.label}</span>
-            </motion.button>
-          );
-        })}
-      </motion.div>
-
-      {/* Tab Content */}
-      <motion.div
-        key={activeTab}
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
-      >
-        {activeTab === 'overview' && (
-          <div className="grid grid-cols-1 md:grid-cols-[minmax(280px,1fr)_minmax(300px,2fr)] gap-4">
-            {/* Left column: Character card and ilvl tracker */}
-            <div className="flex flex-col gap-4">
-              <CharacterProgressCard
-                character={{
-                  character_name: characterData.character_name,
-                  class_name: characterData.class_name,
-                  spec: characterData.spec,
-                  role: characterData.role || 'DPS',
-                  current_ilvl: characterData.current_ilvl,
-                  target_ilvl: characterData.target_ilvl || characterData.current_ilvl,
-                  status: characterData.progress?.status || 'unknown',
-                  message: characterData.progress?.message,
-                }}
-                isSelected
+        ) : (
+          <>
+            {/* 2. Season Timeline */}
+            {sections.season ? (
+              <SeasonTimeline
+                seasonData={sections.season}
+                currentIlvl={character.current_ilvl}
+                selectedWeek={selectedWeek}
+                onWeekSelect={setSelectedWeek}
               />
-              <IlvlTracker
-                currentIlvl={characterData.current_ilvl}
-                targetIlvl={characterData.target_ilvl || characterData.current_ilvl}
-                characterName={characterData.character_name}
+            ) : sectionErrors.season ? (
+              <SectionError label="Season Timeline" error={sectionErrors.season} />
+            ) : null}
+
+            {/* 3. Weekly Tasks */}
+            {sections.tasks ? (
+              <WeeklyTasksSection
+                tasksData={sections.tasks}
+                characterId={character.id}
+                guildId={guildId}
+                classColor={classColor}
+                selectedWeek={selectedWeek}
               />
-            </div>
+            ) : sectionErrors.tasks ? (
+              <SectionError label="Weekly Tasks" error={sectionErrors.tasks} />
+            ) : null}
 
-            {/* Right column: Gear priorities */}
-            <div>
-              <GearPriorityList
-                priorities={characterData.gear_priorities || []}
-                characterName={characterData.character_name}
-              />
-            </div>
-          </div>
-        )}
+            {/* 4. Great Vault + Crests (side-by-side) */}
+            <VaultAndCrests
+              vaultData={sections.vault}
+              crestsData={sections.crests}
+              characterId={character.id}
+              guildId={guildId}
+              currentWeek={currentWeek}
+            />
 
-        {activeTab === 'bis' && (
-          <Card padding="lg" variant="elevated">
-            <div className="flex flex-col items-center gap-3 text-center p-8">
-              <Icon name="target" size={48} className="text-white/15" />
-              <h3 className="text-base font-bold text-white m-0">
-                BiS List
-              </h3>
-              <p className="text-sm text-white/50 m-0 max-w-80">
-                BiS List coming soon
-              </p>
-            </div>
-          </Card>
-        )}
+            {/* 5. Equipment Grid */}
+            <EquipmentGrid gearData={sections.gear} />
 
-        {activeTab === 'vault' && (
-          <Card padding="lg" variant="elevated">
-            <div className="flex flex-col items-center gap-3 text-center p-8">
-              <Icon name="package" size={48} className="text-white/15" />
-              <h3 className="text-base font-bold text-white m-0">
-                Great Vault
-              </h3>
-              <p className="text-sm text-white/50 m-0 max-w-80">
-                Vault content coming soon
-              </p>
-            </div>
-          </Card>
-        )}
+            {/* 6. BiS Tracker */}
+            <BisTracker
+              bisData={sections.bis}
+              characterId={character.id}
+              guildId={guildId}
+              classColor={classColor}
+            />
 
-        {activeTab === 'professions' && (
-          <Card padding="lg" variant="elevated">
-            <div className="flex flex-col items-center gap-3 text-center p-8">
-              <Icon name="briefcase" size={48} className="text-white/15" />
-              <h3 className="text-base font-bold text-white m-0">
-                Professions
-              </h3>
-              <p className="text-sm text-white/50 m-0 max-w-80">
-                Professions content coming soon
-              </p>
-            </div>
-          </Card>
+            {/* 7. Professions */}
+            <ProfessionsSection
+              professionsData={sections.professions}
+              characterId={character.id}
+              guildId={guildId}
+              currentWeek={currentWeek}
+            />
+
+            {/* 8. Talent Builds */}
+            <TalentBuildsSection
+              talentsData={sections.talents}
+              characterId={character.id}
+              guildId={guildId}
+            />
+
+            {/* 9. Weekly Progress Granular */}
+            <WeeklyProgressGranular
+              vaultData={sections.vault}
+              characterId={character.id}
+              guildId={guildId}
+              currentWeek={currentWeek}
+              onVaultUpdate={handleVaultUpdate}
+            />
+          </>
         )}
-      </motion.div>
-    </div>
+      </div>
+    </>
   );
 }

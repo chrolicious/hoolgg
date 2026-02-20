@@ -17,6 +17,10 @@ logger = logging.getLogger(__name__)
 
 def get_current_user_from_token():
     """Extract bnet_id from JWT token in cookie"""
+    import os
+    if os.getenv("FLASK_ENV") == "development":
+        return 1  # Dev mode: always return test user bnet_id
+
     from app.middleware.auth import verify_token
 
     access_token = request.cookies.get("access_token")
@@ -32,6 +36,9 @@ def get_current_user_from_token():
 
 def check_permission(bnet_id: int, guild_id: int, tool: str = "progress"):
     """Check user permission for guild tool access"""
+    import os
+    if os.getenv("FLASK_ENV") == "development":
+        return {"allowed": True, "rank_id": 0}
     perm_service = PermissionService()
     return perm_service.check_permission(bnet_id, guild_id, tool)
 
@@ -142,26 +149,13 @@ def get_character_details(guild_id: int, character_name: str):
     blizzard_service = BlizzardService()
 
     try:
-        # Check cache first
-        cached_data = cache_service.get_character_data(character_name, realm)
+        import os
+        character_data = None
 
-        if cached_data:
-            logger.info(f"Using cached data for {character_name}-{realm}")
-            character_data = cached_data
-        else:
-            logger.info(f"Fetching fresh data from Blizzard for {character_name}-{realm}")
-
-            # Fetch from Blizzard
-            character_data = blizzard_service.get_character_data(character_name, realm)
-
-            if not character_data:
-                return jsonify({"error": "Character not found or Blizzard API error"}), 404
-
-            # Cache the data
-            cache_service.cache_character_data(character_name, realm, character_data)
-
-            # Update or create CharacterProgress record
-            existing = (
+        # In dev mode, use database data only
+        if os.getenv("FLASK_ENV") == "development":
+            logger.info(f"Dev mode: Loading {character_name}-{realm} from database")
+            char_obj = (
                 db.query(CharacterProgress)
                 .filter(
                     CharacterProgress.character_name == character_name,
@@ -171,26 +165,69 @@ def get_character_details(guild_id: int, character_name: str):
                 .first()
             )
 
-            if existing:
-                existing.current_ilvl = character_data.get("current_ilvl")
-                existing.gear_details = character_data.get("gear_details")
-                existing.class_name = character_data.get("class_name")
-                existing.spec = character_data.get("spec")
-                existing.role = character_data.get("role")
-            else:
-                new_char = CharacterProgress(
-                    character_name=character_name,
-                    realm=realm,
-                    guild_id=guild_id,
-                    class_name=character_data.get("class_name"),
-                    spec=character_data.get("spec"),
-                    role=character_data.get("role"),
-                    current_ilvl=character_data.get("current_ilvl"),
-                    gear_details=character_data.get("gear_details"),
-                )
-                db.add(new_char)
+            if char_obj:
+                character_data = {
+                    "character_name": char_obj.character_name,
+                    "class_name": char_obj.class_name,
+                    "spec_name": char_obj.spec,
+                    "current_ilvl": char_obj.current_ilvl,
+                    "bnet_id": str(char_obj.user_bnet_id) if char_obj.user_bnet_id else "0",
+                    "role": char_obj.role,
+                }
+        else:
+            # Production mode: check cache first
+            cached_data = cache_service.get_character_data(character_name, realm)
 
-            db.commit()
+            if cached_data:
+                logger.info(f"Using cached data for {character_name}-{realm}")
+                character_data = cached_data
+            else:
+                logger.info(f"Fetching fresh data from Blizzard for {character_name}-{realm}")
+
+                # Fetch from Blizzard
+                character_data = blizzard_service.get_character_data(character_name, realm)
+
+                if not character_data:
+                    return jsonify({"error": "Character not found or Blizzard API error"}), 404
+
+                # Cache the data
+                cache_service.cache_character_data(character_name, realm, character_data)
+
+                # Update or create CharacterProgress record
+                existing = (
+                    db.query(CharacterProgress)
+                    .filter(
+                        CharacterProgress.character_name == character_name,
+                        CharacterProgress.realm == realm,
+                        CharacterProgress.guild_id == guild_id,
+                    )
+                    .first()
+                )
+
+                if existing:
+                    existing.current_ilvl = character_data.get("current_ilvl")
+                    existing.gear_details = character_data.get("gear_details")
+                    existing.class_name = character_data.get("class_name")
+                    existing.spec = character_data.get("spec")
+                    existing.role = character_data.get("role")
+                else:
+                    new_char = CharacterProgress(
+                        character_name=character_name,
+                        realm=realm,
+                        guild_id=guild_id,
+                        class_name=character_data.get("class_name"),
+                        spec=character_data.get("spec"),
+                        role=character_data.get("role"),
+                        current_ilvl=character_data.get("current_ilvl"),
+                        gear_details=character_data.get("gear_details"),
+                    )
+                    db.add(new_char)
+
+                db.commit()
+
+        # If character_data is still None, return 404
+        if not character_data:
+            return jsonify({"error": "Character not found"}), 404
 
         # Get current week target
         expansion_id = "12.0"

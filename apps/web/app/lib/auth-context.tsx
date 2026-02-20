@@ -30,11 +30,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (process.env.NODE_ENV === 'development') {
           if (!cancelled) {
             setUser({
-              id: '1',
+              bnet_id: 1,
               username: 'TestPlayer',
-              battleTag: 'TestPlayer#1234',
-              region: 'us',
-              locale: 'en_US',
             });
             setIsLoading(false);
             return;

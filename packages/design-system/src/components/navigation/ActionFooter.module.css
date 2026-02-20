@@ -78,7 +78,7 @@
   font-size: 0.9375rem;
   font-weight: var(--font-weight-bold);
   cursor: pointer;
-  transition: all var(--hool-duration-fast) cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
   box-shadow:
     0 4px 12px rgba(0, 0, 0, 0.3),

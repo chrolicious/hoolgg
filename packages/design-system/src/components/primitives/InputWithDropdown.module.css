@@ -18,7 +18,7 @@
   font-size: 0.875rem;
   font-weight: var(--font-weight-medium);
   color: var(--hool-slate-400);
-  transition: color var(--hool-duration-fast) ease, font-weight var(--hool-duration-fast) ease;
+  transition: color 0.15s ease, font-weight 0.15s ease;
 }
 
 .valueDisplay.hasValue {
@@ -108,7 +108,7 @@
   color: #1a1a1a;
   text-align: left;
   cursor: pointer;
-  transition: background-color var(--hool-duration-fast) ease;
+  transition: background-color 0.15s ease;
   outline: none;
 }
 

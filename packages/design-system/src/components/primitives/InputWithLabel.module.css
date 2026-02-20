@@ -7,7 +7,7 @@
 .outer {
   position: relative;
   filter: drop-shadow(2px 3px 4px rgba(0, 0, 0, 0.15));
-  transition: filter var(--hool-duration-fast) ease;
+  transition: filter 0.15s ease;
   z-index: 1;
 }
 
@@ -26,7 +26,7 @@
   display: flex;
   align-items: stretch;
   gap: 16px;
-  transition: gap var(--hool-duration-slow) cubic-bezier(0.25, 1.8, 0.5, 1), box-shadow var(--hool-duration-fast) ease;
+  transition: gap 0.4s cubic-bezier(0.25, 1.8, 0.5, 1), box-shadow 0.15s ease;
   z-index: 1;
   border-radius: var(--hool-radius-full);
 }
@@ -50,7 +50,7 @@
   border-radius: var(--hool-radius-full);
   border: var(--hool-border-thin) solid rgba(0, 0, 0, 0.1);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition: all var(--hool-duration-slow) cubic-bezier(0.25, 1.8, 0.5, 1);
+  transition: all 0.4s cubic-bezier(0.25, 1.8, 0.5, 1);
 }
 
 .outer.active .labelSection {
@@ -88,7 +88,7 @@
   border-radius: var(--hool-radius-full);
   border: var(--hool-border-thin) solid rgba(0, 0, 0, 0.1);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition: all var(--hool-duration-slow) cubic-bezier(0.25, 1.8, 0.5, 1);
+  transition: all 0.4s cubic-bezier(0.25, 1.8, 0.5, 1);
 }
 
 .outer.active .inputSection {
@@ -135,7 +135,7 @@
   border-radius: var(--hool-radius-full);
   pointer-events: none;
   opacity: 0;
-  animation: fadeIn var(--hool-duration-fast) ease forwards, scrollHalftone 1s linear infinite;
+  animation: fadeIn 0.15s ease forwards, scrollHalftone 1s linear infinite;
   background-image:
     linear-gradient(to right, transparent, rgba(232, 184, 42, 0.15)),
     radial-gradient(rgba(0, 0, 0, 0.08) 1px, transparent 0),

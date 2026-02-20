@@ -47,7 +47,7 @@
   box-shadow:
     inset 0 1px 3px rgba(255, 255, 255, 0.2),
     var(--hool-shadow-sm);
-  transition: all var(--hool-duration-normal) cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
 }
 
