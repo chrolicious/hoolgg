@@ -19,16 +19,16 @@
 
 /* Reduce padding to make checkboxes more compact */
 .checkboxButton :global(.inside) {
-  padding: var(--hool-space-1) !important; /* Much smaller than button default */
+  padding: 3px !important; /* Much smaller than button default */
 }
 
 /* Size-specific padding adjustments */
 .checkboxButton button[class*="sm"] :global(.inside) {
-  padding: calc(var(--hool-space-1) - 1px) !important;
+  padding: 2px !important;
 }
 
 .checkboxButton button[class*="lg"] :global(.inside) {
-  padding: calc(var(--hool-space-1) + 1px) !important;
+  padding: 4px !important;
 }
 
 /* Force colored background even when not selected */
@@ -39,7 +39,7 @@
 /* Unchecked state - apply muted filter */
 .unchecked :global(.inside) {
   filter: saturate(0.3) brightness(1.1) opacity(0.5);
-  transition: filter var(--hool-duration-fast) ease;
+  transition: filter 0.15s ease;
 }
 
 .unchecked:hover :global(.inside) {
@@ -110,15 +110,15 @@
 .labelWrapper {
   display: flex;
   flex-direction: column;
-  gap: var(--hool-space-1);
-  padding-top: var(--hool-space-1);
+  gap: 2px;
+  padding-top: 1px;
 }
 
 .label {
   font-family: 'Inter', system-ui, sans-serif;
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   font-weight: var(--font-weight-bold);
-  color: #1a1a1a;
+  color: rgba(255, 255, 255, 0.9);
   line-height: 1.4;
   cursor: pointer;
 }
@@ -130,12 +130,12 @@
 
 .description {
   font-family: 'Inter', system-ui, sans-serif;
-  font-size: 0.75rem;
+  font-size: 0.6875rem;
   font-weight: var(--font-weight-medium);
-  color: #6B7280;
+  color: rgba(255, 255, 255, 0.5);
   line-height: 1.3;
 }
 
 .descriptionDisabled {
-  color: #D1D5DB;
+  color: rgba(255, 255, 255, 0.25);
 }

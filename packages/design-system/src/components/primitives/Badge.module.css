@@ -7,11 +7,51 @@
   --bw: 3px;
   --badge-width: 200px;
   --badge-height: 370px;
+  --badge-separator: rgba(29, 33, 25, 0.35);
   display: inline-flex;
   flex-direction: column;
   width: var(--badge-width);
   height: var(--badge-height);
   filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.9));
+}
+
+/* White separators for white-text variants */
+.badge[data-variant="deathknight"],
+.badge[data-variant="demonhunter"],
+.badge[data-variant="druid"],
+.badge[data-variant="evoker"],
+.badge[data-variant="shaman"],
+.badge[data-variant="warlock"],
+.badge[data-variant="warrior"],
+.badge[data-variant="purple"],
+.badge[data-variant="warning"],
+.badge[data-variant="destructive"],
+.badge[data-variant="blue"],
+.badge[data-variant="glass"] {
+  --badge-separator: rgba(255, 255, 255, 0.25);
+}
+
+/* Glass variant — glassmorphism effect */
+.badge[data-variant="glass"] .inside {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.badge[data-variant="glass"] .inside::after {
+  background:
+    linear-gradient(135deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.2) 100%),
+    linear-gradient(110deg,
+      transparent -50%,
+      transparent 20%,
+      rgba(255, 255, 255, 0.1) 50%,
+      transparent 80%,
+      transparent 150%);
+  background-size: 100% 100%, 200% 100%;
+  background-repeat: no-repeat, no-repeat;
+  background-position: 0 0, 0 0;
+  animation: shimmer 5.5s ease-in-out infinite;
+  pointer-events: none;
 }
 
 /* Size variants */
@@ -42,6 +82,7 @@
   --b1: calc((var(--bevel) + var(--bw) * 2) - (var(--bw) * 0.4142) * 2);
   --b2: calc(var(--b1) + var(--bw));
   --b3: calc(var(--b2) + var(--bw));
+  --outline-duration: 0.25s;
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -59,12 +100,28 @@
     var(--bw) calc(100% - var(--b2)),
     var(--bw) var(--b2)
   );
+  transition: clip-path var(--outline-duration) cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.badge:hover .outline {
+  --outline-duration: 0.15s;
+  clip-path: polygon(
+    var(--b1) 0,
+    calc(100% - var(--b3)) 0,
+    100% var(--b3),
+    100% calc(100% - var(--b1)),
+    calc(100% - var(--b1)) 100%,
+    var(--b3) 100%,
+    0 calc(100% - var(--b3)),
+    0 var(--b1)
+  );
 }
 
 .darkLayer {
   --b1: calc((var(--bevel) + var(--bw)) - var(--bw) * 0.4142);
   --b2: calc(var(--b1) + var(--bw));
   --b3: calc(var(--b2) + var(--bw));
+  --darkLayer-duration: 0.25s;
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -80,9 +137,25 @@
     var(--bw) calc(100% - var(--b2)),
     var(--bw) var(--b2)
   );
+  transition: clip-path var(--darkLayer-duration) cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.badge:hover .darkLayer {
+  --darkLayer-duration: 0.15s;
+  clip-path: polygon(
+    var(--b1) 0,
+    calc(100% - var(--b3)) 0,
+    100% var(--b3),
+    100% calc(100% - var(--b1)),
+    calc(100% - var(--b1)) 100%,
+    var(--b3) 100%,
+    0 calc(100% - var(--b3)),
+    0 var(--b1)
+  );
 }
 
 .inside {
+  --inside-duration: 0.25s;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -99,6 +172,12 @@
     0 var(--bevel)
   );
   overflow: hidden;
+  transition: transform var(--inside-duration) cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.badge:hover .inside {
+  --inside-duration: 0.15s;
+  transform: translate(calc(var(--bw) * -1), calc(var(--bw) * -1));
 }
 
 /* Large rotating star - partially visible */
@@ -816,7 +895,7 @@
   z-index: 2;
   font-family: var(--font-sans);
   color: var(--btn-color);
-  padding: var(--hool-space-2);
+  padding: 16px;
 }
 
 .header {
@@ -826,7 +905,7 @@
   padding-bottom: var(--hool-space-1);
   margin-bottom: var(--hool-space-1);
   text-align: center;
-  background-image: linear-gradient(to right, transparent 12.5%, rgba(29, 33, 25, 0.35) 12.5%, rgba(29, 33, 25, 0.35) 87.5%, transparent 87.5%);
+  background-image: linear-gradient(to right, transparent 12.5%, var(--badge-separator) 12.5%, var(--badge-separator) 87.5%, transparent 87.5%);
   background-size: 100% 1px;
   background-position: 0 bottom;
   background-repeat: no-repeat;
@@ -844,7 +923,7 @@
   line-height: 1.2;
   padding-bottom: var(--hool-space-1);
   text-align: center;
-  background-image: linear-gradient(to right, transparent 12.5%, rgba(29, 33, 25, 0.35) 12.5%, rgba(29, 33, 25, 0.35) 87.5%, transparent 87.5%);
+  background-image: linear-gradient(to right, transparent 12.5%, var(--badge-separator) 12.5%, var(--badge-separator) 87.5%, transparent 87.5%);
   background-size: 100% 1px;
   background-position: 0 bottom;
   background-repeat: no-repeat;
@@ -898,7 +977,7 @@
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  padding: var(--hool-space-3);
+  padding: 16px;
   gap: var(--hool-space-3);
 }
 
@@ -913,12 +992,12 @@
 }
 
 .horizontal .header {
-  border-right: var(--hool-border-thin) solid rgba(29, 33, 25, 0.35);
+  border-right: var(--hool-border-thin) solid var(--badge-separator);
   padding-right: var(--hool-space-2);
 }
 
 .horizontal .body {
-  border-right: var(--hool-border-thin) solid rgba(29, 33, 25, 0.35);
+  border-right: var(--hool-border-thin) solid var(--badge-separator);
   padding-right: var(--hool-space-2);
   display: flex;
   flex-direction: column;

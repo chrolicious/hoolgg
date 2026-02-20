@@ -53,7 +53,7 @@
 }
 
 .trigger.soft {
-  transition: color var(--hool-duration-fast);
+  transition: color 0.15s;
 }
 
 .trigger:hover:not(.disabled).soft {
@@ -109,7 +109,7 @@
     var(--bw) calc(100% - var(--b2)),
     var(--bw) var(--b2)
   );
-  transition: clip-path var(--hool-duration-slow) cubic-bezier(0.4, 0, 0.2, 1);
+  transition: clip-path 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .trigger:hover:not(.disabled) .outline,
@@ -124,7 +124,7 @@
     0 calc(100% - var(--b3)),
     0 var(--b1)
   );
-  transition: clip-path var(--hool-duration-fast) cubic-bezier(0.4, 0, 0.2, 1);
+  transition: clip-path 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .darkLayer {
@@ -144,7 +144,7 @@
     var(--bw) calc(100% - var(--b2)),
     var(--bw) var(--b2)
   );
-  transition: clip-path var(--hool-duration-slow) cubic-bezier(0.4, 0, 0.2, 1);
+  transition: clip-path 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .trigger:hover:not(.disabled) .darkLayer,
@@ -159,7 +159,7 @@
     0 calc(100% - var(--b3)),
     0 var(--b1)
   );
-  transition: clip-path var(--hool-duration-fast) cubic-bezier(0.4, 0, 0.2, 1);
+  transition: clip-path 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .inside {
@@ -180,12 +180,12 @@
     0 calc(100% - var(--bevel)),
     0 var(--bevel)
   );
-  transition: transform var(--hool-duration-slow) cubic-bezier(0.4, 0, 0.2, 1), background-color var(--hool-duration-slow) cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
 }
 
 .trigger:hover:not(.disabled) .inside {
-  transition: transform var(--hool-duration-fast) cubic-bezier(0.4, 0, 0.2, 1), background-color var(--hool-duration-fast) cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .trigger:hover:not(.disabled) .inside,
@@ -199,7 +199,7 @@
   position: absolute;
   inset: 0;
   opacity: 0;
-  transition: opacity var(--hool-duration-fast) ease;
+  transition: opacity 0.15s ease;
   pointer-events: none;
   background-image:
     linear-gradient(to right, var(--btn-hover-bg-fade), transparent),
@@ -268,7 +268,7 @@
   font-size: 0.875rem;
   color: #1a1a1a;
   cursor: pointer;
-  transition: background-color var(--hool-duration-fast) ease;
+  transition: background-color 0.15s ease;
 }
 
 .menuItem:hover {

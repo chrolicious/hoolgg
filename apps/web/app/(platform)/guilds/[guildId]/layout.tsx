@@ -7,10 +7,20 @@ import { FadeIn, SlideIn } from '@hool/design-system';
 import { AnimatePresence, motion } from 'framer-motion';
 import { GuildProvider, useGuild } from '../../../lib/guild-context';
 import { useAuth } from '../../../lib/auth-context';
-import { api } from '../../../lib/api';
+import { api, progressApi } from '../../../lib/api';
 import type { Guild, GuildListResponse } from '../../../lib/types';
-import { DashboardHeader } from '../../../components/dashboard-header';
 import { SectionHeader } from '../../../components/section-header';
+
+interface CharacterData {
+  id: number;
+  character_name: string;
+  realm: string;
+  class_name: string;
+  spec: string;
+  role: 'Tank' | 'Healer' | 'DPS';
+  current_ilvl: number;
+  user_bnet_id: number | null;
+}
 
 // ── Sidebar Navigation Item ─────────────────────────────────
 
@@ -19,6 +29,7 @@ interface NavItemProps {
   icon: string;
   label: string;
   active: boolean;
+  collapsed: boolean;
   onClick: () => void;
 }
 
@@ -37,15 +48,17 @@ interface NavSection {
   items: NavItemData[];
 }
 
-function NavItem({ href, icon, label, active, onClick }: NavItemProps) {
+function NavItem({ href, icon, label, active, collapsed, onClick }: NavItemProps) {
   return (
     <button
       onClick={onClick}
+      title={collapsed ? label : undefined}
       style={{
         display: 'flex',
         alignItems: 'center',
-        gap: '0.75rem',
-        padding: '0.625rem 1rem',
+        justifyContent: collapsed ? 'center' : 'flex-start',
+        gap: collapsed ? 0 : '0.625rem',
+        padding: collapsed ? '0.625rem' : '0.625rem 0.75rem',
         borderRadius: 8,
         border: 'none',
         background: active
@@ -55,7 +68,7 @@ function NavItem({ href, icon, label, active, onClick }: NavItemProps) {
         cursor: 'pointer',
         width: '100%',
         textAlign: 'left',
-        fontSize: '0.875rem',
+        fontSize: '0.8125rem',
         fontWeight: active ? 600 : 400,
         transition: 'background 0.15s ease, color 0.15s ease',
         outline: 'none',
@@ -79,14 +92,14 @@ function NavItem({ href, icon, label, active, onClick }: NavItemProps) {
         }
       }}
     >
-      <Icon name={icon} size={18} />
-      <span>{label}</span>
-      {active && (
+      <Icon name={icon} size={16} style={{ flexShrink: 0 }} />
+      {!collapsed && <span>{label}</span>}
+      {!collapsed && active && (
         <div
           style={{
             marginLeft: 'auto',
-            width: 6,
-            height: 6,
+            width: 5,
+            height: 5,
             borderRadius: '50%',
             background: '#8b5cf6',
           }}
@@ -99,18 +112,19 @@ function NavItem({ href, icon, label, active, onClick }: NavItemProps) {
 // ── Inner Layout (requires GuildContext) ─────────────────────
 
 function GuildLayoutInner({ children }: { children: React.ReactNode }) {
-  const { guild, isLoading, error, canAccess, isGM, isOfficer, guildId } = useGuild();
+  const { guild, isLoading, error, canAccess, isGM, isOfficer, guildId, members: guildMembers } = useGuild();
   const { user, logout } = useAuth();
   const pathname = usePathname();
   const router = useRouter();
 
-  // Determine user role for DashboardHeader
-  const userRole = isGM ? 'gm' : isOfficer ? 'officer' : 'raider';
-
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [guilds, setGuilds] = useState<Guild[]>([]);
+  const [characters, setCharacters] = useState<CharacterData[]>([]);
   const userMenuRef = useRef<HTMLDivElement>(null);
+
+  const sidebarWidth = sidebarCollapsed ? 56 : 240;
 
   // Close sidebar on route change
   useEffect(() => {
@@ -146,13 +160,57 @@ function GuildLayoutInner({ children }: { children: React.ReactNode }) {
     fetchGuilds();
   }, []);
 
+  // Fetch user's characters for sidebar
+  useEffect(() => {
+    async function fetchCharacters() {
+      if (!guildId || !user || !guildMembers) return;
+
+      try {
+        const data = await progressApi.get<{ characters: CharacterData[]; guild_id: number }>(
+          `/guilds/${guildId}/characters`
+        );
+
+        // Filter to user's characters
+        const userGuildMembers = guildMembers.filter(
+          (m) => m.bnet_id === user.bnet_id
+        );
+        const userCharNames = new Set(
+          userGuildMembers.map((m) => m.character_name.toLowerCase())
+        );
+        const userCharacters = data.characters.filter((c: CharacterData) =>
+          c.user_bnet_id === user.bnet_id || userCharNames.has(c.character_name.toLowerCase())
+        );
+
+        setCharacters(userCharacters);
+      } catch {
+        // Non-critical — sidebar will just not show character list
+      }
+    }
+    fetchCharacters();
+  }, [guildId, user, guildMembers]);
+
   const basePath = `/guilds/${guildId}`;
+
+  // Build character nav items
+  const characterNavItems: NavItemData[] = characters.map((char) => ({
+    href: `${basePath}/roster/${encodeURIComponent(char.character_name)}?realm=${encodeURIComponent(char.realm)}`,
+    icon: 'user',
+    label: char.character_name,
+    alwaysShow: true,
+  }));
 
   const navSections: NavSection[] = [
     {
       header: 'MY ROSTER',
       items: [
         { href: `${basePath}/roster`, icon: 'users', label: 'Overview', alwaysShow: true },
+        ...characterNavItems,
+      ],
+    },
+    {
+      header: 'GEAR GUIDE',
+      items: [
+        { href: `${basePath}/gear-guide`, icon: 'book-open', label: 'Gear Track Reference', alwaysShow: true },
       ],
     },
     {
@@ -315,67 +373,95 @@ function GuildLayoutInner({ children }: { children: React.ReactNode }) {
           top: 0,
           left: 0,
           bottom: 0,
-          width: 240,
+          width: sidebarWidth,
           background: 'rgba(14, 11, 18, 0.95)',
           borderRight: '1px solid rgba(255, 255, 255, 0.06)',
-          padding: '1rem 0.75rem',
+          padding: sidebarCollapsed ? '0.75rem 0.5rem' : '0.75rem',
           display: 'flex',
           flexDirection: 'column',
           gap: '0.25rem',
           zIndex: 50,
           transform: sidebarOpen ? 'translateX(0)' : undefined,
-          transition: 'transform 0.2s ease',
+          transition: 'width 0.2s ease, padding 0.2s ease, transform 0.2s ease',
+          overflow: 'hidden',
           ...(typeof window !== 'undefined' && window.innerWidth < 768
             ? { transform: sidebarOpen ? 'translateX(0)' : 'translateX(-100%)' }
             : {}),
         }}
         className="guild-sidebar"
       >
-        {/* Guild name header */}
+        {/* Guild header + collapse toggle */}
         <div
           style={{
-            padding: '0.5rem 1rem 1rem',
+            display: 'flex',
+            alignItems: sidebarCollapsed ? 'center' : 'flex-start',
+            flexDirection: sidebarCollapsed ? 'column' : 'row',
+            justifyContent: sidebarCollapsed ? 'center' : 'space-between',
+            gap: sidebarCollapsed ? '0.5rem' : 0,
+            padding: sidebarCollapsed ? '0.25rem 0 0.5rem' : '0.25rem 0.25rem 0.75rem',
             borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
-            marginBottom: '0.5rem',
+            marginBottom: '0.25rem',
           }}
         >
-          <div
+          {sidebarCollapsed ? (
+            <Icon name="shield" size={18} style={{ color: '#8b5cf6' }} />
+          ) : (
+            <div style={{ minWidth: 0, flex: 1 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <Icon name="shield" size={16} style={{ color: '#8b5cf6', flexShrink: 0 }} />
+                <span
+                  style={{
+                    fontSize: '0.875rem',
+                    fontWeight: 700,
+                    color: '#ffffff',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  {guild?.name || 'Guild'}
+                </span>
+              </div>
+              {guild?.realm && (
+                <span
+                  style={{
+                    fontSize: '0.6875rem',
+                    color: 'rgba(255, 255, 255, 0.35)',
+                    paddingLeft: '1.625rem',
+                  }}
+                >
+                  {guild.realm}
+                </span>
+              )}
+            </div>
+          )}
+          <button
+            onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+            title={sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
             style={{
               display: 'flex',
               alignItems: 'center',
-              gap: '0.5rem',
+              justifyContent: 'center',
+              width: 24,
+              height: 24,
+              border: 'none',
+              background: 'transparent',
+              color: 'rgba(255, 255, 255, 0.3)',
+              cursor: 'pointer',
+              borderRadius: 4,
+              flexShrink: 0,
+              transition: 'color 0.15s ease',
             }}
+            onMouseEnter={(e) => { e.currentTarget.style.color = 'rgba(255, 255, 255, 0.7)'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.color = 'rgba(255, 255, 255, 0.3)'; }}
           >
-            <Icon name="shield" size={18} style={{ color: '#8b5cf6' }} />
-            <span
-              style={{
-                fontSize: '0.9375rem',
-                fontWeight: 700,
-                color: '#ffffff',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                whiteSpace: 'nowrap',
-              }}
-            >
-              {guild?.name || 'Guild'}
-            </span>
-          </div>
-          {guild?.realm && (
-            <span
-              style={{
-                fontSize: '0.75rem',
-                color: 'rgba(255, 255, 255, 0.4)',
-                paddingLeft: '1.75rem',
-              }}
-            >
-              {guild.realm}
-            </span>
-          )}
+            <Icon name={sidebarCollapsed ? 'chevron-right' : 'chevron-left'} size={14} />
+          </button>
         </div>
 
         {/* Navigation links */}
-        <nav style={{ display: 'flex', flexDirection: 'column', gap: '0.125rem', flex: 1 }}>
-          {navSections.map((section) => {
+        <nav style={{ display: 'flex', flexDirection: 'column', gap: '0.125rem', flex: 1, overflow: 'hidden' }}>
+          {navSections.map((section, sectionIndex) => {
             const visibleItems = section.items.filter((item) => {
               if (item.alwaysShow) return true;
               if (item.gmOnly) return isGM;
@@ -387,8 +473,11 @@ function GuildLayoutInner({ children }: { children: React.ReactNode }) {
             if (visibleItems.length === 0) return null;
 
             return (
-              <div key={section.header}>
-                <SectionHeader label={section.header} />
+              <div key={section.header} style={{ marginTop: sectionIndex > 0 ? '0.25rem' : 0 }}>
+                {!sidebarCollapsed && <SectionHeader label={section.header} />}
+                {sidebarCollapsed && sectionIndex > 0 && (
+                  <div style={{ height: 1, background: 'rgba(255, 255, 255, 0.06)', margin: '0.375rem 0' }} />
+                )}
                 {visibleItems.map((item) => (
                   <NavItem
                     key={item.href}
@@ -396,6 +485,7 @@ function GuildLayoutInner({ children }: { children: React.ReactNode }) {
                     icon={item.icon}
                     label={item.label}
                     active={isActivePath(item.href)}
+                    collapsed={sidebarCollapsed}
                     onClick={() => router.push(item.href)}
                   />
                 ))}
@@ -404,14 +494,18 @@ function GuildLayoutInner({ children }: { children: React.ReactNode }) {
           })}
         </nav>
 
-        {/* Guild switcher at bottom */}
-        {guilds.length > 1 && (
-          <div
-            style={{
-              borderTop: '1px solid rgba(255, 255, 255, 0.06)',
-              paddingTop: '0.75rem',
-            }}
-          >
+        {/* Bottom section: guild switcher + user menu */}
+        <div
+          style={{
+            borderTop: '1px solid rgba(255, 255, 255, 0.06)',
+            padding: '0.75rem 0.125rem',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: sidebarCollapsed ? 'center' : 'stretch',
+            gap: '0.5rem',
+          }}
+        >
+          {!sidebarCollapsed && guilds.length > 1 && (
             <Select
               options={guilds.map((g) => ({
                 value: g.id,
@@ -423,8 +517,143 @@ function GuildLayoutInner({ children }: { children: React.ReactNode }) {
               size="sm"
               label="Switch Guild"
             />
+          )}
+
+          {/* User menu */}
+          <div ref={userMenuRef} style={{ position: 'relative' }}>
+            <button
+              onClick={() => setUserMenuOpen(!userMenuOpen)}
+              title={sidebarCollapsed ? user?.username : undefined}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: sidebarCollapsed ? 'center' : 'flex-start',
+                gap: sidebarCollapsed ? 0 : '0.625rem',
+                padding: sidebarCollapsed ? '0.625rem' : '0.625rem 0.75rem',
+                borderRadius: 8,
+                border: 'none',
+                background: userMenuOpen ? 'rgba(255, 255, 255, 0.08)' : 'transparent',
+                color: userMenuOpen ? '#ffffff' : 'rgba(255, 255, 255, 0.5)',
+                cursor: 'pointer',
+                width: '100%',
+                textAlign: 'left',
+                fontSize: '0.8125rem',
+                fontWeight: 400,
+                transition: 'background 0.15s ease, color 0.15s ease',
+                outline: 'none',
+              }}
+              onMouseEnter={(e) => {
+                if (!userMenuOpen) {
+                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.04)';
+                  e.currentTarget.style.color = 'rgba(255, 255, 255, 0.8)';
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (!userMenuOpen) {
+                  e.currentTarget.style.background = 'transparent';
+                  e.currentTarget.style.color = 'rgba(255, 255, 255, 0.5)';
+                }
+              }}
+            >
+              <Icon name="user" size={16} style={{ flexShrink: 0 }} />
+              {!sidebarCollapsed && <span>{user?.username}</span>}
+            </button>
+
+            <AnimatePresence>
+              {userMenuOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: 8, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 8, scale: 0.95 }}
+                  transition={{ duration: 0.15 }}
+                  style={{
+                    position: 'absolute',
+                    bottom: '100%',
+                    left: sidebarCollapsed ? '50%' : 0,
+                    right: sidebarCollapsed ? undefined : 0,
+                    transform: sidebarCollapsed ? 'translateX(-50%)' : undefined,
+                    marginBottom: 8,
+                    minWidth: 160,
+                    background: 'rgba(30, 25, 40, 0.95)',
+                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    borderRadius: 10,
+                    padding: '0.375rem',
+                    backdropFilter: 'blur(12px)',
+                    zIndex: 50,
+                  }}
+                >
+                  <button
+                    onClick={() => {
+                      setUserMenuOpen(false);
+                      router.push('/guilds');
+                    }}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.5rem',
+                      width: '100%',
+                      padding: '0.5rem 0.75rem',
+                      border: 'none',
+                      background: 'transparent',
+                      color: 'rgba(255, 255, 255, 0.7)',
+                      fontSize: '0.8125rem',
+                      borderRadius: 6,
+                      cursor: 'pointer',
+                      textAlign: 'left',
+                      whiteSpace: 'nowrap',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.background = 'rgba(255, 255, 255, 0.06)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.background = 'transparent';
+                    }}
+                  >
+                    <Icon name="arrow-left" size={14} />
+                    Switch Guild
+                  </button>
+                  <div
+                    style={{
+                      height: 1,
+                      background: 'rgba(255, 255, 255, 0.06)',
+                      margin: '0.25rem 0',
+                    }}
+                  />
+                  <button
+                    onClick={() => {
+                      setUserMenuOpen(false);
+                      logout();
+                    }}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.5rem',
+                      width: '100%',
+                      padding: '0.5rem 0.75rem',
+                      border: 'none',
+                      background: 'transparent',
+                      color: '#ef4444',
+                      fontSize: '0.8125rem',
+                      borderRadius: 6,
+                      cursor: 'pointer',
+                      textAlign: 'left',
+                      whiteSpace: 'nowrap',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.background = 'rgba(239, 68, 68, 0.1)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.background = 'transparent';
+                    }}
+                  >
+                    <Icon name="x-mark" size={14} />
+                    Sign Out
+                  </button>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
-        )}
+        </div>
       </aside>
 
       {/* Main content area */}
@@ -437,155 +666,30 @@ function GuildLayoutInner({ children }: { children: React.ReactNode }) {
         }}
         className="guild-main"
       >
-        {/* Top bar */}
-        <header
+        {/* Mobile hamburger */}
+        <button
+          onClick={() => setSidebarOpen(true)}
           style={{
-            position: 'sticky',
-            top: 0,
+            display: 'none',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: 36,
+            height: 36,
+            border: 'none',
+            background: 'rgba(255, 255, 255, 0.05)',
+            borderRadius: 8,
+            color: 'rgba(255, 255, 255, 0.7)',
+            cursor: 'pointer',
+            position: 'fixed',
+            top: '0.75rem',
+            left: '0.75rem',
             zIndex: 30,
-            padding: '0.75rem 0',
           }}
+          className="mobile-menu-btn"
+          aria-label="Open navigation menu"
         >
-          <div
-            style={{
-              maxWidth: 1200,
-              width: '100%',
-              margin: '0 auto',
-              padding: '0 1.5rem',
-            }}
-          >
-            {/* Mobile hamburger */}
-            <button
-              onClick={() => setSidebarOpen(true)}
-              style={{
-                display: 'none',
-                alignItems: 'center',
-                justifyContent: 'center',
-                width: 36,
-                height: 36,
-                border: 'none',
-                background: 'rgba(255, 255, 255, 0.05)',
-                borderRadius: 8,
-                color: 'rgba(255, 255, 255, 0.7)',
-                cursor: 'pointer',
-                marginBottom: '0.75rem',
-              }}
-              className="mobile-menu-btn"
-              aria-label="Open navigation menu"
-            >
-              <Icon name="menu" size={20} />
-            </button>
-
-            {guild && (
-              <DashboardHeader
-                guild={guild}
-                userRole={userRole}
-                userMenuButton={
-                  <div ref={userMenuRef} style={{ position: 'relative' }}>
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      onClick={() => setUserMenuOpen(!userMenuOpen)}
-                      icon={<Icon name="user" size={16} />}
-                    >
-                      {user?.username}
-                    </Button>
-
-                    <AnimatePresence>
-                      {userMenuOpen && (
-                        <motion.div
-                          initial={{ opacity: 0, y: -8, scale: 0.95 }}
-                          animate={{ opacity: 1, y: 0, scale: 1 }}
-                          exit={{ opacity: 0, y: -8, scale: 0.95 }}
-                          transition={{ duration: 0.15 }}
-                          style={{
-                            position: 'absolute',
-                            top: '100%',
-                            right: 0,
-                            marginTop: 8,
-                            minWidth: 160,
-                            background: 'rgba(30, 25, 40, 0.95)',
-                            border: '1px solid rgba(255, 255, 255, 0.1)',
-                            borderRadius: 10,
-                            padding: '0.375rem',
-                            backdropFilter: 'blur(12px)',
-                            zIndex: 50,
-                          }}
-                        >
-                          <button
-                            onClick={() => {
-                              setUserMenuOpen(false);
-                              router.push('/guilds');
-                            }}
-                            style={{
-                              display: 'flex',
-                              alignItems: 'center',
-                              gap: '0.5rem',
-                              width: '100%',
-                              padding: '0.5rem 0.75rem',
-                              border: 'none',
-                              background: 'transparent',
-                              color: 'rgba(255, 255, 255, 0.7)',
-                              fontSize: '0.8125rem',
-                              borderRadius: 6,
-                              cursor: 'pointer',
-                              textAlign: 'left',
-                            }}
-                            onMouseEnter={(e) => {
-                              e.currentTarget.style.background = 'rgba(255, 255, 255, 0.06)';
-                            }}
-                            onMouseLeave={(e) => {
-                              e.currentTarget.style.background = 'transparent';
-                            }}
-                          >
-                            <Icon name="arrow-left" size={14} />
-                            Switch Guild
-                          </button>
-                          <div
-                            style={{
-                              height: 1,
-                              background: 'rgba(255, 255, 255, 0.06)',
-                              margin: '0.25rem 0',
-                            }}
-                          />
-                          <button
-                            onClick={() => {
-                              setUserMenuOpen(false);
-                              logout();
-                            }}
-                            style={{
-                              display: 'flex',
-                              alignItems: 'center',
-                              gap: '0.5rem',
-                              width: '100%',
-                              padding: '0.5rem 0.75rem',
-                              border: 'none',
-                              background: 'transparent',
-                              color: '#ef4444',
-                              fontSize: '0.8125rem',
-                              borderRadius: 6,
-                              cursor: 'pointer',
-                              textAlign: 'left',
-                            }}
-                            onMouseEnter={(e) => {
-                              e.currentTarget.style.background = 'rgba(239, 68, 68, 0.1)';
-                            }}
-                            onMouseLeave={(e) => {
-                              e.currentTarget.style.background = 'transparent';
-                            }}
-                          >
-                            <Icon name="x-mark" size={14} />
-                            Sign Out
-                          </button>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </div>
-                }
-              />
-            )}
-          </div>
-        </header>
+          <Icon name="menu" size={20} />
+        </button>
 
         {/* Page content */}
         <main
@@ -616,7 +720,8 @@ function GuildLayoutInner({ children }: { children: React.ReactNode }) {
           transform: translateX(0);
         }
         .guild-main {
-          margin-left: 240px;
+          margin-left: ${sidebarWidth}px;
+          transition: margin-left 0.2s ease;
         }
         .mobile-menu-btn {
           display: none !important;

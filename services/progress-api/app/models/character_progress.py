@@ -19,14 +19,23 @@ class CharacterProgress(Base):
     class_name = Column(String(50), nullable=True)
     spec = Column(String(50), nullable=True)
     role = Column(String(20), nullable=True)  # Tank, Healer, DPS
+    level = Column(Integer, nullable=True)
+    avatar_url = Column(String(512), nullable=True)
+
+    # Roster tracking
+    user_bnet_id = Column(Integer, nullable=True, index=True)
+    display_order = Column(Integer, nullable=True, server_default="0")
 
     # Gear progression
     current_ilvl = Column(Float, nullable=True)
     gear_details = Column(JSON, nullable=True)  # Full gear breakdown from Blizzard API
+    parsed_gear = Column(JSON, nullable=True)  # Processed gear data
+    character_stats = Column(JSON, nullable=True)  # Character stats
 
     # Metadata
     last_updated = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
     created_at = Column(DateTime(timezone=True), server_default=func.now())
+    last_gear_sync = Column(DateTime(timezone=True), nullable=True)
 
     # Composite index for character lookup
     __table_args__ = (
@@ -46,10 +55,17 @@ class CharacterProgress(Base):
             "class_name": self.class_name,
             "spec": self.spec,
             "role": self.role,
+            "level": self.level,
+            "avatar_url": self.avatar_url,
+            "user_bnet_id": self.user_bnet_id,
+            "display_order": self.display_order,
             "current_ilvl": self.current_ilvl,
             "gear_details": self.gear_details,
+            "parsed_gear": self.parsed_gear,
+            "character_stats": self.character_stats,
             "last_updated": self.last_updated.isoformat() if self.last_updated else None,
             "created_at": self.created_at.isoformat() if self.created_at else None,
+            "last_gear_sync": self.last_gear_sync.isoformat() if self.last_gear_sync else None,
         }
 
     def get_gear_priorities(self):

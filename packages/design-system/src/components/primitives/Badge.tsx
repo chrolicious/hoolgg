@@ -13,6 +13,7 @@ export interface BadgeProps {
   orientation?: 'vertical' | 'horizontal';
   profileIcon?: React.ReactNode;
   className?: string;
+  style?: React.CSSProperties;
   children?: React.ReactNode;
   onClick?: () => void;
 }
@@ -30,6 +31,7 @@ export const Badge = React.forwardRef<HTMLDivElement, BadgeProps>(
       orientation = 'vertical',
       profileIcon,
       className,
+      style: styleProp,
       children,
       onClick,
     },
@@ -39,7 +41,7 @@ export const Badge = React.forwardRef<HTMLDivElement, BadgeProps>(
       <div
         ref={ref}
         className={`${styles.badge} ${styles[size]} ${orientation === 'horizontal' ? styles.horizontal : ''} ${className || ''}`}
-        style={variantVars[variant] as React.CSSProperties}
+        style={{ ...variantVars[variant] as React.CSSProperties, ...styleProp }}
         data-variant={variant}
         onClick={onClick}
       >

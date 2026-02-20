@@ -1,0 +1,71 @@
+/* Avatar ignores pointer events so hovers pass through to the badge,
+   triggering both the badge hover animation and the wrapper:hover avatar shift */
+.cardAvatar {
+  pointer-events: none;
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.cardWrapper:hover .cardAvatar {
+  transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translate(-3.5px, -3.5px);
+}
+
+/* Override Badge dimensions for card grid usage */
+.cardBadge {
+  --badge-width: 370px;
+  --badge-height: auto;
+  cursor: pointer;
+}
+
+/*
+ * Trigger badge layer animations from the card wrapper hover.
+ * This ensures hovering anywhere on the card (including the avatar
+ * that sits above the badge) triggers the full badge animation.
+ *
+ * Badge DOM: .badge > outline(div) > darkLayer(div) > inside(div)
+ * We target each layer via child combinators since CSS module
+ * class names are scoped and not accessible here.
+ */
+
+/* Outline layer — first child of badge */
+.cardWrapper:hover .cardBadge > div {
+  --outline-duration: 0.15s;
+  clip-path: polygon(
+    var(--b1) 0,
+    calc(100% - var(--b3)) 0,
+    100% var(--b3),
+    100% calc(100% - var(--b1)),
+    calc(100% - var(--b1)) 100%,
+    var(--b3) 100%,
+    0 calc(100% - var(--b3)),
+    0 var(--b1)
+  );
+}
+
+/* Dark layer — child of outline */
+.cardWrapper:hover .cardBadge > div > div {
+  --darkLayer-duration: 0.15s;
+  clip-path: polygon(
+    var(--b1) 0,
+    calc(100% - var(--b3)) 0,
+    100% var(--b3),
+    100% calc(100% - var(--b1)),
+    calc(100% - var(--b1)) 100%,
+    var(--b3) 100%,
+    0 calc(100% - var(--b3)),
+    0 var(--b1)
+  );
+}
+
+/* Inside layer — child of dark layer (translate to reveal sticker edge) */
+.cardWrapper:hover .cardBadge > div > div > div {
+  --inside-duration: 0.15s;
+  transform: translate(calc(var(--bw) * -1), calc(var(--bw) * -1));
+}
+
+.addBadge {
+  --badge-width: 180px;
+  --badge-height: 180px;
+  cursor: pointer;
+  align-self: center;
+}

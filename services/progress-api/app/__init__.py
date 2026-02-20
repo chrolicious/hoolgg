@@ -48,9 +48,32 @@ def create_app() -> Flask:
     init_db(app)
 
     # Register blueprints
-    from app.routes import health, progress
+    from app.routes import (
+        health,
+        progress,
+        characters,
+        bis,
+        crests,
+        gear,
+        professions,
+        talents,
+        tasks,
+        vault,
+        season,
+        reference,
+    )
 
     app.register_blueprint(health.bp)
     app.register_blueprint(progress.bp)
+    app.register_blueprint(characters.bp)
+    app.register_blueprint(bis.bp)
+    app.register_blueprint(crests.bp)
+    app.register_blueprint(gear.bp)
+    app.register_blueprint(professions.bp)
+    app.register_blueprint(talents.bp)
+    app.register_blueprint(tasks.bp)
+    app.register_blueprint(vault.bp)
+    app.register_blueprint(season.bp)
+    app.register_blueprint(reference.bp)
 
     return app

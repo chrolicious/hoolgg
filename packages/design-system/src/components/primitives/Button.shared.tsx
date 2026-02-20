@@ -202,6 +202,16 @@ export const variantVars = {
     '--btn-hover-bg-fade': 'rgba(213, 171, 127, 0.9)',
     '--btn-dot-color': 'rgba(0, 0, 0, 0.2)',
   },
+  // Glass variant (glassmorphism)
+  glass: {
+    '--btn-bg': 'rgba(255, 255, 255, 0.08)',
+    '--btn-color': '#FFFFFF',
+    '--btn-border-color': colors.sticker.border,
+    '--btn-outline-color': colors.sticker.outline,
+    '--btn-hover-bg': 'rgba(255, 255, 255, 0.14)',
+    '--btn-hover-bg-fade': 'rgba(255, 255, 255, 0.05)',
+    '--btn-dot-color': 'rgba(255, 255, 255, 0.1)',
+  },
   // Blue variant
   blue: {
     '--btn-bg': '#3B82F6',

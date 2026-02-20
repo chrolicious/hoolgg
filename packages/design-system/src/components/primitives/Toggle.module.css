@@ -50,7 +50,7 @@
     var(--bw) calc(100% - var(--b2)),
     var(--bw) var(--b2)
   );
-  transition: clip-path var(--hool-duration-normal) cubic-bezier(0.4, 0, 0.2, 1);
+  transition: clip-path 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Expand on hover */
@@ -65,7 +65,7 @@
     0 calc(100% - var(--b3)),
     0 var(--b1)
   );
-  transition: clip-path var(--hool-duration-fast) cubic-bezier(0.4, 0, 0.2, 1);
+  transition: clip-path 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* --- Layer 2: Dark border + shadow --- */
@@ -87,7 +87,7 @@
     var(--bw) calc(100% - var(--b2)),
     var(--bw) var(--b2)
   );
-  transition: clip-path var(--hool-duration-normal) cubic-bezier(0.4, 0, 0.2, 1);
+  transition: clip-path 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Expand on hover */
@@ -102,7 +102,7 @@
     0 calc(100% - var(--b3)),
     0 var(--b1)
   );
-  transition: clip-path var(--hool-duration-fast) cubic-bezier(0.4, 0, 0.2, 1);
+  transition: clip-path 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* --- Layer 3: Inside fill --- */
@@ -123,12 +123,12 @@
     0 calc(100% - var(--bevel)),
     0 var(--bevel)
   );
-  transition: transform var(--hool-duration-normal) cubic-bezier(0.4, 0, 0.2, 1), background-color var(--hool-duration-normal) cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Faster transition on hover */
 .toggle:hover:not(.disabled) .inside {
-  transition: transform var(--hool-duration-fast) cubic-bezier(0.4, 0, 0.2, 1), background-color var(--hool-duration-fast) cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Lift on hover */
@@ -149,12 +149,12 @@
   background-size: 26px 26px;
   background-position: 0 0, 13px 13px;
   background-repeat: repeat;
-  transition: opacity var(--hool-duration-fast) ease;
+  transition: opacity 0.15s ease;
 }
 
 .checked .inside::after {
   opacity: 1;
-  animation: slideStars var(--hool-duration-slow) linear infinite, rotateStars var(--hool-duration-slower) linear infinite;
+  animation: slideStars 0.4s linear infinite, rotateStars 0.6s linear infinite;
 }
 
 @keyframes slideStars {

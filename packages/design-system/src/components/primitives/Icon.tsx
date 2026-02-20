@@ -3,10 +3,11 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import {
-  Heart, Star, Shield, Search, User, Menu, Home, Settings,
-  Zap, Flame, Sword, Crown, AlertCircle,
+  Heart, Star, Shield, Search, User, Users, Menu, Home, Settings,
+  Zap, Flame, Sword, Crown, AlertCircle, BookOpen, RefreshCw,
   ArrowRight, ArrowLeft, ArrowUp, ArrowDown, ChevronRight, ChevronDown, ChevronLeft,
   Plus, Check, Link, Pencil, Trash2, X, Minus,
+  GripVertical, ArrowUpDown, Clock,
 } from 'lucide-react';
 
 export interface IconProps {
@@ -37,6 +38,7 @@ const iconMap: Record<string, React.ComponentType<any>> = {
   shield: Shield,
   search: Search,
   user: User,
+  users: Users,
   menu: Menu,
   home: Home,
   settings: Settings,
@@ -45,6 +47,8 @@ const iconMap: Record<string, React.ComponentType<any>> = {
   sword: Sword,
   crown: Crown,
   'alert-circle': AlertCircle,
+  'book-open': BookOpen,
+  'refresh': RefreshCw,
   'arrow-right': ArrowRight,
   'arrow-left': ArrowLeft,
   'arrow-up': ArrowUp,
@@ -59,6 +63,9 @@ const iconMap: Record<string, React.ComponentType<any>> = {
   trash: Trash2,
   'x-mark': X,
   minus: Minus,
+  'grip-vertical': GripVertical,
+  'arrow-up-down': ArrowUpDown,
+  clock: Clock,
 };
 
 const animations: Record<string, any> = {

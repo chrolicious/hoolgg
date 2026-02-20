@@ -9,8 +9,8 @@
   justify-content: center;
   overflow: visible;
   background-color: #E5E7EB;
-  border: var(--hool-border-medium) solid var(--hool-ui-white);
-  border-radius: var(--hool-radius-full);
+  border: 2px solid #FFFFFF;
+  border-radius: 9999px;
   /* Sticker-style drop shadow */
   box-shadow:
     0 4px 12px rgba(0, 0, 0, 0.25),
@@ -23,7 +23,7 @@
   content: '';
   position: absolute;
   inset: 0;
-  border-radius: var(--hool-radius-full);
+  border-radius: 9999px;
   background-image:
     repeating-linear-gradient(
       45deg,
@@ -58,28 +58,28 @@
   width: 32px;
   height: 32px;
   font-size: 0.75rem;
-  font-weight: var(--font-weight-bold);
+  font-weight: 700;
 }
 
 .md {
   width: 48px;
   height: 48px;
   font-size: 0.875rem;
-  font-weight: var(--font-weight-bold);
+  font-weight: 700;
 }
 
 .lg {
   width: 64px;
   height: 64px;
   font-size: 1rem;
-  font-weight: var(--font-weight-bold);
+  font-weight: 700;
 }
 
 .xl {
   width: 96px;
   height: 96px;
   font-size: 1.25rem;
-  font-weight: var(--font-weight-bold);
+  font-weight: 700;
 }
 
 /* Image — clipped to circle */
@@ -90,7 +90,7 @@
   object-fit: cover;
   object-position: center;
   z-index: 0;
-  border-radius: var(--hool-radius-full);
+  border-radius: 9999px;
 }
 
 /* Fallback initials — clipped to circle */
@@ -102,13 +102,12 @@
   width: 100%;
   height: 100%;
   background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
-  color: var(--hool-ui-white);
+  color: #FFFFFF;
   font-family: 'Inter', system-ui, sans-serif;
-  font-weight: var(--font-weight-bold);
+  font-weight: 700;
   text-transform: uppercase;
   user-select: none;
   z-index: 0;
-  border-radius: var(--hool-radius-full);
+  border-radius: 9999px;
   overflow: hidden;
 }
-

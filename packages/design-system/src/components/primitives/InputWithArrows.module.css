@@ -17,7 +17,7 @@
   cursor: pointer;
   color: #1a1a1a;
   font-weight: var(--font-weight-bold);
-  transition: color var(--hool-duration-fast) ease, transform var(--hool-duration-fast) ease;
+  transition: color 0.15s ease, transform 0.15s ease;
   outline: none;
 }
 

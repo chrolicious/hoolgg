@@ -40,7 +40,7 @@
   --b1: calc((var(--bevel) + var(--bw) * 2) - (var(--bw) * 0.4142) * 2);
   --b2: calc(var(--b1) + var(--bw));
   --b3: calc(var(--b2) + var(--bw));
-  --outline-duration: var(--hool-duration-normal);
+  --outline-duration: 0.25s;
   display: block;
   margin-top: calc(var(--bw) * -1);
   margin-left: calc(var(--bw) * -1);
@@ -61,7 +61,7 @@
 
 .button:hover:not(:active):not(:disabled) .outline,
 .button:focus-visible:not(:active) .outline {
-  --outline-duration: var(--hool-duration-fast);
+  --outline-duration: 0.15s;
   clip-path: polygon(
     var(--b1) 0,
     calc(100% - var(--b3)) 0,
@@ -80,7 +80,7 @@
   --b1: calc((var(--bevel) + var(--bw)) - var(--bw) * 0.4142);
   --b2: calc(var(--b1) + var(--bw));
   --b3: calc(var(--b2) + var(--bw));
-  --darkLayer-duration: var(--hool-duration-normal);
+  --darkLayer-duration: 0.25s;
   display: block;
   padding: calc(var(--bw) * 2);
   background-color: var(--btn-border-color, #1d2119);
@@ -99,7 +99,7 @@
 
 .button:hover:not(:active):not(:disabled) .darkLayer,
 .button:focus-visible:not(:active) .darkLayer {
-  --darkLayer-duration: var(--hool-duration-fast);
+  --darkLayer-duration: 0.15s;
   clip-path: polygon(
     var(--b1) 0,
     calc(100% - var(--b3)) 0,
@@ -115,7 +115,7 @@
 /* --- Layer 3: Fill (inside) --- */
 
 .inside {
-  --inside-duration: var(--hool-duration-normal);
+  --inside-duration: 0.25s;
   position: relative;
   display: flex;
   align-items: center;
@@ -139,7 +139,7 @@
 
 /* Faster transition in (hover), slower out (return) */
 .button:hover:not(:disabled) .inside {
-  --inside-duration: var(--hool-duration-fast);
+  --inside-duration: 0.15s;
 }
 
 /* Halftone overlay — separate pseudo-element so it can fade in/out */
@@ -148,7 +148,7 @@
   position: absolute;
   inset: 0;
   opacity: 0;
-  transition: opacity var(--hool-duration-fast) ease;
+  transition: opacity 0.15s ease;
   pointer-events: none;
   background-image:
     linear-gradient(to right, transparent, var(--btn-hover-bg-fade)),
@@ -185,7 +185,7 @@
 /* --- Soft variants: text color flips on hover --- */
 
 .soft .inside {
-  transition: transform var(--hool-duration-fast), color var(--hool-duration-fast);
+  transition: transform 0.15s, color 0.15s;
 }
 
 .button.soft:hover:not(:disabled) .inside {
