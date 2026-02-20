@@ -14,6 +14,7 @@ interface WeeklyTasksSectionProps {
   guildId: string;
   classColor: string;
   selectedWeek?: number;
+  onTasksChange?: (tasks: TasksResponse) => void;
 }
 
 export function WeeklyTasksSection({
@@ -22,6 +23,7 @@ export function WeeklyTasksSection({
   guildId,
   classColor,
   selectedWeek,
+  onTasksChange,
 }: WeeklyTasksSectionProps) {
   const [weeklyTasks, setWeeklyTasks] = useState<TaskItem[]>(tasksData.weekly);
   const [dailyTasks, setDailyTasks] = useState<TaskItem[]>(tasksData.daily);
@@ -97,7 +99,7 @@ export function WeeklyTasksSection({
     const previousTasks = type === 'weekly' ? [...weeklyTasks] : [...dailyTasks];
 
     // Optimistic update
-    setTasks((prev) =>
+    const updater = (prev: TaskItem[]) =>
       prev.map((t) =>
         t.id === task.id
           ? {
@@ -106,8 +108,19 @@ export function WeeklyTasksSection({
               completed_at: checked ? new Date().toISOString() : null,
             }
           : t,
-      ),
-    );
+      );
+
+    const newWeekly = type === 'weekly' ? updater(weeklyTasks) : weeklyTasks;
+    const newDaily = type === 'daily' ? updater(dailyTasks) : dailyTasks;
+
+    setTasks(updater);
+
+    // Notify parent of the change so header progress bar updates
+    onTasksChange?.({
+      ...tasksData,
+      weekly: newWeekly,
+      daily: newDaily,
+    });
 
     try {
       await progressApi.post(
@@ -122,6 +135,7 @@ export function WeeklyTasksSection({
     } catch (error) {
       // Revert optimistic update on error
       setTasks(previousTasks);
+      onTasksChange?.(tasksData);
       console.error('Failed to toggle task:', error);
     }
   };

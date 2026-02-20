@@ -24,6 +24,7 @@ interface CharacterData {
   spec: string;
   role: 'Tank' | 'Healer' | 'DPS';
   current_ilvl: number;
+  avatar_url: string | null;
   user_bnet_id: number | null;
   progress?: {
     status: 'ahead' | 'behind' | 'unknown';
@@ -42,6 +43,13 @@ interface CharacterData {
     runed: number;
     gilded: number;
   };
+  crests_cumulative?: {
+    weathered: number;
+    carved: number;
+    runed: number;
+    gilded: number;
+  };
+  crest_cap?: number;
   last_gear_sync: string | null;
 }
 
@@ -68,6 +76,7 @@ function DraggableCard({
   onDragOverCard,
   onDragLeaveCard,
   dragEnabled,
+  targetIlvl,
 }: {
   char: CharacterData;
   index: number;
@@ -80,6 +89,7 @@ function DraggableCard({
   onDragOverCard: (index: number, zone: DropZone) => void;
   onDragLeaveCard: (index: number) => void;
   dragEnabled: boolean;
+  targetIlvl: number;
 }) {
   const isDragged = draggedIndex === index;
   const isTarget = dropZone !== null && draggedIndex !== null && draggedIndex !== index;
@@ -152,15 +162,18 @@ function DraggableCard({
         characterId={char.id}
         characterName={char.character_name}
         realm={char.realm}
+        avatarUrl={char.avatar_url ?? undefined}
         className={char.class_name}
         spec={char.spec}
         role={char.role}
         currentIlvl={char.current_ilvl}
-        targetIlvl={char.progress?.target_ilvl}
+        targetIlvl={targetIlvl}
         weeklyTasksCompleted={char.progress?.weekly_tasks_completed}
         weeklyTasksTotal={char.progress?.weekly_tasks_total}
         vaultSlots={char.vault_slots}
         crests={char.crests}
+        crestsCumulative={char.crests_cumulative}
+        crestCap={char.crest_cap}
         lastSynced={char.last_gear_sync}
         onDelete={fetchCharacters}
       />
@@ -219,6 +232,7 @@ export default function RosterPage() {
   const [error, setError] = useState<string | null>(null);
   const [sortBy, setSortBy] = useState<SortBy>('custom');
   const [isSyncingAll, setIsSyncingAll] = useState(false);
+  const [targetIlvl, setTargetIlvl] = useState<number>(0);
 
   // Drag state
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
@@ -231,13 +245,18 @@ export default function RosterPage() {
     setError(null);
 
     try {
-      const data = await progressApi.get<{
-        characters: Array<Record<string, any>>;
-        guild_id: number;
-        current_week?: number;
-      }>(
-        `/guilds/${guildId}/characters`
-      );
+      const [data, seasonData] = await Promise.all([
+        progressApi.get<{
+          characters: Array<Record<string, any>>;
+          guild_id: number;
+          current_week?: number;
+        }>(`/guilds/${guildId}/characters`),
+        progressApi.get<{ current_target_ilvl: number }>(`/guilds/${guildId}/season`).catch(() => null),
+      ]);
+
+      if (seasonData?.current_target_ilvl) {
+        setTargetIlvl(seasonData.current_target_ilvl);
+      }
 
       const userGuildMembers = guildMembers.filter(
         (m) => m.bnet_id === user.bnet_id
@@ -254,7 +273,7 @@ export default function RosterPage() {
         )
         .map((c) => {
           const vaultSummary = c.vault_summary as Record<string, any> | null;
-          const crestsSummary = c.crests_summary as Record<string, number> | null;
+          const crestsSummary = c.crests_summary as { week: Record<string, number> | null; cumulative: Record<string, number> | null; cap: number } | null;
           const calcSlots = vaultSummary?.calculated_slots as Record<string, any[]> | undefined;
 
           const toSlotArray = (key: string, count: number): VaultSlotData[] => {
@@ -273,6 +292,7 @@ export default function RosterPage() {
             spec: c.spec ?? '',
             role: c.role ?? 'DPS',
             current_ilvl: c.current_ilvl,
+            avatar_url: c.avatar_url ?? null,
             user_bnet_id: c.user_bnet_id ?? null,
             last_gear_sync: c.last_gear_sync ?? null,
             progress: {
@@ -285,12 +305,19 @@ export default function RosterPage() {
               dungeon: toSlotArray('dungeon_slots', 3),
               world: toSlotArray('world_slots', 3),
             } : undefined,
-            crests: crestsSummary ? {
-              weathered: crestsSummary.Weathered ?? 0,
-              carved: crestsSummary.Carved ?? 0,
-              runed: crestsSummary.Runed ?? 0,
-              gilded: crestsSummary.Gilded ?? 0,
+            crests: crestsSummary?.week ? {
+              weathered: crestsSummary.week.Weathered ?? 0,
+              carved: crestsSummary.week.Carved ?? 0,
+              runed: crestsSummary.week.Runed ?? 0,
+              gilded: crestsSummary.week.Gilded ?? 0,
             } : undefined,
+            crests_cumulative: crestsSummary?.cumulative ? {
+              weathered: crestsSummary.cumulative.Weathered ?? 0,
+              carved: crestsSummary.cumulative.Carved ?? 0,
+              runed: crestsSummary.cumulative.Runed ?? 0,
+              gilded: crestsSummary.cumulative.Gilded ?? 0,
+            } : undefined,
+            crest_cap: crestsSummary?.cap ?? 0,
           };
         });
 
@@ -499,6 +526,7 @@ export default function RosterPage() {
             onDragOverCard={handleDragOverCard}
             onDragLeaveCard={handleDragLeaveCard}
             dragEnabled={dragEnabled}
+            targetIlvl={targetIlvl}
           />
         ))}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>

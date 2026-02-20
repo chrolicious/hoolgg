@@ -69,6 +69,13 @@ interface CharacterCardProps {
     runed: number;
     gilded: number;
   };
+  crestsCumulative?: {
+    weathered: number;
+    carved: number;
+    runed: number;
+    gilded: number;
+  };
+  crestCap?: number;
   lastSynced?: string | null;
   onDelete?: () => void;
 }
@@ -122,11 +129,13 @@ export function CharacterCard({
   spec,
   role,
   currentIlvl,
-  targetIlvl = 626,
+  targetIlvl = 0,
   weeklyTasksCompleted = 0,
   weeklyTasksTotal = 6,
   vaultSlots,
   crests = { weathered: 0, carved: 0, runed: 0, gilded: 0 },
+  crestsCumulative,
+  crestCap: crestCapRaw = 0,
   lastSynced,
   onDelete,
 }: CharacterCardProps) {
@@ -136,6 +145,7 @@ export function CharacterCard({
   const [deleteError, setDeleteError] = useState<string | null>(null);
   const [isSyncing, setIsSyncing] = useState(false);
 
+  const crestCap = Math.max(crestCapRaw, 100);
   const variant = CLASS_TO_VARIANT[className] || 'primary';
   const classColor = CLASS_COLORS[className] || '#FFFFFF';
   const safeIlvl = currentIlvl ?? 0;
@@ -261,7 +271,7 @@ export function CharacterCard({
           <span style={{ fontSize: '28px', fontWeight: 700, color: '#fff' }}>
             {currentIlvl != null ? currentIlvl.toFixed(1) : '—'}
           </span>
-          {currentIlvl != null && (
+          {currentIlvl != null && targetIlvl > 0 && (
             <span style={{
               fontSize: '14px', fontWeight: 600, padding: '2px 8px', borderRadius: '4px',
               color: isDeltaPositive ? '#22c55e' : '#ef4444',
@@ -278,8 +288,26 @@ export function CharacterCard({
         {/* Weekly Progress */}
         <div style={{ marginBottom: '16px' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
-            <span style={{ fontSize: '12px', fontWeight: 600, color: 'rgba(255,255,255,0.7)' }}>Weekly Tasks</span>
-            <span style={{ fontSize: '12px', fontWeight: 700, color: 'rgba(255,255,255,0.9)' }}>{weeklyTasksCompleted}/{weeklyTasksTotal}</span>
+            <span style={{ fontSize: '12px', fontWeight: 600, color: 'rgba(255,255,255,0.7)', display: 'flex', alignItems: 'center', gap: '4px' }}>
+              Weekly Tasks
+              {weeklyTasksTotal > 0 && weeklyTasksCompleted >= weeklyTasksTotal && (
+                <span style={{
+                  display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                  width: '16px', height: '16px', borderRadius: '9999px',
+                  backgroundColor: 'rgba(0,0,0,0.35)', border: '1px solid rgba(34,197,94,0.4)',
+                }}>
+                  <Icon name="check" size={10} style={{ color: '#22c55e' }} />
+                </span>
+              )}
+            </span>
+            <span style={{
+              fontSize: '12px', fontWeight: 700,
+              color: weeklyTasksTotal > 0 && weeklyTasksCompleted >= weeklyTasksTotal ? '#22c55e' : 'rgba(255,255,255,0.9)',
+              ...(weeklyTasksTotal > 0 && weeklyTasksCompleted >= weeklyTasksTotal ? {
+                padding: '1px 6px', borderRadius: '4px',
+                backgroundColor: 'rgba(0,0,0,0.35)', border: '1px solid rgba(34,197,94,0.3)',
+              } : {}),
+            }}>{weeklyTasksCompleted}/{weeklyTasksTotal}</span>
           </div>
           <div style={{ height: '8px', borderRadius: '9999px', overflow: 'hidden', backgroundColor: 'rgba(0,0,0,0.35)', border: '1px solid rgba(255,255,255,0.08)' }}>
             <div style={{
@@ -328,15 +356,14 @@ export function CharacterCard({
         <div style={{ marginTop: '16px' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
             <span style={{ fontSize: '12px', fontWeight: 600, color: 'rgba(255,255,255,0.7)' }}>Crests</span>
-            <span style={{ fontSize: '10px', color: 'rgba(255,255,255,0.4)' }}>/ 90</span>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '6px' }}>
             {[
-              { label: 'Wth', value: crests.weathered, color: 'rgba(148,163,184,', textColor: '#94a3b8' },
-              { label: 'Crv', value: crests.carved, color: 'rgba(34,197,94,', textColor: '#4ade80' },
-              { label: 'Run', value: crests.runed, color: 'rgba(99,102,241,', textColor: '#818cf8' },
-              { label: 'Gld', value: crests.gilded, color: 'rgba(234,179,8,', textColor: '#facc15' },
-            ].map(({ label, value, color, textColor }) => (
+              { label: 'Wth', value: crests.weathered, cumulative: crestsCumulative?.weathered ?? 0, color: 'rgba(148,163,184,', textColor: '#94a3b8' },
+              { label: 'Crv', value: crests.carved, cumulative: crestsCumulative?.carved ?? 0, color: 'rgba(34,197,94,', textColor: '#4ade80' },
+              { label: 'Run', value: crests.runed, cumulative: crestsCumulative?.runed ?? 0, color: 'rgba(99,102,241,', textColor: '#818cf8' },
+              { label: 'Gld', value: crests.gilded, cumulative: crestsCumulative?.gilded ?? 0, color: 'rgba(234,179,8,', textColor: '#facc15' },
+            ].map(({ label, value, cumulative, color, textColor }) => (
               <div key={label} style={{
                 textAlign: 'center', padding: '6px 4px', borderRadius: '6px',
                 backgroundColor: value > 0 ? `${color}0.2)` : 'rgba(0,0,0,0.35)',
@@ -345,6 +372,9 @@ export function CharacterCard({
                 <div style={{ fontSize: '8px', color: 'rgba(255,255,255,0.5)', marginBottom: '2px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{label}</div>
                 <div style={{ fontSize: '13px', fontWeight: 700, color: value > 0 ? textColor : 'rgba(255,255,255,0.3)' }}>
                   {value > 0 ? value : '\u2014'}
+                </div>
+                <div style={{ fontSize: '9px', color: 'rgba(255,255,255,0.35)', marginTop: '2px' }}>
+                  {cumulative}/{crestCap}
                 </div>
               </div>
             ))}

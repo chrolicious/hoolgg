@@ -1,6 +1,7 @@
 'use client';
 
-import type { SeasonResponse } from '../types';
+import type { SeasonResponse, TasksSummaryResponse } from '../types';
+import { Icon } from '@hool/design-system';
 import { SectionCard } from './section-card';
 
 interface SeasonTimelineProps {
@@ -8,9 +9,10 @@ interface SeasonTimelineProps {
   currentIlvl: number | null;
   selectedWeek?: number;
   onWeekSelect?: (week: number) => void;
+  tasksSummary?: TasksSummaryResponse | null;
 }
 
-export function SeasonTimeline({ seasonData, currentIlvl, selectedWeek, onWeekSelect }: SeasonTimelineProps) {
+export function SeasonTimeline({ seasonData, currentIlvl, selectedWeek, onWeekSelect, tasksSummary }: SeasonTimelineProps) {
   const currentWeekData = seasonData.weeks.find((w) => w.is_current);
 
   const delta =
@@ -19,8 +21,8 @@ export function SeasonTimeline({ seasonData, currentIlvl, selectedWeek, onWeekSe
   const deltaLabel =
     delta !== null
       ? delta >= 0
-        ? `+${delta} ahead`
-        : `${delta} behind`
+        ? `+${delta.toFixed(1)} ahead`
+        : `${delta.toFixed(1)} behind`
       : null;
 
   const deltaColor =
@@ -52,9 +54,11 @@ export function SeasonTimeline({ seasonData, currentIlvl, selectedWeek, onWeekSe
       <div
         style={{
           overflowX: 'auto',
+          overflowY: 'visible',
           display: 'flex',
           gap: '6px',
           scrollbarWidth: 'none',
+          paddingTop: '6px',
           paddingBottom: '4px',
         }}
       >
@@ -62,12 +66,15 @@ export function SeasonTimeline({ seasonData, currentIlvl, selectedWeek, onWeekSe
           const isCurrent = week.is_current;
           const isSelected = selectedWeek !== undefined && week.week_number === selectedWeek;
           const isClickable = !!onWeekSelect;
+          const weekSummary = tasksSummary?.weeks?.[String(week.week_number)];
+          const allDone = weekSummary?.all_done ?? false;
 
           return (
             <div
               key={week.week_number}
               onClick={isClickable ? () => onWeekSelect(week.week_number) : undefined}
               style={{
+                position: 'relative',
                 width: '60px',
                 minWidth: '60px',
                 height: '48px',
@@ -78,19 +85,39 @@ export function SeasonTimeline({ seasonData, currentIlvl, selectedWeek, onWeekSe
                 alignItems: 'center',
                 justifyContent: 'center',
                 cursor: isClickable ? 'pointer' : 'default',
-                backgroundColor: isSelected
-                  ? 'rgba(59,130,246,0.3)'
-                  : isCurrent
-                    ? 'rgba(124,58,237,0.3)'
-                    : 'rgba(0,0,0,0.2)',
-                border: isSelected
-                  ? '2px solid rgba(59,130,246,0.6)'
-                  : isCurrent
-                    ? '1px solid rgba(124,58,237,0.5)'
-                    : '1px solid rgba(255,255,255,0.08)',
+                backgroundColor: allDone
+                  ? 'rgba(34,197,94,0.15)'
+                  : isSelected
+                    ? 'rgba(59,130,246,0.3)'
+                    : isCurrent
+                      ? 'rgba(124,58,237,0.3)'
+                      : 'rgba(0,0,0,0.2)',
+                border: allDone
+                  ? '1px solid rgba(34,197,94,0.4)'
+                  : isSelected
+                    ? '2px solid rgba(59,130,246,0.6)'
+                    : isCurrent
+                      ? '1px solid rgba(124,58,237,0.5)'
+                      : '1px solid rgba(255,255,255,0.08)',
                 transition: 'background-color 0.15s, border-color 0.15s',
               }}
             >
+              {allDone && (
+                <div style={{
+                  position: 'absolute',
+                  top: '-4px',
+                  right: '-4px',
+                  width: '14px',
+                  height: '14px',
+                  borderRadius: '9999px',
+                  backgroundColor: '#22c55e',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                  <Icon name="check" size={9} />
+                </div>
+              )}
               <span
                 style={{
                   fontSize: '10px',
