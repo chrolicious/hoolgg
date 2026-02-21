@@ -248,6 +248,12 @@ def add_character(gid: int):
         )
         next_order = (max_order or 0) + 1
 
+        # Securely enforce the user's bnet_id from the token
+        target_bnet_id = data.get("user_bnet_id")
+        if not target_bnet_id or target_bnet_id != bnet_id:
+            logger.info(f"Enforcing token bnet_id {bnet_id} for character creation (requested: {target_bnet_id})")
+            target_bnet_id = bnet_id
+
         character = CharacterProgress(
             character_name=name,
             realm=realm,
@@ -255,7 +261,7 @@ def add_character(gid: int):
             class_name=data.get("class_name"),
             spec=data.get("spec"),
             role=data.get("role"),
-            user_bnet_id=data.get("user_bnet_id"),
+            user_bnet_id=target_bnet_id,
             display_order=next_order,
         )
         db.add(character)

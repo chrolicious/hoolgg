@@ -712,7 +712,7 @@ function MembersTab() {
         </Badge>
       </div>
 
-        <Card padding="none" variant="elevated">
+        <Card variant="elevated">
           <div style={{ overflowX: 'auto' }}>
             {/* Table header */}
             <div

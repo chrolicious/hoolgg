@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { useGuild } from '../../../../lib/guild-context';
 import { useAuth } from '../../../../lib/auth-context';
@@ -8,7 +8,7 @@ import { progressApi } from '../../../../lib/api';
 import { Icon, Button } from '@hool/design-system';
 import { CharacterCard, formatRelativeTime } from './components/character-card';
 import { AddCharacterCard } from './components/add-character-card';
-import { PageSkeleton } from '../../../../components/loading-skeleton';
+import { RosterSkeleton } from '../../../../components/loading-skeleton';
 import { ErrorMessage } from '../../../../components/error-message';
 
 interface VaultSlotData {
@@ -70,6 +70,7 @@ function DraggableCard({
   guildId,
   fetchCharacters,
   draggedIndex,
+  draggedChar,
   onDragStart,
   onDrop,
   dropZone,
@@ -83,6 +84,7 @@ function DraggableCard({
   guildId: string;
   fetchCharacters: () => void;
   draggedIndex: number | null;
+  draggedChar: CharacterData | null;
   onDragStart: (index: number) => void;
   onDrop: (targetIndex: number, zone: DropZone) => void;
   dropZone: DropZone;
@@ -94,6 +96,32 @@ function DraggableCard({
   const isDragged = draggedIndex === index;
   const isTarget = dropZone !== null && draggedIndex !== null && draggedIndex !== index;
 
+  // Class colors for drag indicators
+  const CLASS_COLORS: Record<string, string> = {
+    'Death Knight': '#C41E3A',
+    'Demon Hunter': '#A330C9',
+    'Druid': '#FF7C0A',
+    'Evoker': '#33937F',
+    'Hunter': '#AAD372',
+    'Mage': '#3FC7EB',
+    'Monk': '#00FF98',
+    'Paladin': '#F48CBA',
+    'Priest': '#FFFFFF',
+    'Rogue': '#FFF468',
+    'Shaman': '#0070DD',
+    'Warlock': '#8788EE',
+    'Warrior': '#C69B6D',
+  };
+
+  const indicatorColor = draggedChar ? CLASS_COLORS[draggedChar.class_name] || '#8b5cf6' : '#8b5cf6';
+  
+  // Convert hex to rgb for gradients
+  const hex2rgb = (hex: string) => {
+    const clean = hex.replace('#', '');
+    return `${parseInt(clean.substring(0, 2), 16)}, ${parseInt(clean.substring(2, 4), 16)}, ${parseInt(clean.substring(4, 6), 16)}`;
+  };
+  const rgbColor = hex2rgb(indicatorColor);
+
   return (
     <motion.div
       layout
@@ -102,7 +130,6 @@ function DraggableCard({
       draggable={dragEnabled}
       onDragStart={(e) => {
         if (!dragEnabled) return;
-        // Set drag image with slight offset
         const el = e.currentTarget as HTMLElement;
         if ('dataTransfer' in e) {
           const dt = (e as unknown as React.DragEvent).nativeEvent.dataTransfer;
@@ -130,29 +157,42 @@ function DraggableCard({
         const zone = getDropZone(e as unknown as React.DragEvent, rect);
         onDrop(index, zone);
       }}
-      onDragEnd={() => {
-        // Fires on the dragged element when drag ends (even if dropped outside)
-      }}
+      onDragEnd={() => {}}
       style={{
         opacity: isDragged ? 0.4 : 1,
         position: 'relative',
         cursor: dragEnabled ? 'grab' : 'default',
+        boxShadow: isDragged ? `0 0 30px rgba(${rgbColor}, 0.3)` : 'none',
       }}
     >
       {/* Drop zone indicator */}
       {isTarget && (
-        <div
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
           style={{
             position: 'absolute',
-            inset: 0,
+            inset: '-4px',
             zIndex: 10,
             pointerEvents: 'none',
-            borderRadius: '12px',
+            borderRadius: '16px',
             ...(dropZone === 'left'
-              ? { borderLeft: '3px solid #8b5cf6', background: 'linear-gradient(90deg, rgba(139,92,246,0.15), transparent 40%)' }
+              ? { 
+                  borderLeft: `4px solid ${indicatorColor}`, 
+                  background: `linear-gradient(90deg, rgba(${rgbColor},0.2), transparent 50%)`,
+                  boxShadow: `-10px 0 20px -5px rgba(${rgbColor}, 0.2)`
+                }
               : dropZone === 'right'
-              ? { borderRight: '3px solid #8b5cf6', background: 'linear-gradient(-90deg, rgba(139,92,246,0.15), transparent 40%)' }
-              : { border: '2px solid #8b5cf6', background: 'rgba(139,92,246,0.08)' }),
+              ? { 
+                  borderRight: `4px solid ${indicatorColor}`, 
+                  background: `linear-gradient(-90deg, rgba(${rgbColor},0.2), transparent 50%)`,
+                  boxShadow: `10px 0 20px -5px rgba(${rgbColor}, 0.2)`
+                }
+              : { 
+                  border: `3px solid ${indicatorColor}`, 
+                  background: `rgba(${rgbColor},0.1)`,
+                  boxShadow: `0 0 20px rgba(${rgbColor}, 0.2)`
+                }),
           }}
         />
       )}
@@ -417,6 +457,16 @@ export default function RosterPage() {
   const displayCharacters = sortCharacters(characters, sortBy);
   const dragEnabled = sortBy === 'custom';
 
+  const availableMembers = guildMembers
+    ? guildMembers.filter(
+        (m) =>
+          m.bnet_id === user?.bnet_id &&
+          !characters.some(
+            (c) => c.character_name.toLowerCase() === m.character_name.toLowerCase()
+          )
+      )
+    : [];
+
   // Clear drag state if drag ends without a drop (e.g. pressed Escape)
   useEffect(() => {
     const handleDragEnd = () => {
@@ -428,7 +478,7 @@ export default function RosterPage() {
   }, []);
 
   if (isLoading) {
-    return <PageSkeleton />;
+    return <RosterSkeleton count={6} />;
   }
 
   if (error) {
@@ -520,6 +570,7 @@ export default function RosterPage() {
             guildId={guildId}
             fetchCharacters={fetchCharacters}
             draggedIndex={draggedIndex}
+            draggedChar={draggedIndex !== null ? displayCharacters[draggedIndex] : null}
             onDragStart={handleDragStart}
             onDrop={handleDrop}
             dropZone={hoverTarget?.index === i ? hoverTarget.zone : null}
@@ -532,6 +583,7 @@ export default function RosterPage() {
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <AddCharacterCard
             guildId={guildId}
+            availableMembers={availableMembers}
             onCharacterAdded={fetchCharacters}
           />
         </div>

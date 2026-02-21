@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button, Icon, StatCard, Card } from '@hool/design-system';
-import { AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { ProtectedRoute } from '../../../../components/protected-route';
 import { RoleGate } from '../../../../components/role-gate';
 import { ErrorMessage } from '../../../../components/error-message';
