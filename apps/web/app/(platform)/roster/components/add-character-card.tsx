@@ -31,11 +31,20 @@ export function AddCharacterCard({ onCharacterAdded }: AddCharacterCardProps) {
     setError(null);
 
     try {
-      await progressApi.post(`/users/me/characters`, {
+      const newChar = await progressApi.post<{id: number}>(`/users/me/characters`, {
         name: characterName.trim(),
         realm: realm.trim(),
         region: region,
       });
+
+      if (newChar && newChar.id) {
+        // Automatically sync the character so the class, ilvl, and raider.io stats populate instantly
+        try {
+          await progressApi.post(`/users/me/characters/${newChar.id}/gear/sync`);
+        } catch (syncErr) {
+          console.error('Initial sync failed, but character was added', syncErr);
+        }
+      }
 
       setShowForm(false);
       setCharacterName('');
