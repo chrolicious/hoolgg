@@ -108,7 +108,7 @@ function NavItem({ href, icon, label, active, collapsed, onClick }: NavItemProps
 
 // ── Inner Layout ─────────────────────
 
-export default function RosterLayout({ children }: { children: React.ReactNode }) {
+export default function RosterLayoutInner({ children }: { children: React.ReactNode }) {
   const { user, logout } = useAuth();
   const pathname = usePathname();
   const router = useRouter();
