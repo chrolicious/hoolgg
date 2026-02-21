@@ -323,7 +323,9 @@ def sync_my_character_gear(cid: int):
         stats_data = blizz.get_character_stats(char.character_name, char.realm)
         
         if gear_data:
-            parsed_gear = parse_equipment_response(gear_data)
+            from app.services.gear_parser import create_empty_gear
+            existing_gear = char.gear_data if char.gear_data else create_empty_gear()
+            parsed_gear, equipped_ilvl = parse_equipment_response(gear_data, existing_gear)
             avg_ilvl = calculate_avg_ilvl(parsed_gear)
             
             char.gear_data = parsed_gear
@@ -366,11 +368,12 @@ def sync_all_my_characters(cid: int):
                 stats_data = blizz.get_character_stats(char.character_name, char.realm)
                 
                 if gear_data:
-                    from app.services.gear_parser import parse_equipment_response, calculate_avg_ilvl
+                    from app.services.gear_parser import parse_equipment_response, calculate_avg_ilvl, create_empty_gear
                     from app.services.stats_parser import parse_character_stats
                     from datetime import datetime, timezone
                     
-                    parsed_gear = parse_equipment_response(gear_data)
+                    existing_gear = char.gear_data if char.gear_data else create_empty_gear()
+                    parsed_gear, equipped_ilvl = parse_equipment_response(gear_data, existing_gear)
                     avg_ilvl = calculate_avg_ilvl(parsed_gear)
                     
                     char.gear_data = parsed_gear
