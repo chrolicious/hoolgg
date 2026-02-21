@@ -11,7 +11,7 @@ from app.services.stats_parser import parse_character_stats
 from app.services.bis_sync_service import sync_bis_with_gear
 import logging
 
-bp = Blueprint("gear", __name__, url_prefix="/guilds")
+bp = Blueprint("gear", __name__, url_prefix="/users/me")
 logger = logging.getLogger(__name__)
 
 
@@ -34,17 +34,10 @@ def get_current_user_from_token():
     return payload.get("bnet_id")
 
 
-def check_permission(bnet_id: int, guild_id: int, tool: str = "progress"):
-    """Check user permission for guild tool access"""
-    import os
-    if os.getenv("FLASK_ENV") == "development":
-        return {"allowed": True, "rank_id": 0}
-    perm_service = PermissionService()
-    return perm_service.check_permission(bnet_id, guild_id, tool)
 
 
-@bp.route("/<int:gid>/characters/<int:cid>/gear", methods=["GET"])
-def get_gear(gid: int, cid: int):
+@bp.route("/characters/<int:cid>/gear", methods=["GET"])
+def get_gear(cid: int):
     """
     Get character gear data.
 
@@ -54,9 +47,6 @@ def get_gear(gid: int, cid: int):
     if not bnet_id:
         return jsonify({"error": "Not authenticated"}), 401
 
-    perm_check = check_permission(bnet_id, gid)
-    if not perm_check.get("allowed"):
-        return jsonify({"error": "Access denied"}), 403
 
     db = next(get_db())
 
@@ -65,7 +55,7 @@ def get_gear(gid: int, cid: int):
             db.query(CharacterProgress)
             .filter(
                 CharacterProgress.id == cid,
-                CharacterProgress.guild_id == gid,
+                CharacterProgress.user_bnet_id == bnet_id,
             )
             .first()
         )
@@ -91,8 +81,8 @@ def get_gear(gid: int, cid: int):
         db.close()
 
 
-@bp.route("/<int:gid>/characters/<int:cid>/gear", methods=["POST"])
-def update_gear_slot(gid: int, cid: int):
+@bp.route("/characters/<int:cid>/gear", methods=["POST"])
+def update_gear_slot(cid: int):
     """
     Manually update gear for a specific slot.
 
@@ -109,9 +99,6 @@ def update_gear_slot(gid: int, cid: int):
     if not bnet_id:
         return jsonify({"error": "Not authenticated"}), 401
 
-    perm_check = check_permission(bnet_id, gid)
-    if not perm_check.get("allowed"):
-        return jsonify({"error": "Access denied"}), 403
 
     data = request.get_json()
     if not data:
@@ -128,7 +115,7 @@ def update_gear_slot(gid: int, cid: int):
             db.query(CharacterProgress)
             .filter(
                 CharacterProgress.id == cid,
-                CharacterProgress.guild_id == gid,
+                CharacterProgress.user_bnet_id == bnet_id,
             )
             .first()
         )
@@ -171,8 +158,8 @@ def update_gear_slot(gid: int, cid: int):
         db.close()
 
 
-@bp.route("/<int:gid>/characters/<int:cid>/gear/sync", methods=["POST"])
-def sync_gear(gid: int, cid: int):
+@bp.route("/characters/<int:cid>/gear/sync", methods=["POST"])
+def sync_gear(cid: int):
     """
     Sync character gear from Blizzard API.
 
@@ -183,9 +170,6 @@ def sync_gear(gid: int, cid: int):
     if not bnet_id:
         return jsonify({"error": "Not authenticated"}), 401
 
-    perm_check = check_permission(bnet_id, gid)
-    if not perm_check.get("allowed"):
-        return jsonify({"error": "Access denied"}), 403
 
     db = next(get_db())
 
@@ -194,7 +178,7 @@ def sync_gear(gid: int, cid: int):
             db.query(CharacterProgress)
             .filter(
                 CharacterProgress.id == cid,
-                CharacterProgress.guild_id == gid,
+                CharacterProgress.user_bnet_id == bnet_id,
             )
             .first()
         )
@@ -291,8 +275,8 @@ def sync_gear(gid: int, cid: int):
         db.close()
 
 
-@bp.route("/<int:gid>/characters/<int:cid>/gear/sync-all", methods=["POST"])
-def sync_all_gear(gid: int, cid: int):
+@bp.route("/characters/<int:cid>/gear/sync-all", methods=["POST"])
+def sync_all_gear(cid: int):
     """
     Sync gear for all characters in the guild (batch operation).
 
@@ -303,16 +287,13 @@ def sync_all_gear(gid: int, cid: int):
     if not bnet_id:
         return jsonify({"error": "Not authenticated"}), 401
 
-    perm_check = check_permission(bnet_id, gid)
-    if not perm_check.get("allowed"):
-        return jsonify({"error": "Access denied"}), 403
 
     db = next(get_db())
 
     try:
         characters = (
             db.query(CharacterProgress)
-            .filter(CharacterProgress.guild_id == gid)
+            .filter(CharacterProgress.user_bnet_id == bnet_id)
             .all()
         )
 
