@@ -11,7 +11,7 @@ export default function Home() {
   useEffect(() => {
     if (isLoading) return;
     if (isAuthenticated) {
-      router.replace('/guilds');
+      router.replace('/roster');
     } else {
       router.replace('/auth/login');
     }

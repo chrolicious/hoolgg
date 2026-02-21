@@ -12,7 +12,7 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (!isLoading && isAuthenticated) {
-      router.replace('/guilds');
+      router.replace('/roster');
     }
   }, [isLoading, isAuthenticated, router]);
 
