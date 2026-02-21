@@ -78,6 +78,7 @@ async function request<T>(
     return fetch(url.toString(), {
       method,
       credentials: 'include',
+      cache: 'no-store', // Extremely important to bypass Next.js static fetching
       ...fetchOptions,
       headers,
       body: body !== undefined ? JSON.stringify(body) : undefined,
