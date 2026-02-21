@@ -69,7 +69,6 @@ def get_season_timeline():
         })
 
     return jsonify({
-        "guild_id": gid,
         "region": region,
         "current_week": current_week,
         "current_target_ilvl": get_weekly_target(current_week),
