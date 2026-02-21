@@ -15,14 +15,21 @@ interface SeasonTimelineProps {
 export function SeasonTimeline({ seasonData, currentIlvl, selectedWeek, onWeekSelect, tasksSummary }: SeasonTimelineProps) {
   const currentWeekData = seasonData.weeks.find((w) => w.is_current);
 
+  // Use the displayed week info (selected or current)
+  const displayedWeek = selectedWeek !== undefined
+    ? seasonData.weeks.find((w) => w.week_number === selectedWeek)
+    : currentWeekData;
+
+  const targetIlvlForDisplay = displayedWeek ? displayedWeek.target_ilvl : seasonData.current_target_ilvl;
+
   const delta =
-    currentIlvl !== null ? currentIlvl - seasonData.current_target_ilvl : null;
+    currentIlvl !== null ? currentIlvl - targetIlvlForDisplay : null;
 
   const deltaLabel =
     delta !== null
       ? delta >= 0
         ? `+${delta.toFixed(1)} ahead`
-        : `${delta.toFixed(1)} behind`
+        : `${Math.abs(delta).toFixed(1)} behind`
       : null;
 
   const deltaColor =
@@ -42,11 +49,6 @@ export function SeasonTimeline({ seasonData, currentIlvl, selectedWeek, onWeekSe
 
     return `${fmt(start)} – ${fmt(end)}`;
   };
-
-  // Use the displayed week info (selected or current)
-  const displayedWeek = selectedWeek !== undefined
-    ? seasonData.weeks.find((w) => w.week_number === selectedWeek)
-    : currentWeekData;
 
   return (
     <SectionCard title="Season Timeline">
@@ -178,7 +180,7 @@ export function SeasonTimeline({ seasonData, currentIlvl, selectedWeek, onWeekSe
           >
             Target:{' '}
             <span style={{ fontWeight: 700, color: '#fff' }}>
-              {seasonData.current_target_ilvl} ilvl
+              {targetIlvlForDisplay} ilvl
             </span>
             {currentIlvl !== null && (
               <>
