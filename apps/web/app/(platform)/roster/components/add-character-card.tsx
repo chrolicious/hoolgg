@@ -63,119 +63,149 @@ export function AddCharacterCard({ onCharacterAdded }: AddCharacterCardProps) {
   };
 
   return (
-    <Badge
-      variant="glass"
-      size="md"
-      className={cardStyles.addBadge}
-      style={{ '--badge-width': '370px', '--badge-height': '200px', minHeight: '200px' } as React.CSSProperties}
-    >
-      <AnimatePresence mode="wait">
-        {!showForm ? (
-          <motion.button
-            key="button"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setShowForm(true)}
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '12px',
-              background: 'none',
-              border: 'none',
-              cursor: 'pointer',
-              padding: 0,
-              width: '100%',
-              height: '100%',
-              position: 'absolute',
-              inset: 0,
-            }}
-          >
-            <Icon name="plus" size={32} style={{ color: 'rgba(255,255,255,0.3)', transition: 'color 0.2s' }} />
-            <span style={{ fontSize: '14px', fontWeight: 600, color: 'rgba(255,255,255,0.4)' }}>
-              Add New Character
-            </span>
-          </motion.button>
-        ) : (
-          <motion.form
-            key="form"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onSubmit={handleSubmit}
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '12px',
-              width: '100%',
-              padding: '24px 20px',
-              height: '100%',
-              justifyContent: 'center',
-              position: 'absolute',
-              inset: 0
-            }}
-          >
-            {error && (
-              <div style={{ color: '#ef4444', fontSize: '12px', textAlign: 'center', fontWeight: 600 }}>
-                {error}
-              </div>
-            )}
-            
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
-              <Input
-                value={realm}
-                onChange={(e) => setRealm(e.target.value)}
-                placeholder="Realm (e.g. Area 52)"
-                size="md"
-                disabled={isSubmitting}
-              />
-              <Input
-                value={characterName}
-                onChange={(e) => setCharacterName(e.target.value)}
-                placeholder="Character Name"
-                size="md"
-                disabled={isSubmitting}
-              />
-            </div>
+    <>
+      <Badge
+        variant="glass"
+        size="md"
+        className={cardStyles.addBadge}
+        style={{ '--badge-width': '370px', '--badge-height': '200px', minHeight: '200px' } as React.CSSProperties}
+        onClick={() => setShowForm(true)}
+      >
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '12px',
+            background: 'none',
+            border: 'none',
+            cursor: 'pointer',
+            padding: 0,
+            width: '100%',
+            height: '100%',
+            position: 'absolute',
+            inset: 0,
+          }}
+        >
+          <Icon name="plus" size={32} className="starIcon" style={{ color: '#8b5cf6', transition: 'all 0.2s' }} />
+          <span style={{ fontSize: '14px', fontWeight: 600, color: 'rgba(255,255,255,0.4)' }}>
+            Add New Character
+          </span>
+        </div>
+      </Badge>
 
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '4px' }}>
-              <div style={{ display: 'flex', gap: '4px' }}>
-                {['us', 'eu', 'kr', 'tw'].map((r) => (
-                  <button
-                    key={r}
-                    type="button"
-                    onClick={() => setRegion(r)}
-                    style={{
-                      background: region === r ? 'rgba(139,92,246,0.2)' : 'rgba(255,255,255,0.05)',
-                      border: region === r ? '1px solid rgba(139,92,246,0.5)' : '1px solid rgba(255,255,255,0.1)',
-                      color: region === r ? '#c4b5fd' : 'rgba(255,255,255,0.4)',
-                      padding: '4px 8px',
-                      borderRadius: '4px',
-                      fontSize: '10px',
-                      fontWeight: 600,
-                      cursor: 'pointer',
-                      textTransform: 'uppercase'
-                    }}
-                  >
-                    {r}
-                  </button>
-                ))}
+      <AnimatePresence>
+        {showForm && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            style={{
+              position: 'fixed', inset: 0, zIndex: 100,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              backgroundColor: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(4px)',
+            }}
+            onClick={handleCancel}
+          >
+            <motion.form
+              initial={{ opacity: 0, scale: 0.95, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 10 }}
+              onClick={(e) => e.stopPropagation()}
+              onSubmit={handleSubmit}
+              style={{
+                width: '100%', maxWidth: '400px', padding: '24px',
+                borderRadius: '12px', backgroundColor: '#1a1a2e',
+                border: '1px solid rgba(255,255,255,0.1)',
+                display: 'flex', flexDirection: 'column', gap: '16px',
+                boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)'
+              }}
+            >
+              <h3 style={{ fontSize: '18px', fontWeight: 700, color: '#fff', margin: 0, textAlign: 'center' }}>Add Character</h3>
+
+              <div style={{
+                padding: '12px', borderRadius: '8px', backgroundColor: 'rgba(37,99,235,0.1)',
+                border: '1px solid rgba(37,99,235,0.2)'
+              }}>
+                <p style={{ fontSize: '12px', color: '#60a5fa', margin: 0, display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <Icon name="info" size={12} />
+                  Your character's class, spec, and gear will be synced automatically.
+                </p>
               </div>
+
+              {error && (
+                <div style={{
+                  padding: '12px', borderRadius: '8px',
+                  backgroundColor: 'rgba(239,68,68,0.15)', border: '1px solid rgba(239,68,68,0.3)',
+                  color: '#f87171', fontSize: '13px', textAlign: 'center'
+                }}>
+                  {error}
+                </div>
+              )}
               
-              <div style={{ display: 'flex', gap: '8px' }}>
-                <Button type="button" onClick={handleCancel} disabled={isSubmitting} variant="ghost" size="sm">
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                <label style={{ fontSize: '13px', fontWeight: 600, color: 'rgba(255,255,255,0.7)' }}>Region</label>
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  {['us', 'eu', 'kr', 'tw'].map((r) => (
+                    <button
+                      key={r}
+                      type="button"
+                      onClick={() => setRegion(r)}
+                      style={{
+                        flex: 1,
+                        background: region === r ? 'rgba(139,92,246,0.2)' : 'rgba(255,255,255,0.05)',
+                        border: region === r ? '1px solid rgba(139,92,246,0.5)' : '1px solid rgba(255,255,255,0.1)',
+                        color: region === r ? '#c4b5fd' : 'rgba(255,255,255,0.5)',
+                        padding: '8px 0',
+                        borderRadius: '6px',
+                        fontSize: '12px',
+                        fontWeight: 600,
+                        cursor: 'pointer',
+                        textTransform: 'uppercase',
+                        transition: 'all 0.2s'
+                      }}
+                    >
+                      {r}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                <label style={{ fontSize: '13px', fontWeight: 600, color: 'rgba(255,255,255,0.7)' }}>Realm</label>
+                <Input
+                  value={realm}
+                  onChange={(e) => setRealm(e.target.value)}
+                  placeholder="e.g. Area 52"
+                  size="md"
+                  disabled={isSubmitting}
+                />
+              </div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                <label style={{ fontSize: '13px', fontWeight: 600, color: 'rgba(255,255,255,0.7)' }}>Character Name</label>
+                <Input
+                  value={characterName}
+                  onChange={(e) => setCharacterName(e.target.value)}
+                  placeholder="e.g. Thrall"
+                  size="md"
+                  disabled={isSubmitting}
+                />
+              </div>
+
+              <div style={{ display: 'flex', gap: '12px', marginTop: '8px' }}>
+                <Button type="button" onClick={handleCancel} disabled={isSubmitting} variant="secondary" size="md" style={{ flex: 1 }}>
                   Cancel
                 </Button>
-                <Button type="submit" disabled={isSubmitting || !realm || !characterName} variant="primary" size="sm">
-                  {isSubmitting ? 'Syncing...' : 'Add'}
+                <Button type="submit" disabled={isSubmitting || !realm || !characterName} variant="primary" size="md" style={{ flex: 1 }}>
+                  {isSubmitting ? 'Syncing...' : 'Add Character'}
                 </Button>
               </div>
-            </div>
-          </motion.form>
+            </motion.form>
+          </motion.div>
         )}
       </AnimatePresence>
-    </Badge>
+    </>
   );
 }
