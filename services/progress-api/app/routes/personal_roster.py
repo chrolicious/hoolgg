@@ -324,11 +324,12 @@ def sync_my_character_gear(cid: int):
         
         if gear_data:
             from app.services.gear_parser import create_empty_gear
-            existing_gear = char.gear_data if char.gear_data else create_empty_gear()
+            existing_gear = char.parsed_gear if char.parsed_gear else create_empty_gear()
             parsed_gear, equipped_ilvl = parse_equipment_response(gear_data, existing_gear)
             avg_ilvl = calculate_avg_ilvl(parsed_gear)
             
-            char.gear_data = parsed_gear
+            char.gear_details = gear_data
+            char.parsed_gear = parsed_gear
             char.current_ilvl = avg_ilvl
             char.last_gear_sync = datetime.now(timezone.utc)
             
@@ -372,11 +373,12 @@ def sync_all_my_characters(cid: int):
                     from app.services.stats_parser import parse_character_stats
                     from datetime import datetime, timezone
                     
-                    existing_gear = char.gear_data if char.gear_data else create_empty_gear()
+                    existing_gear = char.parsed_gear if char.parsed_gear else create_empty_gear()
                     parsed_gear, equipped_ilvl = parse_equipment_response(gear_data, existing_gear)
                     avg_ilvl = calculate_avg_ilvl(parsed_gear)
                     
-                    char.gear_data = parsed_gear
+                    char.gear_details = gear_data
+                    char.parsed_gear = parsed_gear
                     char.current_ilvl = avg_ilvl
                     char.last_gear_sync = datetime.now(timezone.utc)
                     
