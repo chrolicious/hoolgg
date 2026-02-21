@@ -122,17 +122,7 @@ export function AddCharacterCard({ onCharacterAdded }: AddCharacterCardProps) {
                 boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)'
               }}
             >
-              <h3 style={{ fontSize: '18px', fontWeight: 700, color: '#fff', margin: 0, textAlign: 'center' }}>Add Character</h3>
-
-              <div style={{
-                padding: '12px', borderRadius: '8px', backgroundColor: 'rgba(37,99,235,0.1)',
-                border: '1px solid rgba(37,99,235,0.2)'
-              }}>
-                <p style={{ fontSize: '12px', color: '#60a5fa', margin: 0, display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <Icon name="info" size={12} />
-                  Your character's class, spec, and gear will be synced automatically.
-                </p>
-              </div>
+            <h3 style={{ fontSize: '18px', fontWeight: 700, color: '#fff', margin: 0, textAlign: 'center' }}>Add Character</h3>
 
               {error && (
                 <div style={{
@@ -173,17 +163,6 @@ export function AddCharacterCard({ onCharacterAdded }: AddCharacterCardProps) {
               </div>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                <label style={{ fontSize: '13px', fontWeight: 600, color: 'rgba(255,255,255,0.7)' }}>Realm</label>
-                <Input
-                  value={realm}
-                  onChange={(e) => setRealm(e.target.value)}
-                  placeholder="e.g. Area 52"
-                  size="md"
-                  disabled={isSubmitting}
-                />
-              </div>
-
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                 <label style={{ fontSize: '13px', fontWeight: 600, color: 'rgba(255,255,255,0.7)' }}>Character Name</label>
                 <Input
                   value={characterName}
@@ -194,11 +173,22 @@ export function AddCharacterCard({ onCharacterAdded }: AddCharacterCardProps) {
                 />
               </div>
 
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                <label style={{ fontSize: '13px', fontWeight: 600, color: 'rgba(255,255,255,0.7)' }}>Realm</label>
+                <Input
+                  value={realm}
+                  onChange={(e) => setRealm(e.target.value)}
+                  placeholder="e.g. Area 52"
+                  size="md"
+                  disabled={isSubmitting}
+                />
+              </div>
+
               <div style={{ display: 'flex', gap: '12px', marginTop: '8px' }}>
                 <Button type="button" onClick={handleCancel} disabled={isSubmitting} variant="secondary" size="md" style={{ flex: 1 }}>
                   Cancel
                 </Button>
-                <Button type="submit" disabled={isSubmitting || !realm || !characterName} variant="primary" size="md" style={{ flex: 1 }}>
+                <Button type="submit" disabled={isSubmitting || !realm || !characterName} variant="purple" size="md" style={{ flex: 1 }}>
                   {isSubmitting ? 'Syncing...' : 'Add Character'}
                 </Button>
               </div>
