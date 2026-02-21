@@ -287,7 +287,7 @@ export default function RosterPage() {
       const data = await progressApi.get<{
         characters: Array<Record<string, any>>;
         current_week?: number;
-      }>(`/users/me/characters`);
+      }>(`/users/me/characters?t=${Date.now()}`);
 
       // Map API response to CharacterData shape
       const mapped: CharacterData[] = data.characters

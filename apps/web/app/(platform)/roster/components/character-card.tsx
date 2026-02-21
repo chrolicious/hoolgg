@@ -257,20 +257,20 @@ export function CharacterCard({
 
         {/* Top margin to clear the overlapping avatar */}
         <div style={{ marginTop: '24px' }}>
-          <h3 style={{ color: '#fff', fontSize: '18px', fontWeight: 700, margin: '0 0 4px 0', textShadow: '0 1px 3px rgba(0,0,0,0.8)' }}>
+          <h3 style={{ color: '#fff', fontSize: '18px', fontWeight: 700, margin: '0 0 4px 0', }}>
             {characterName}
           </h3>
-          <p style={{ fontSize: '12px', color: 'rgba(255,255,255,0.6)', margin: '0 0 4px 0' }}>
+          <p style={{ fontSize: '12px', color: '#fff', margin: '0 0 4px 0' }}>
             {spec} · {realm}
           </p>
-          <p style={{ fontSize: '10px', color: 'rgba(255,255,255,0.35)', margin: '0 0 12px 0' }}>
+          <p style={{ fontSize: '10px', color: '#fff', margin: '0 0 12px 0' }}>
             {lastSynced ? `Synced ${formatRelativeTime(lastSynced)}` : 'Never synced'}
           </p>
         </div>
 
         {/* ilvl Section */}
         <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', marginBottom: '12px' }}>
-          <span style={{ fontSize: '28px', fontWeight: 700, color: '#fff', textShadow: '0 2px 4px rgba(0,0,0,0.8)' }}>
+          <span style={{ fontSize: '28px', fontWeight: 700, color: '#fff', }}>
             {currentIlvl != null ? currentIlvl.toFixed(1) : '—'}
           </span>
           {currentIlvl != null && targetIlvl > 0 && (
@@ -282,7 +282,7 @@ export function CharacterCard({
               {isDeltaPositive ? '+' : ''}{ilvlDelta.toFixed(1)}
             </span>
           )}
-          <span style={{ fontSize: '12px', color: 'rgba(255,255,255,0.5)', marginLeft: 'auto' }}>
+          <span style={{ fontSize: '12px', color: '#fff', marginLeft: 'auto' }}>
             Resets in {daysUntilReset}d
           </span>
         </div>
@@ -293,7 +293,7 @@ export function CharacterCard({
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '4px 8px', background: 'rgba(255, 255, 255, 0.05)', borderRadius: '6px', border: '1px solid rgba(255, 255, 255, 0.1)' }}>
               <Icon name="swords" size={12} style={{ color: '#f59e0b' }} />
               <span style={{ fontSize: '12px', fontWeight: 600, color: '#fff' }}>{mythicPlusScore.toFixed(0)}</span>
-              <span style={{ fontSize: '10px', color: 'rgba(255,255,255,0.5)' }}>M+</span>
+              <span style={{ fontSize: '10px', color: '#fff' }}>M+</span>
             </div>
           )}
           
@@ -308,7 +308,7 @@ export function CharacterCard({
         {/* Weekly Progress */}
         <div style={{ marginBottom: '16px' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
-            <span style={{ fontSize: '12px', fontWeight: 600, color: 'rgba(255,255,255,0.7)', display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <span style={{ fontSize: '12px', fontWeight: 600, color: '#fff', display: 'flex', alignItems: 'center', gap: '4px' }}>
               Weekly Tasks
               {weeklyTasksTotal > 0 && weeklyTasksCompleted >= weeklyTasksTotal && (
                 <span style={{
@@ -322,7 +322,7 @@ export function CharacterCard({
             </span>
             <span style={{
               fontSize: '12px', fontWeight: 700,
-              color: weeklyTasksTotal > 0 && weeklyTasksCompleted >= weeklyTasksTotal ? '#22c55e' : 'rgba(255,255,255,0.9)',
+              color: weeklyTasksTotal > 0 && weeklyTasksCompleted >= weeklyTasksTotal ? '#22c55e' : '#fff',
               ...(weeklyTasksTotal > 0 && weeklyTasksCompleted >= weeklyTasksTotal ? {
                 padding: '1px 6px', borderRadius: '4px',
                 backgroundColor: 'rgba(0,0,0,0.35)', border: '1px solid rgba(34,197,94,0.3)',
@@ -341,7 +341,7 @@ export function CharacterCard({
         {/* Great Vault — per-slot ilvl */}
         <div>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
-            <span style={{ fontSize: '12px', fontWeight: 600, color: 'rgba(255,255,255,0.7)' }}>Great Vault</span>
+            <span style={{ fontSize: '12px', fontWeight: 600, color: '#fff' }}>Great Vault</span>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
             {[
@@ -352,7 +352,7 @@ export function CharacterCard({
               <div key={label} style={{
                 display: 'grid', gridTemplateColumns: '36px 1fr 1fr 1fr', gap: '4px', alignItems: 'center',
               }}>
-                <div style={{ fontSize: '10px', fontWeight: 600, color: 'rgba(255,255,255,0.7)' }}>{label}</div>
+                <div style={{ fontSize: '10px', fontWeight: 600, color: '#fff' }}>{label}</div>
                 {slots.slice(0, 3).map((slot, i) => (
                   <div key={i} style={{
                     textAlign: 'center', padding: '5px 2px', borderRadius: '4px',
@@ -375,7 +375,7 @@ export function CharacterCard({
         {/* Crests */}
         <div style={{ marginTop: '16px' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
-            <span style={{ fontSize: '12px', fontWeight: 600, color: 'rgba(255,255,255,0.7)' }}>Crests</span>
+            <span style={{ fontSize: '12px', fontWeight: 600, color: '#fff' }}>Crests</span>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '6px' }}>
             {[
@@ -389,11 +389,11 @@ export function CharacterCard({
                 backgroundColor: value > 0 ? `${color}0.2)` : 'rgba(0,0,0,0.35)',
                 border: `1px solid ${value > 0 ? `${color}0.35)` : 'rgba(255,255,255,0.08)'}`,
               }}>
-                <div style={{ fontSize: '8px', color: 'rgba(255,255,255,0.5)', marginBottom: '2px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{label}</div>
+                <div style={{ fontSize: '8px', color: '#fff', marginBottom: '2px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{label}</div>
                 <div style={{ fontSize: '13px', fontWeight: 700, color: value > 0 ? textColor : 'rgba(255,255,255,0.3)' }}>
                   {value > 0 ? value : '\u2014'}
                 </div>
-                <div style={{ fontSize: '9px', color: 'rgba(255,255,255,0.35)', marginTop: '2px' }}>
+                <div style={{ fontSize: '9px', color: '#fff', marginTop: '2px' }}>
                   {cumulative}/{crestCap}
                 </div>
               </div>
@@ -414,7 +414,7 @@ export function CharacterCard({
           }}
           onClick={(e) => e.stopPropagation()}
         >
-          <p style={{ fontSize: '13px', color: 'rgba(255,255,255,0.9)', textAlign: 'center', margin: 0, whiteSpace: 'nowrap' }}>
+          <p style={{ fontSize: '13px', color: '#fff', textAlign: 'center', margin: 0, whiteSpace: 'nowrap' }}>
             Delete <span style={{ color: classColor }}>{characterName}</span>?
           </p>
           <div style={{ display: 'flex', gap: '6px' }}>

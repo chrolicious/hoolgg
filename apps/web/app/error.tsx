@@ -64,9 +64,9 @@ export default function ErrorPage({
             <Button
               variant="secondary"
               size="md"
-              onClick={() => (window.location.href = '/guilds')}
+              onClick={() => (window.location.href = '/roster')}
             >
-              Go to Guilds
+              Go to Roster
             </Button>
           </div>
         </div>

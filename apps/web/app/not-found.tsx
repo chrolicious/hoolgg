@@ -46,7 +46,7 @@ export default function NotFound() {
         The page you are looking for does not exist or has been moved.
       </p>
       <Link
-        href="/guilds"
+        href="/roster"
         style={{
           display: 'inline-flex',
           alignItems: 'center',
@@ -62,7 +62,7 @@ export default function NotFound() {
           transition: 'background 0.15s ease',
         }}
       >
-        Go to Guilds
+        Go to Roster
       </Link>
     </div>
   );

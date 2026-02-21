@@ -53,7 +53,7 @@ export function AddCharacterCard({ onCharacterAdded }: AddCharacterCardProps) {
       onCharacterAdded();
     } catch (err: any) {
       console.error('Failed to add character:', err);
-      if (err?.response?.status === 409) {
+      if (err.status === 409 || err?.response?.status === 409) {
         setError('Character already in roster');
       } else {
         setError(err.message || 'Failed to add character');

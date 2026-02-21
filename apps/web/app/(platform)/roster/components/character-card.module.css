@@ -15,7 +15,9 @@
   --badge-width: 370px;
   --badge-height: auto;
   cursor: pointer;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
 }
+
 
 /*
  * Trigger badge layer animations from the card wrapper hover.
@@ -68,4 +70,15 @@
   --badge-height: 180px;
   cursor: pointer;
   align-self: center;
+}
+
+/* Make the glass background way darker for the Add Character card */
+.addBadge[data-variant="glass"] > div > div > div {
+  background: #050407 !important;
+  border: 1px dashed rgba(139, 92, 246, 0.3) !important;
+}
+
+/* Ensure the star icon is prominent */
+.addBadge:hover .starIcon {
+  color: #a78bfa !important;
 }

@@ -302,7 +302,8 @@ def sync_my_character_gear(cid: int):
         if not char:
             return jsonify({"error": "Character not found"}), 404
             
-        region = char.region if hasattr(char, "region") and char.region else "us"
+        from flask import current_app
+        region = getattr(char, "region", None) or current_app.config.get("BLIZZARD_REGION", "us")
         blizz = BlizzardService()
         
         # Use existing sync logic from gear service if we want to be thorough, but for MVP personal roster:
@@ -313,7 +314,20 @@ def sync_my_character_gear(cid: int):
         
         gear_data = blizz.get_character_equipment(char.character_name, char.realm)
         stats_data = blizz.get_character_stats(char.character_name, char.realm)
-        
+
+        # Sync character profile (class, spec, role, avatar)
+        profile_data = blizz.get_character_profile(char.character_name, char.realm)
+        if profile_data:
+            char.class_name = profile_data.get("character_class", {}).get("name")
+            char.spec = profile_data.get("active_spec", {}).get("name")
+            if char.class_name and char.spec:
+                char.role = blizz._determine_role(char.class_name, char.spec)
+            media_href = profile_data.get("media", {}).get("href")
+            if media_href:
+                avatar = blizz._fetch_media_avatar(media_href)
+                if avatar:
+                    char.avatar_url = avatar
+
         # Sync Raider.IO if never synced or older than 6 hours
         now = datetime.now(timezone.utc)
         if not char.last_raiderio_sync or now - char.last_raiderio_sync > timedelta(hours=6):
@@ -324,7 +338,7 @@ def sync_my_character_gear(cid: int):
                 char.mythic_plus_score = mplus
                 char.raid_progress = raid
                 char.last_raiderio_sync = now
-                
+
                 # Update this week's Great Vault entry with M+ runs
                 if recent_runs:
                     current_week = calculate_current_week(region)
@@ -332,27 +346,27 @@ def sync_my_character_gear(cid: int):
                         GreatVaultEntry.character_id == char.id,
                         GreatVaultEntry.week_number == current_week
                     ).first()
-                    
+
                     if not vault_entry:
                         vault_entry = GreatVaultEntry(
                             character_id=char.id,
                             week_number=current_week,
                         )
                         db.add(vault_entry)
-                        
+
                     vault_entry.m_plus_runs = recent_runs
-        
+
         if gear_data:
             from app.services.gear_parser import create_empty_gear
             existing_gear = char.parsed_gear if char.parsed_gear else create_empty_gear()
             parsed_gear, equipped_ilvl = parse_equipment_response(gear_data, existing_gear)
             avg_ilvl = calculate_avg_ilvl(parsed_gear)
-            
+
             char.gear_details = gear_data
             char.parsed_gear = parsed_gear
             char.current_ilvl = avg_ilvl
             char.last_gear_sync = datetime.now(timezone.utc)
-            
+
             if stats_data:
                 parsed_stats = parse_character_stats(stats_data)
                 char.stats_data = parsed_stats
@@ -385,14 +399,28 @@ def sync_all_my_characters(cid: int):
         results = []
         for char in chars:
             try:
-                region = char.region if hasattr(char, "region") and char.region else "us"
+                from flask import current_app
+                region = getattr(char, "region", None) or current_app.config.get("BLIZZARD_REGION", "us")
                 blizz = BlizzardService()
                 gear_data = blizz.get_character_equipment(char.character_name, char.realm)
                 stats_data = blizz.get_character_stats(char.character_name, char.realm)
-                
+
+                # Sync character profile (class, spec, role, avatar)
+                profile_data = blizz.get_character_profile(char.character_name, char.realm)
+                if profile_data:
+                    char.class_name = profile_data.get("character_class", {}).get("name")
+                    char.spec = profile_data.get("active_spec", {}).get("name")
+                    if char.class_name and char.spec:
+                        char.role = blizz._determine_role(char.class_name, char.spec)
+                    media_href = profile_data.get("media", {}).get("href")
+                    if media_href:
+                        avatar = blizz._fetch_media_avatar(media_href)
+                        if avatar:
+                            char.avatar_url = avatar
+
                 from datetime import datetime, timezone, timedelta
                 from app.services.raiderio_service import RaiderIOService, parse_raiderio_profile
-                
+
                 now = datetime.now(timezone.utc)
                 if not char.last_raiderio_sync or now - char.last_raiderio_sync > timedelta(hours=6):
                     rio_service = RaiderIOService()
@@ -402,7 +430,7 @@ def sync_all_my_characters(cid: int):
                         char.mythic_plus_score = mplus
                         char.raid_progress = raid
                         char.last_raiderio_sync = now
-                        
+
                         # Update this week's Great Vault entry with M+ runs
                         if recent_runs:
                             current_week = calculate_current_week(region)
@@ -410,30 +438,30 @@ def sync_all_my_characters(cid: int):
                                 GreatVaultEntry.character_id == char.id,
                                 GreatVaultEntry.week_number == current_week
                             ).first()
-                            
+
                             if not vault_entry:
                                 vault_entry = GreatVaultEntry(
                                     character_id=char.id,
                                     week_number=current_week,
                                 )
                                 db.add(vault_entry)
-                                
+
                             vault_entry.m_plus_runs = recent_runs
-                
+
                 if gear_data:
                     from app.services.gear_parser import parse_equipment_response, calculate_avg_ilvl, create_empty_gear
                     from app.services.stats_parser import parse_character_stats
                     from datetime import datetime, timezone
-                    
+
                     existing_gear = char.parsed_gear if char.parsed_gear else create_empty_gear()
                     parsed_gear, equipped_ilvl = parse_equipment_response(gear_data, existing_gear)
                     avg_ilvl = calculate_avg_ilvl(parsed_gear)
-                    
+
                     char.gear_details = gear_data
                     char.parsed_gear = parsed_gear
                     char.current_ilvl = avg_ilvl
                     char.last_gear_sync = datetime.now(timezone.utc)
-                    
+
                     if stats_data:
                         parsed_stats = parse_character_stats(stats_data)
                         char.stats_data = parsed_stats
