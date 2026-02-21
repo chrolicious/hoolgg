@@ -47,3 +47,4 @@ coverage/
 
 # Worktrees
 .worktrees/
+\n# Backups\nbackups/
