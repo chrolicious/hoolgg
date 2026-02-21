@@ -274,22 +274,23 @@ export default function RosterLayoutInner({ children }: { children: React.ReactN
           }}
         >
           {sidebarCollapsed ? (
-            <Icon name="users" size={18} style={{ color: '#8b5cf6' }} />
+            <img src="https://cdn-icons-png.flaticon.com/256/13037/13037142.png" alt="HOOL.GG" style={{ width: 22, height: 22, objectFit: 'contain', filter: 'invert(44%) sepia(87%) saturate(5412%) hue-rotate(244deg) brightness(97%) contrast(93%)' }} />
           ) : (
             <div style={{ minWidth: 0, flex: 1 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <Icon name="users" size={16} style={{ color: '#8b5cf6', flexShrink: 0 }} />
+                <img src="https://cdn-icons-png.flaticon.com/256/13037/13037142.png" alt="HOOL.GG" style={{ width: 20, height: 20, objectFit: 'contain', filter: 'invert(44%) sepia(87%) saturate(5412%) hue-rotate(244deg) brightness(97%) contrast(93%)' }} />
                 <span
                   style={{
-                    fontSize: '0.875rem',
-                    fontWeight: 700,
+                    fontSize: '1rem',
+                    fontWeight: 800,
                     color: '#ffffff',
+                    letterSpacing: '-0.02em',
                     overflow: 'hidden',
                     textOverflow: 'ellipsis',
                     whiteSpace: 'nowrap',
                   }}
                 >
-                  My Roster
+                  HOOL.GG
                 </span>
               </div>
             </div>
