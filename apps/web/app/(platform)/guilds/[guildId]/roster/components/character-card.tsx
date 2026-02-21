@@ -255,7 +255,7 @@ export function CharacterCard({
 
         {/* Top margin to clear the overlapping avatar */}
         <div style={{ marginTop: '24px' }}>
-          <h3 style={{ color: '#fff', fontSize: '18px', fontWeight: 700, margin: '0 0 4px 0' }}>
+          <h3 style={{ color: '#fff', fontSize: '18px', fontWeight: 700, margin: '0 0 4px 0', textShadow: '0 1px 3px rgba(0,0,0,0.8)' }}>
             {characterName}
           </h3>
           <p style={{ fontSize: '12px', color: 'rgba(255,255,255,0.6)', margin: '0 0 4px 0' }}>
@@ -268,7 +268,7 @@ export function CharacterCard({
 
         {/* ilvl Section */}
         <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', marginBottom: '16px' }}>
-          <span style={{ fontSize: '28px', fontWeight: 700, color: '#fff' }}>
+          <span style={{ fontSize: '28px', fontWeight: 700, color: '#fff', textShadow: '0 2px 4px rgba(0,0,0,0.8)' }}>
             {currentIlvl != null ? currentIlvl.toFixed(1) : '—'}
           </span>
           {currentIlvl != null && targetIlvl > 0 && (

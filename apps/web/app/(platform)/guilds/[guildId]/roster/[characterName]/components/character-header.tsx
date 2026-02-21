@@ -167,7 +167,7 @@ export function CharacterHeader({
               size="xl"
             />
 
-            <h2 style={{ color: '#fff', fontSize: '18px', fontWeight: 700, margin: '8px 0 4px 0' }}>
+            <h2 style={{ color: '#fff', fontSize: '18px', fontWeight: 700, margin: '8px 0 4px 0', textShadow: '0 1px 3px rgba(0,0,0,0.8)' }}>
               {character.character_name}
             </h2>
 
@@ -182,7 +182,7 @@ export function CharacterHeader({
             {/* ilvl display — pushed to bottom of left column */}
             <div style={{ marginTop: 'auto' }}>
               <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
-                <span style={{ fontSize: '28px', fontWeight: 700, color: '#fff' }}>
+                <span style={{ fontSize: '28px', fontWeight: 700, color: '#fff', textShadow: '0 2px 4px rgba(0,0,0,0.8)' }}>
                   {character.current_ilvl != null ? character.current_ilvl.toFixed(1) : '\u2014'}
                 </span>
                 {character.current_ilvl != null && targetIlvl > 0 && (
