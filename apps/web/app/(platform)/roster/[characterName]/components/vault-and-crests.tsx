@@ -332,7 +332,6 @@ export function VaultAndCrests({ vaultData, crestsData, characterId,  currentWee
       <Crests
         crestsData={crestsData}
         characterId={characterId}
-        undefined={undefined}
         currentWeek={currentWeek}
         selectedWeek={selectedWeek}
       />

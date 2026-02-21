@@ -321,13 +321,7 @@ export default function RosterLayoutInner({ children }: { children: React.ReactN
         {/* Navigation links */}
         <nav style={{ display: 'flex', flexDirection: 'column', gap: '0.125rem', flex: 1, overflow: 'hidden' }}>
           {navSections.map((section, sectionIndex) => {
-            const visibleItems = section.items.filter((item) => {
-              if (item.alwaysShow) return true;
-              if (item.gmOnly) return isGM;
-              if (item.officerOnly) return isOfficer;
-              if (item.tool) return canAccess(item.tool);
-              return true;
-            });
+            const visibleItems = section.items;
 
             if (visibleItems.length === 0) return null;
 

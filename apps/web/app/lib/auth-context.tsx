@@ -26,18 +26,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     async function checkAuth() {
       try {
-        // Development mode: auto-login test user
-        if (process.env.NODE_ENV === 'development') {
-          if (!cancelled) {
-            setUser({
-              bnet_id: 1,
-              username: 'TestPlayer',
-            });
-            setIsLoading(false);
-            return;
-          }
-        }
-
         const userData = await api.get<User>('/auth/me');
         if (!cancelled) {
           setUser(userData);

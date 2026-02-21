@@ -47,6 +47,7 @@ export function WeeklyTasksSection({
         setIsLoadingWeek(false);
       }
     },
+    [characterId],
   );
 
   useEffect(() => {

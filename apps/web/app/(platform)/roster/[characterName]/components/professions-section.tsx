@@ -120,6 +120,7 @@ export function ProfessionsSection({
         console.error('Failed to save profession progress:', err);
       }
     },
+    [characterId, currentWeek, progress],
   );
 
   const handleCheckboxChange = (

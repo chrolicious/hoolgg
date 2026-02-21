@@ -22,7 +22,7 @@ class RaiderIOService:
             "region": region,
             "realm": realm_slug,
             "name": character_name,
-            "fields": "mythic_plus_scores_by_season:current,raid_progression"
+            "fields": "mythic_plus_scores_by_season:current,raid_progression,mythic_plus_recent_runs"
         }
 
         max_retries = 3
@@ -59,13 +59,13 @@ class RaiderIOService:
         return None
 
 
-def parse_raiderio_profile(data: Dict[str, Any]) -> tuple[float, Optional[Dict[str, Any]]]:
+def parse_raiderio_profile(data: Dict[str, Any]) -> tuple[float, Optional[Dict[str, Any]], list[int]]:
     """
-    Parse Raider.IO profile data to extract M+ score and raid progression.
-    Returns: (mythic_plus_score, raid_progression_json)
+    Parse Raider.IO profile data to extract M+ score, raid progression, and recent M+ runs.
+    Returns: (mythic_plus_score, raid_progression_json, list_of_recent_run_levels)
     """
     if not data:
-        return 0.0, None
+        return 0.0, None, []
         
     mplus_score = 0.0
     seasons = data.get("mythic_plus_scores_by_season", [])
@@ -75,4 +75,8 @@ def parse_raiderio_profile(data: Dict[str, Any]) -> tuple[float, Optional[Dict[s
         
     raid_progress = data.get("raid_progression")
     
-    return mplus_score, raid_progress
+    # Extract recent runs
+    recent_runs = data.get("mythic_plus_recent_runs", [])
+    run_levels = [run.get("mythic_level", 0) for run in recent_runs if "mythic_level" in run]
+    
+    return mplus_score, raid_progress, run_levels
