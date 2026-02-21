@@ -319,8 +319,8 @@ def sync_my_character_gear(cid: int):
         from app.services.stats_parser import parse_character_stats
         from datetime import datetime, timezone
         
-        gear_data = blizz.get_character_equipment(char.realm, char.character_name)
-        stats_data = blizz.get_character_stats(char.realm, char.character_name)
+        gear_data = blizz.get_character_equipment(char.character_name, char.realm)
+        stats_data = blizz.get_character_stats(char.character_name, char.realm)
         
         if gear_data:
             parsed_gear = parse_equipment_response(gear_data)
@@ -362,8 +362,8 @@ def sync_all_my_characters(cid: int):
             try:
                 region = char.region if hasattr(char, "region") and char.region else "us"
                 blizz = BlizzardService()
-                gear_data = blizz.get_character_equipment(char.realm, char.character_name)
-                stats_data = blizz.get_character_stats(char.realm, char.character_name)
+                gear_data = blizz.get_character_equipment(char.character_name, char.realm)
+                stats_data = blizz.get_character_stats(char.character_name, char.realm)
                 
                 if gear_data:
                     from app.services.gear_parser import parse_equipment_response, calculate_avg_ilvl
