@@ -2,13 +2,13 @@
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { useAuth } from '../../../lib/auth-context';
-import { progressApi } from '../../../lib/api';
+import { useAuth } from '../../lib/auth-context';
+import { progressApi } from '../../lib/api';
 import { Icon, Button } from '@hool/design-system';
 import { CharacterCard, formatRelativeTime } from './components/character-card';
 import { AddCharacterCard } from './components/add-character-card';
-import { RosterSkeleton } from '../../../components/loading-skeleton';
-import { ErrorMessage } from '../../../components/error-message';
+import { RosterSkeleton } from '../../components/loading-skeleton';
+import { ErrorMessage } from '../../components/error-message';
 
 interface VaultSlotData {
   unlocked: boolean;

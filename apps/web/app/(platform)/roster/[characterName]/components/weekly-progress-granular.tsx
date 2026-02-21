@@ -2,14 +2,13 @@
 
 import { useState, useEffect } from 'react';
 import { Button, Icon } from '@hool/design-system';
-import { progressApi } from '../../../../../../lib/api';
+import { progressApi } from '../../../../lib/api';
 import { SectionCard } from './section-card';
 import type { VaultResponse } from '../types';
 
 interface WeeklyProgressGranularProps {
   vaultData: VaultResponse | null;
   characterId: number;
-  guildId: string;
   currentWeek: number;
   onVaultUpdate: () => void;
 }
@@ -35,7 +34,6 @@ const labelStyle: React.CSSProperties = {
 export function WeeklyProgressGranular({
   vaultData,
   characterId,
-  guildId,
   currentWeek,
   onVaultUpdate,
 }: WeeklyProgressGranularProps) {
@@ -127,7 +125,7 @@ export function WeeklyProgressGranular({
     setSaveStatus(null);
 
     try {
-      await progressApi.post(`/guilds/${guildId}/characters/${characterId}/vault`, {
+      await progressApi.post(`/users/me/characters/${characterId}/vault`, {
         week_number: currentWeek,
         raid_lfr: raidLfr,
         raid_normal: raidNormal,

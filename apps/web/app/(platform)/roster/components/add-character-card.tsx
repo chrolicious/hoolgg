@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Badge, Icon, Button, Input, Select, type SelectOption } from '@hool/design-system';
-import { progressApi } from '../../../../lib/api';
+import { progressApi } from '../../../lib/api';
 import cardStyles from './character-card.module.css';
 
 interface AddCharacterCardProps {

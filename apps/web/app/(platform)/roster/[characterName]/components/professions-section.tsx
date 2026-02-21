@@ -3,7 +3,7 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { Select, Checkbox, Button } from '@hool/design-system';
 import { SectionCard } from './section-card';
-import { progressApi } from '../../../../../../lib/api';
+import { progressApi } from '../../../../lib/api';
 import type {
   ProfessionsResponse,
   ProfessionWeeklyProgress,
@@ -13,7 +13,6 @@ import { AVAILABLE_PROFESSIONS } from '../types';
 interface ProfessionsSectionProps {
   professionsData: ProfessionsResponse | null;
   characterId: number;
-  guildId: string;
   currentWeek: number;
 }
 
@@ -36,7 +35,6 @@ const inputStyle: React.CSSProperties = {
 export function ProfessionsSection({
   professionsData,
   characterId,
-  guildId,
   currentWeek,
 }: ProfessionsSectionProps) {
   // Initialize profession slots from data
@@ -84,7 +82,7 @@ export function ProfessionsSection({
     setIsSaving(true);
     try {
       await progressApi.put(
-        `/guilds/${guildId}/characters/${characterId}/professions`,
+        `/users/me/characters/${characterId}/professions`,
         {
           professions: [prof1, prof2].filter(Boolean),
         },
@@ -115,14 +113,13 @@ export function ProfessionsSection({
 
       try {
         await progressApi.post(
-          `/guilds/${guildId}/characters/${characterId}/professions/progress`,
+          `/users/me/characters/${characterId}/professions/progress`,
           payload,
         );
       } catch (err) {
         console.error('Failed to save profession progress:', err);
       }
     },
-    [guildId, characterId, currentWeek, progress],
   );
 
   const handleCheckboxChange = (

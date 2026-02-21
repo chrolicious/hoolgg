@@ -3,13 +3,13 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import type { VaultResponse, VaultSlot, CrestsResponse } from '../types';
 import { SectionCard } from './section-card';
-import { progressApi } from '../../../../../../lib/api';
+import { progressApi } from '../../../../lib/api';
 
 interface VaultAndCrestsProps {
   vaultData: VaultResponse | null;
   crestsData: CrestsResponse | null;
   characterId: number;
-  guildId: string;
+  
   currentWeek: number;
   selectedWeek?: number;
 }
@@ -159,14 +159,14 @@ function GreatVault({ vaultData }: { vaultData: VaultResponse | null }) {
 interface CrestsProps {
   crestsData: CrestsResponse | null;
   characterId: number;
-  guildId: string;
+  
   currentWeek: number;
   selectedWeek?: number;
 }
 
 const PER_WEEK_CAP = 100; // Fixed per-type weekly cap (raised from 90 to 100 in Midnight)
 
-function Crests({ crestsData, characterId, guildId, currentWeek, selectedWeek }: CrestsProps) {
+function Crests({ crestsData, characterId,  currentWeek, selectedWeek }: CrestsProps) {
   // Cumulative cap increases by 100 each season week (e.g. W1=100, W2=200, W3=300)
   // Computed purely from week number — allows catch-up on missed weeks
   const displayWeek = selectedWeek ?? currentWeek;
@@ -199,7 +199,7 @@ function Crests({ crestsData, characterId, guildId, currentWeek, selectedWeek }:
     async (crestType: string, collected: number) => {
       try {
         await progressApi.post(
-          `/guilds/${guildId}/characters/${characterId}/crests`,
+          `/users/me/characters/${characterId}/crests`,
           {
             crest_type: crestType,
             week_number: currentWeek,
@@ -210,7 +210,7 @@ function Crests({ crestsData, characterId, guildId, currentWeek, selectedWeek }:
         console.error('Failed to save crest:', err);
       }
     },
-    [guildId, characterId, currentWeek],
+    [ characterId, currentWeek],
   );
 
   const handleChange = (crestKey: string, value: number) => {
@@ -319,7 +319,7 @@ function Crests({ crestsData, characterId, guildId, currentWeek, selectedWeek }:
 
 // ─── Main export ───
 
-export function VaultAndCrests({ vaultData, crestsData, characterId, guildId, currentWeek, selectedWeek }: VaultAndCrestsProps) {
+export function VaultAndCrests({ vaultData, crestsData, characterId,  currentWeek, selectedWeek }: VaultAndCrestsProps) {
   return (
     <div
       style={{
@@ -332,7 +332,7 @@ export function VaultAndCrests({ vaultData, crestsData, characterId, guildId, cu
       <Crests
         crestsData={crestsData}
         characterId={characterId}
-        guildId={guildId}
+        undefined={undefined}
         currentWeek={currentWeek}
         selectedWeek={selectedWeek}
       />

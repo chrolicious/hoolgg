@@ -6,12 +6,11 @@ import type { TasksResponse, TaskItem } from '../types';
 import { hexToRgba } from '../utils';
 import { SectionCard } from './section-card';
 import { Checkbox, Icon } from '@hool/design-system';
-import { progressApi } from '../../../../../../lib/api';
+import { progressApi } from '../../../../lib/api';
 
 interface WeeklyTasksSectionProps {
   tasksData: TasksResponse;
   characterId: number;
-  guildId: string;
   classColor: string;
   selectedWeek?: number;
   onTasksChange?: (tasks: TasksResponse) => void;
@@ -20,7 +19,6 @@ interface WeeklyTasksSectionProps {
 export function WeeklyTasksSection({
   tasksData,
   characterId,
-  guildId,
   classColor,
   selectedWeek,
   onTasksChange,
@@ -37,7 +35,7 @@ export function WeeklyTasksSection({
       setIsLoadingWeek(true);
       try {
         const data = await progressApi.get<TasksResponse>(
-          `/guilds/${guildId}/characters/${characterId}/tasks?week=${week}`,
+          `/users/me/characters/${characterId}/tasks?week=${week}`,
         );
         setWeeklyTasks(data.weekly);
         setDailyTasks(data.daily);
@@ -49,7 +47,6 @@ export function WeeklyTasksSection({
         setIsLoadingWeek(false);
       }
     },
-    [guildId, characterId],
   );
 
   useEffect(() => {
@@ -124,7 +121,7 @@ export function WeeklyTasksSection({
 
     try {
       await progressApi.post(
-        `/guilds/${guildId}/characters/${characterId}/tasks`,
+        `/users/me/characters/${characterId}/tasks`,
         {
           task_id: task.id,
           task_type: type,

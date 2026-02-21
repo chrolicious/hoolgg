@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Button, Icon, Select } from '@hool/design-system';
-import { progressApi } from '../../../../../../lib/api';
+import { progressApi } from '../../../../lib/api';
 import { SectionCard } from './section-card';
 import type { TalentsResponse, TalentBuild } from '../types';
 import { TALENT_CATEGORIES } from '../types';
@@ -10,7 +10,6 @@ import { TALENT_CATEGORIES } from '../types';
 interface TalentBuildsSectionProps {
   talentsData: TalentsResponse | null;
   characterId: number;
-  guildId: string;
 }
 
 const categoryColors: Record<string, { bg: string; text: string }> = {
@@ -38,7 +37,6 @@ const categoryOptions = TALENT_CATEGORIES.map((cat) => ({
 export function TalentBuildsSection({
   talentsData,
   characterId,
-  guildId,
 }: TalentBuildsSectionProps) {
   const [builds, setBuilds] = useState<TalentBuild[]>(talentsData?.builds ?? []);
   const [showAddForm, setShowAddForm] = useState(false);
@@ -51,7 +49,7 @@ export function TalentBuildsSection({
     if (!selectedCategory || !buildName || !talentString) return;
 
     const newBuild = await progressApi.post<TalentBuild>(
-      `/guilds/${guildId}/characters/${characterId}/talents`,
+      `/users/me/characters/${characterId}/talents`,
       {
         category: selectedCategory,
         name: buildName,
@@ -68,7 +66,7 @@ export function TalentBuildsSection({
 
   const handleDelete = async (buildId: number) => {
     await progressApi.delete(
-      `/guilds/${guildId}/characters/${characterId}/talents/${buildId}`,
+      `/users/me/characters/${characterId}/talents/${buildId}`,
     );
     setBuilds((prev) => prev.filter((b) => b.id !== buildId));
   };

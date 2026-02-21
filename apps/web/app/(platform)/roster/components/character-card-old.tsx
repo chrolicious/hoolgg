@@ -25,7 +25,6 @@ const CLASS_COLORS: Record<string, string> = {
 
 interface CharacterCardProps {
   /** Guild ID for navigation */
-  guildId: string;
   /** Character ID for deletion */
   characterId: number;
   /** Character name (unique identifier) */
@@ -66,7 +65,6 @@ interface CharacterCardProps {
  * ```
  */
 export function CharacterCard({
-  guildId,
   characterId,
   characterName,
   realm,
@@ -96,7 +94,7 @@ export function CharacterCard({
     setDeleteError(null);
 
     try {
-      await progressApi.delete(`/guilds/${guildId}/characters/${characterId}`);
+      await progressApi.delete(`/users/me/characters/${characterId}`);
       // Success - trigger parent refresh
       onDelete?.();
     } catch (err: any) {
@@ -198,7 +196,7 @@ export function CharacterCard({
           className="w-full bg-transparent border-none cursor-pointer p-0 text-left flex flex-col gap-3"
           onClick={() =>
             router.push(
-              `/guilds/${guildId}/roster/${encodeURIComponent(characterName)}?realm=${encodeURIComponent(realm)}`
+              `/users/me/roster/${encodeURIComponent(characterName)}?realm=${encodeURIComponent(realm)}`
             )
           }
           aria-label={`View details for ${characterName}`}

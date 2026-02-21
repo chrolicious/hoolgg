@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Avatar, Badge, Button, Icon } from '@hool/design-system';
-import { progressApi } from '../../../../../../lib/api';
+import { progressApi } from '../../../../lib/api';
 import type {
   CharacterRoster,
   GearResponse,
@@ -25,7 +25,6 @@ interface CharacterHeaderProps {
   crestsData: CrestsResponse | null;
   tasksData: TasksResponse | null;
   seasonData: SeasonResponse | null;
-  guildId: string;
   onSync: () => void;
   onDelete: () => void;
   onRefresh: () => void;
@@ -38,7 +37,6 @@ export function CharacterHeader({
   crestsData,
   tasksData,
   seasonData,
-  guildId,
   onSync,
   onDelete,
   onRefresh,
@@ -89,7 +87,7 @@ export function CharacterHeader({
   const handleSync = async () => {
     setIsSyncing(true);
     try {
-      await progressApi.post(`/guilds/${guildId}/characters/${character.id}/gear/sync`);
+      await progressApi.post(`/users/me/characters/${character.id}/gear/sync`);
       onSync();
     } catch (err: any) {
       console.error('Failed to sync character:', err);
@@ -110,7 +108,7 @@ export function CharacterHeader({
     setIsDeleting(true);
     setDeleteError(null);
     try {
-      await progressApi.delete(`/guilds/${guildId}/characters/${character.id}`);
+      await progressApi.delete(`/users/me/characters/${character.id}`);
       setShowDeleteOverlay(false);
       onDelete();
     } catch (err: any) {

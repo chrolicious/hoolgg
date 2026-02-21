@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Avatar, Badge, BadgeVariant, Icon, Button } from '@hool/design-system';
-import { progressApi } from '../../../../../lib/api';
+import { progressApi } from '../../../lib/api';
 import cardStyles from './character-card.module.css';
 
 // Map WoW class display names to Badge variant keys

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Button, Icon, Select, Toggle } from '@hool/design-system';
-import { progressApi } from '../../../../../../lib/api';
+import { progressApi } from '../../../../lib/api';
 import { SectionCard } from './section-card';
 import type { BisResponse, BisItem } from '../types';
 import { BIS_SLOTS } from '../types';
@@ -10,7 +10,7 @@ import { BIS_SLOTS } from '../types';
 interface BisTrackerProps {
   bisData: BisResponse | null;
   characterId: number;
-  guildId: string;
+  
   classColor: string;
 }
 
@@ -30,7 +30,7 @@ const slotOptions = BIS_SLOTS.map((slot) => ({
   label: slot,
 }));
 
-export function BisTracker({ bisData, characterId, guildId, classColor }: BisTrackerProps) {
+export function BisTracker({ bisData, characterId,  classColor }: BisTrackerProps) {
   const [items, setItems] = useState<BisItem[]>(bisData?.items ?? []);
   const [showAddForm, setShowAddForm] = useState(false);
   const [selectedSlot, setSelectedSlot] = useState<string>(BIS_SLOTS[0]);
@@ -48,7 +48,7 @@ export function BisTracker({ bisData, characterId, guildId, classColor }: BisTra
     setIsAdding(true);
     try {
       const result = await progressApi.post<{ item: BisItem }>(
-        `/guilds/${guildId}/characters/${characterId}/bis`,
+        `/users/me/characters/${characterId}/bis`,
         {
           slot: selectedSlot,
           item_name: itemName.trim(),
@@ -77,7 +77,7 @@ export function BisTracker({ bisData, characterId, guildId, classColor }: BisTra
 
     try {
       await progressApi.put(
-        `/guilds/${guildId}/characters/${characterId}/bis/${item.id}`,
+        `/users/me/characters/${characterId}/bis/${item.id}`,
         { obtained: checked },
       );
     } catch (err) {
@@ -95,7 +95,7 @@ export function BisTracker({ bisData, characterId, guildId, classColor }: BisTra
 
     try {
       await progressApi.delete(
-        `/guilds/${guildId}/characters/${characterId}/bis/${item.id}`,
+        `/users/me/characters/${characterId}/bis/${item.id}`,
       );
     } catch (err) {
       console.error('Failed to delete BiS item:', err);

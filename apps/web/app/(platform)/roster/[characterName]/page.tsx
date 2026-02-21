@@ -3,10 +3,10 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, useSearchParams, useRouter } from 'next/navigation';
 import Script from 'next/script';
-import { progressApi } from '../../../../lib/api';
+import { progressApi } from '../../../lib/api';
 import { Card, Icon } from '@hool/design-system';
-import { PageSkeleton } from '../../../../components/loading-skeleton';
-import { ErrorMessage } from '../../../../components/error-message';
+import { PageSkeleton } from '../../../components/loading-skeleton';
+import { ErrorMessage } from '../../../components/error-message';
 import { CLASS_COLORS } from './utils';
 import type {
   CharacterRoster,
@@ -227,7 +227,7 @@ export default function CharacterDetailPage() {
     });
 
     setSectionsLoading(false);
-  }, [guildId]);
+  }, []);
 
   useEffect(() => {
     if (character) {
@@ -241,8 +241,8 @@ export default function CharacterDetailPage() {
   }, [character, fetchSections]);
 
   const handleDelete = useCallback(() => {
-    router.push(`/guilds/${guildId}/roster`);
-  }, [router, guildId]);
+    router.push(`/roster`);
+  }, [router]);
 
   const handleTasksChange = useCallback((tasks: TasksResponse) => {
     setSections((prev) => {
@@ -265,16 +265,16 @@ export default function CharacterDetailPage() {
   }, []);
 
   const handleVaultUpdate = useCallback(async () => {
-    if (!guildId || !character) return;
+    if (!character) return;
     try {
       const vault = await progressApi.get<VaultResponse>(
-        `/guilds/${guildId}/characters/${character.id}/vault`
+        `/users/me/characters/${character.id}/vault`
       );
       setSections((prev) => ({ ...prev, vault }));
     } catch {
       // silently fail — user will see stale data
     }
-  }, [guildId, character]);
+  }, [character]);
 
   // Loading state
   if (isLoading) {
@@ -338,7 +338,6 @@ export default function CharacterDetailPage() {
           crestsData={sections.crests}
           tasksData={sections.tasks}
           seasonData={sections.season}
-          guildId={guildId}
           onSync={handleSync}
           onDelete={handleDelete}
           onRefresh={handleSync}
@@ -376,7 +375,6 @@ export default function CharacterDetailPage() {
                 <WeeklyTasksSection
                   tasksData={sections.tasks}
                   characterId={character.id}
-                  guildId={guildId}
                   classColor={classColor}
                   selectedWeek={selectedWeek}
                   onTasksChange={handleTasksChange}
@@ -392,7 +390,6 @@ export default function CharacterDetailPage() {
                 vaultData={sections.vault}
                 crestsData={sections.crests}
                 characterId={character.id}
-                guildId={guildId}
                 currentWeek={currentWeek}
                 selectedWeek={selectedWeek}
               />
@@ -405,7 +402,6 @@ export default function CharacterDetailPage() {
             <BisTracker
               bisData={sections.bis}
               characterId={character.id}
-              guildId={guildId}
               classColor={classColor}
             />
 
@@ -413,7 +409,6 @@ export default function CharacterDetailPage() {
             <ProfessionsSection
               professionsData={sections.professions}
               characterId={character.id}
-              guildId={guildId}
               currentWeek={currentWeek}
             />
 
@@ -421,14 +416,12 @@ export default function CharacterDetailPage() {
             <TalentBuildsSection
               talentsData={sections.talents}
               characterId={character.id}
-              guildId={guildId}
             />
 
             {/* 9. Weekly Progress Granular */}
             <WeeklyProgressGranular
               vaultData={sections.vault}
               characterId={character.id}
-              guildId={guildId}
               currentWeek={currentWeek}
               onVaultUpdate={handleVaultUpdate}
             />

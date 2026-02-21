@@ -49,6 +49,11 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
+  // Redirect authenticated users to their personal roster from root or legacy routes
+  if (pathname === '/' || pathname === '/guilds') {
+    return NextResponse.redirect(new URL('/roster', request.url));
+  }
+
   return NextResponse.next();
 }
 

@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Card, Icon, Select, Button, type SelectOption } from '@hool/design-system';
 import { progressApi } from '../../../../../lib/api';
-import { useAuth } from '../../../../../lib/auth-context';
+import { useAuth } from '../../../../lib/auth-context';
 
 interface GuildMember {
   character_name: string;
@@ -13,7 +13,6 @@ interface GuildMember {
 }
 
 interface AddCharacterCardProps {
-  guildId: string;
   availableMembers: GuildMember[];
   onCharacterAdded: () => void;
 }
@@ -87,7 +86,6 @@ const SPECS_BY_CLASS: Record<string, { spec: string; role: 'Tank' | 'Healer' | '
   ],
 };
 
-export function AddCharacterCard({ guildId, availableMembers, onCharacterAdded }: AddCharacterCardProps) {
   const { user } = useAuth();
   const [showForm, setShowForm] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -171,7 +169,7 @@ export function AddCharacterCard({ guildId, availableMembers, onCharacterAdded }
     const mainSpecData = availableSpecs.find(s => s.spec === mainSpec);
 
     try {
-      const response = await progressApi.post(`/guilds/${guildId}/characters`, {
+      const response = await progressApi.post(`/users/me/characters`, {
         name: selectedMember,
         realm: characterData.realm,
         class_name: characterData.class_name,
