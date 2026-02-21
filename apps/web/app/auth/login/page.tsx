@@ -2,7 +2,7 @@
 
 import { useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Button, Icon, FadeIn } from '@hool/design-system';
+import { Button, Icon } from '@hool/design-system';
 import { useAuth } from '../../lib/auth-context';
 
 function LoginContent() {
@@ -55,7 +55,7 @@ function LoginContent() {
         gap: '2rem',
       }}
     >
-      <FadeIn duration={0.6}>
+      <div style={{ animation: 'fade-in 0.6s ease-in' }}>
         <div
           style={{
             display: 'flex',
@@ -89,9 +89,9 @@ function LoginContent() {
             Sign in with your Battle.net account to get started.
           </p>
         </div>
-      </FadeIn>
+      </div>
 
-      <FadeIn duration={0.6} delay={0.2}>
+      <div style={{ animation: 'fade-in 0.6s ease-in 0.2s backwards' }}>
         <Button
           variant="primary"
           size="lg"
@@ -100,7 +100,7 @@ function LoginContent() {
         >
           Login with Battle.net
         </Button>
-      </FadeIn>
+      </div>
     </div>
   );
 }
