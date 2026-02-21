@@ -201,7 +201,12 @@ export function CharacterHeader({
           {/* ── Right Column ── */}
           <div style={{ display: 'flex', flexDirection: 'column', flex: 1, alignItems: 'flex-end', gap: '12px', marginTop: '44px' }}>
             {/* Weekly progress bar */}
-            <div style={{ width: '100%' }}>
+            <div 
+              style={{ width: '100%', cursor: 'pointer' }}
+              onClick={() => {
+                document.getElementById('section-tasks')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              }}
+            >
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
                 <span style={{ fontSize: '12px', fontWeight: 600, color: 'rgba(255,255,255,0.7)' }}>Weekly Tasks</span>
                 <span style={{ fontSize: '12px', fontWeight: 700, color: 'rgba(255,255,255,0.9)' }}>
@@ -220,7 +225,12 @@ export function CharacterHeader({
             </div>
 
             {/* Great Vault — per-slot ilvl */}
-            <div style={{ width: '100%' }}>
+            <div 
+              style={{ width: '100%', cursor: 'pointer' }}
+              onClick={() => {
+                document.getElementById('section-vault-crests')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              }}
+            >
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
                 <span style={{ fontSize: '12px', fontWeight: 600, color: 'rgba(255,255,255,0.7)' }}>Great Vault</span>
               </div>
@@ -259,7 +269,12 @@ export function CharacterHeader({
             </div>
 
             {/* Crests summary */}
-            <div style={{ width: '100%' }}>
+            <div 
+              style={{ width: '100%', cursor: 'pointer' }}
+              onClick={() => {
+                document.getElementById('section-vault-crests')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              }}
+            >
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
                 <span style={{ fontSize: '12px', fontWeight: 600, color: 'rgba(255,255,255,0.7)' }}>Crests</span>
               </div>

@@ -359,40 +359,46 @@ export default function CharacterDetailPage() {
           <>
             {/* 2. Season Timeline */}
             {sections.season ? (
-              <SeasonTimeline
-                seasonData={sections.season}
-                currentIlvl={character.current_ilvl}
-                selectedWeek={selectedWeek}
-                onWeekSelect={setSelectedWeek}
-                tasksSummary={sections.tasksSummary}
-              />
+              <div id="section-timeline">
+                <SeasonTimeline
+                  seasonData={sections.season}
+                  currentIlvl={character.current_ilvl}
+                  selectedWeek={selectedWeek}
+                  onWeekSelect={setSelectedWeek}
+                  tasksSummary={sections.tasksSummary}
+                />
+              </div>
             ) : sectionErrors.season ? (
               <SectionError label="Season Timeline" error={sectionErrors.season} />
             ) : null}
 
             {/* 3. Weekly Tasks */}
             {sections.tasks ? (
-              <WeeklyTasksSection
-                tasksData={sections.tasks}
-                characterId={character.id}
-                guildId={guildId}
-                classColor={classColor}
-                selectedWeek={selectedWeek}
-                onTasksChange={handleTasksChange}
-              />
+              <div id="section-tasks">
+                <WeeklyTasksSection
+                  tasksData={sections.tasks}
+                  characterId={character.id}
+                  guildId={guildId}
+                  classColor={classColor}
+                  selectedWeek={selectedWeek}
+                  onTasksChange={handleTasksChange}
+                />
+              </div>
             ) : sectionErrors.tasks ? (
               <SectionError label="Weekly Tasks" error={sectionErrors.tasks} />
             ) : null}
 
             {/* 4. Great Vault + Crests (side-by-side) */}
-            <VaultAndCrests
-              vaultData={sections.vault}
-              crestsData={sections.crests}
-              characterId={character.id}
-              guildId={guildId}
-              currentWeek={currentWeek}
-              selectedWeek={selectedWeek}
-            />
+            <div id="section-vault-crests">
+              <VaultAndCrests
+                vaultData={sections.vault}
+                crestsData={sections.crests}
+                characterId={character.id}
+                guildId={guildId}
+                currentWeek={currentWeek}
+                selectedWeek={selectedWeek}
+              />
+            </div>
 
             {/* 5. Equipment Grid */}
             <EquipmentGrid gearData={sections.gear} />
