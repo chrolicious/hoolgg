@@ -312,7 +312,7 @@ def sync_my_character_gear(cid: int):
             return jsonify({"error": "Character not found"}), 404
             
         region = char.region if hasattr(char, "region") and char.region else "us"
-        blizz = BlizzardService(region)
+        blizz = BlizzardService()
         
         # Use existing sync logic from gear service if we want to be thorough, but for MVP personal roster:
         from app.services.gear_parser import parse_equipment_response, calculate_avg_ilvl
@@ -361,7 +361,7 @@ def sync_all_my_characters(cid: int):
         for char in chars:
             try:
                 region = char.region if hasattr(char, "region") and char.region else "us"
-                blizz = BlizzardService(region)
+                blizz = BlizzardService()
                 gear_data = blizz.get_character_equipment(char.realm, char.character_name)
                 stats_data = blizz.get_character_stats(char.realm, char.character_name)
                 
