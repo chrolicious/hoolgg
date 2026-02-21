@@ -228,10 +228,26 @@ function GuildLayoutInner({ children }: { children: React.ReactNode }) {
     if (href === basePath) {
       return pathname === basePath || pathname === basePath + '/';
     }
+    
+    // Exact match for the overview
     if (href === `${basePath}/roster`) {
-      return pathname.startsWith(`${basePath}/roster`);
+      return pathname === `${basePath}/roster` || pathname === `${basePath}/roster/`;
     }
-    return pathname.startsWith(href);
+
+    // Match exact character paths, accounting for URL encoding
+    const decodedPathname = decodeURIComponent(pathname);
+    const decodedHref = decodeURIComponent(href);
+    
+    if (decodedPathname === decodedHref || decodedPathname === decodedHref + '/') {
+      return true;
+    }
+    
+    // For other sections, prefix match is fine
+    if (!href.includes('/roster/')) {
+      return pathname.startsWith(href);
+    }
+    
+    return false;
   };
 
   if (isLoading) {
