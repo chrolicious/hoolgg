@@ -25,6 +25,8 @@ interface CharacterData {
   current_ilvl: number;
   avatar_url: string | null;
   user_bnet_id: number | null;
+  mythic_plus_score?: number | null;
+  raid_progress?: any;
   progress?: {
     status: 'ahead' | 'behind' | 'unknown';
     target_ilvl?: number;
@@ -203,6 +205,8 @@ function DraggableCard({
         spec={char.spec}
         role={char.role}
         currentIlvl={char.current_ilvl}
+        mythicPlusScore={char.mythic_plus_score}
+        raidProgress={char.raid_progress}
         targetIlvl={targetIlvl}
         weeklyTasksCompleted={char.progress?.weekly_tasks_completed}
         weeklyTasksTotal={char.progress?.weekly_tasks_total}
@@ -310,6 +314,8 @@ export default function RosterPage() {
             current_ilvl: c.current_ilvl,
             avatar_url: c.avatar_url ?? null,
             user_bnet_id: c.user_bnet_id ?? null,
+            mythic_plus_score: c.mythic_plus_score ?? null,
+            raid_progress: c.raid_progress ?? null,
             last_gear_sync: c.last_gear_sync ?? null,
             progress: {
               status: 'unknown' as const,
@@ -533,7 +539,6 @@ export default function RosterPage() {
             key={char.id}
             char={char}
             index={i}
-            guildId={guildId}
             fetchCharacters={fetchCharacters}
             draggedIndex={draggedIndex}
             draggedChar={draggedIndex !== null ? displayCharacters[draggedIndex] : null}

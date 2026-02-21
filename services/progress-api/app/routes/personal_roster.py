@@ -317,10 +317,22 @@ def sync_my_character_gear(cid: int):
         # Use existing sync logic from gear service if we want to be thorough, but for MVP personal roster:
         from app.services.gear_parser import parse_equipment_response, calculate_avg_ilvl
         from app.services.stats_parser import parse_character_stats
-        from datetime import datetime, timezone
+        from app.services.raiderio_service import RaiderIOService, parse_raiderio_profile
+        from datetime import datetime, timezone, timedelta
         
         gear_data = blizz.get_character_equipment(char.character_name, char.realm)
         stats_data = blizz.get_character_stats(char.character_name, char.realm)
+        
+        # Sync Raider.IO if never synced or older than 6 hours
+        now = datetime.now(timezone.utc)
+        if not char.last_raiderio_sync or now - char.last_raiderio_sync > timedelta(hours=6):
+            rio_service = RaiderIOService()
+            rio_data = rio_service.get_character_profile(char.character_name, char.realm, region)
+            if rio_data:
+                mplus, raid = parse_raiderio_profile(rio_data)
+                char.mythic_plus_score = mplus
+                char.raid_progress = raid
+                char.last_raiderio_sync = now
         
         if gear_data:
             from app.services.gear_parser import create_empty_gear
@@ -367,6 +379,19 @@ def sync_all_my_characters(cid: int):
                 blizz = BlizzardService()
                 gear_data = blizz.get_character_equipment(char.character_name, char.realm)
                 stats_data = blizz.get_character_stats(char.character_name, char.realm)
+                
+                from datetime import datetime, timezone, timedelta
+                from app.services.raiderio_service import RaiderIOService, parse_raiderio_profile
+                
+                now = datetime.now(timezone.utc)
+                if not char.last_raiderio_sync or now - char.last_raiderio_sync > timedelta(hours=6):
+                    rio_service = RaiderIOService()
+                    rio_data = rio_service.get_character_profile(char.character_name, char.realm, region)
+                    if rio_data:
+                        mplus, raid = parse_raiderio_profile(rio_data)
+                        char.mythic_plus_score = mplus
+                        char.raid_progress = raid
+                        char.last_raiderio_sync = now
                 
                 if gear_data:
                     from app.services.gear_parser import parse_equipment_response, calculate_avg_ilvl, create_empty_gear

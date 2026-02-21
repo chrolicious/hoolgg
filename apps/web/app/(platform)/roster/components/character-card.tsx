@@ -54,6 +54,8 @@ interface CharacterCardProps {
   spec: string;
   role: 'Tank' | 'Healer' | 'DPS';
   currentIlvl: number | null;
+  mythicPlusScore?: number | null;
+  raidProgress?: any;
   targetIlvl?: number;
   weeklyTasksCompleted?: number;
   weeklyTasksTotal?: number;
@@ -127,6 +129,8 @@ export function CharacterCard({
   spec,
   role,
   currentIlvl,
+  mythicPlusScore,
+  raidProgress,
   targetIlvl = 0,
   weeklyTasksCompleted = 0,
   weeklyTasksTotal = 6,
@@ -265,7 +269,7 @@ export function CharacterCard({
         </div>
 
         {/* ilvl Section */}
-        <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', marginBottom: '16px' }}>
+        <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', marginBottom: '12px' }}>
           <span style={{ fontSize: '28px', fontWeight: 700, color: '#fff', textShadow: '0 2px 4px rgba(0,0,0,0.8)' }}>
             {currentIlvl != null ? currentIlvl.toFixed(1) : '—'}
           </span>
@@ -281,6 +285,24 @@ export function CharacterCard({
           <span style={{ fontSize: '12px', color: 'rgba(255,255,255,0.5)', marginLeft: 'auto' }}>
             Resets in {daysUntilReset}d
           </span>
+        </div>
+
+        {/* Raider.IO M+ and Raid Progression */}
+        <div style={{ display: 'flex', gap: '12px', marginBottom: '16px' }}>
+          {mythicPlusScore != null && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '4px 8px', background: 'rgba(255, 255, 255, 0.05)', borderRadius: '6px', border: '1px solid rgba(255, 255, 255, 0.1)' }}>
+              <Icon name="swords" size={12} style={{ color: '#f59e0b' }} />
+              <span style={{ fontSize: '12px', fontWeight: 600, color: '#fff' }}>{mythicPlusScore.toFixed(0)}</span>
+              <span style={{ fontSize: '10px', color: 'rgba(255,255,255,0.5)' }}>M+</span>
+            </div>
+          )}
+          
+          {raidProgress && raidProgress['nerubar-palace'] && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '4px 8px', background: 'rgba(255, 255, 255, 0.05)', borderRadius: '6px', border: '1px solid rgba(255, 255, 255, 0.1)' }}>
+              <Icon name="skull" size={12} style={{ color: '#ef4444' }} />
+              <span style={{ fontSize: '12px', fontWeight: 600, color: '#fff' }}>{raidProgress['nerubar-palace'].summary}</span>
+            </div>
+          )}
         </div>
 
         {/* Weekly Progress */}
