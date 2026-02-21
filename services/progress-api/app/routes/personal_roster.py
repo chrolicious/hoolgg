@@ -329,10 +329,27 @@ def sync_my_character_gear(cid: int):
             rio_service = RaiderIOService()
             rio_data = rio_service.get_character_profile(char.character_name, char.realm, region)
             if rio_data:
-                mplus, raid = parse_raiderio_profile(rio_data)
+                mplus, raid, recent_runs = parse_raiderio_profile(rio_data)
                 char.mythic_plus_score = mplus
                 char.raid_progress = raid
                 char.last_raiderio_sync = now
+                
+                # Update this week's Great Vault entry with M+ runs
+                if recent_runs:
+                    current_week = calculate_current_week(region)
+                    vault_entry = db.query(GreatVaultEntry).filter(
+                        GreatVaultEntry.character_id == char.id,
+                        GreatVaultEntry.week_number == current_week
+                    ).first()
+                    
+                    if not vault_entry:
+                        vault_entry = GreatVaultEntry(
+                            character_id=char.id,
+                            week_number=current_week,
+                        )
+                        db.add(vault_entry)
+                        
+                    vault_entry.m_plus_runs = recent_runs
         
         if gear_data:
             from app.services.gear_parser import create_empty_gear
@@ -349,11 +366,13 @@ def sync_my_character_gear(cid: int):
                 parsed_stats = parse_character_stats(stats_data)
                 char.stats_data = parsed_stats
                 
-            db.commit()
-            
+        # Always commit any updates (Raider.IO or Gear)
+        db.commit()
+        
+        if gear_data:
             return jsonify({"message": "Synced successfully", "ilvl": avg_ilvl})
-            
-        return jsonify({"error": "Failed to sync from Blizzard"}), 500
+        else:
+            return jsonify({"error": "Failed to sync gear from Blizzard, but Raider.IO updated"}), 206
         
     finally:
         db.close()
@@ -388,10 +407,27 @@ def sync_all_my_characters(cid: int):
                     rio_service = RaiderIOService()
                     rio_data = rio_service.get_character_profile(char.character_name, char.realm, region)
                     if rio_data:
-                        mplus, raid = parse_raiderio_profile(rio_data)
+                        mplus, raid, recent_runs = parse_raiderio_profile(rio_data)
                         char.mythic_plus_score = mplus
                         char.raid_progress = raid
                         char.last_raiderio_sync = now
+                        
+                        # Update this week's Great Vault entry with M+ runs
+                        if recent_runs:
+                            current_week = calculate_current_week(region)
+                            vault_entry = db.query(GreatVaultEntry).filter(
+                                GreatVaultEntry.character_id == char.id,
+                                GreatVaultEntry.week_number == current_week
+                            ).first()
+                            
+                            if not vault_entry:
+                                vault_entry = GreatVaultEntry(
+                                    character_id=char.id,
+                                    week_number=current_week,
+                                )
+                                db.add(vault_entry)
+                                
+                            vault_entry.m_plus_runs = recent_runs
                 
                 if gear_data:
                     from app.services.gear_parser import parse_equipment_response, calculate_avg_ilvl, create_empty_gear
