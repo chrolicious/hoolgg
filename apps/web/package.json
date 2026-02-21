@@ -13,7 +13,7 @@
     "@hool/design-system": "workspace:*",
     "framer-motion": "^11",
     "jose": "^5",
-    "next": "^15",
+    "next": "^15.0.0",
     "react": "^19",
     "react-dom": "^19"
   },
