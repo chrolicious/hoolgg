@@ -206,15 +206,6 @@ def add_my_character():
             display_order=next_order,
         )
         db.add(character)
-        db.flush() # flush to get the ID
-
-        # Auto-trigger sync right after creation
-        from app.routes.gear import sync_gear_internal
-        try:
-            sync_gear_internal(db, character.id, bnet_id)
-        except Exception as e:
-            logger.error(f"Auto-sync failed on creation for {name}-{realm}: {e}")
-            # we don't fail the creation if sync fails
             
         db.commit()
         db.refresh(character)
