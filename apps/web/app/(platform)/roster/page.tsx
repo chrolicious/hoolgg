@@ -433,16 +433,6 @@ export default function RosterPage() {
   const displayCharacters = sortCharacters(characters, sortBy);
   const dragEnabled = sortBy === 'custom';
 
-  const availableMembers = guildMembers
-    ? guildMembers.filter(
-        (m) =>
-          m.bnet_id === user?.bnet_id &&
-          !characters.some(
-            (c) => c.character_name.toLowerCase() === m.character_name.toLowerCase()
-          )
-      )
-    : [];
-
   // Clear drag state if drag ends without a drop (e.g. pressed Escape)
   useEffect(() => {
     const handleDragEnd = () => {
