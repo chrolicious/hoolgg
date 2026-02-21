@@ -1,22 +1,23 @@
 'use client';
 
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { Button, Icon } from '@hool/design-system';
-import { FadeIn } from '@hool/design-system';
+import { useEffect, Suspense } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { Button, Icon, FadeIn } from '@hool/design-system';
 import { useAuth } from '../../lib/auth-context';
 
-export default function LoginPage() {
-  const { isAuthenticated, isLoading, login } = useAuth();
+function LoginContent() {
+  const { login, isAuthenticated, isLoading } = useAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   useEffect(() => {
     if (!isLoading && isAuthenticated) {
-      router.replace('/roster');
+      const redirect = searchParams.get('redirect');
+      router.replace(redirect || '/roster');
     }
-  }, [isLoading, isAuthenticated, router]);
+  }, [isLoading, isAuthenticated, router, searchParams]);
 
-  if (isLoading) {
+  if (isLoading || isAuthenticated) {
     return (
       <div
         style={{
@@ -39,10 +40,6 @@ export default function LoginPage() {
         />
       </div>
     );
-  }
-
-  if (isAuthenticated) {
-    return null;
   }
 
   return (
@@ -88,7 +85,7 @@ export default function LoginPage() {
               lineHeight: 1.6,
             }}
           >
-            Guild management tools for World of Warcraft.
+            Personal WoW Roster & Progression Tracker.
             Sign in with your Battle.net account to get started.
           </p>
         </div>
@@ -105,5 +102,15 @@ export default function LoginPage() {
         </Button>
       </FadeIn>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={
+      <div style={{ minHeight: '100vh', backgroundColor: '#0e0b12' }} />
+    }>
+      <LoginContent />
+    </Suspense>
   );
 }
