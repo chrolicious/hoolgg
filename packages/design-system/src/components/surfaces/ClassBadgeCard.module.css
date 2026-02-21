@@ -1,0 +1,27 @@
+.card {
+  position: relative;
+  border-radius: var(--radius-lg, 12px);
+  padding: var(--spacing-md, 16px);
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.classBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 12px;
+  border-radius: var(--radius-md, 8px);
+  font-weight: 700;
+  font-size: var(--font-size-sm, 14px);
+  margin-bottom: var(--spacing-sm, 12px);
+  transition: all 0.2s ease;
+}
+
+.clickable:hover .classBadge {
+  transform: scale(1.05);
+}

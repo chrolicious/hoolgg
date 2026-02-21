@@ -55,7 +55,9 @@
       "Bash(pnpm --filter @hool/design-system run storybook:*)",
       "Bash(npx storybook dev:*)",
       "Bash(FLASK_ENV=development python -m flask run:*)",
-      "Bash(pgrep:*)"
+      "Bash(pgrep:*)",
+      "Bash(git merge:*)",
+      "Bash(git stash:*)"
     ]
   }
 }

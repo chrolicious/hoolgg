@@ -56,7 +56,7 @@
 }
 
 .wrapper:focus-within .container {
-  border-color: var(--hool-gold-400);
+  border-color: #8b5cf6;
   border-width: 4px;
   padding: calc(var(--input-padding-v, 10px) - 1px) calc(var(--input-padding-h, 20px) - 1px);
 }
@@ -85,9 +85,9 @@
 
 .simple:focus-within .container {
   border-width: 2px;
-  border-color: var(--hool-gold-400);
+  border-color: #8b5cf6;
   padding: calc(var(--input-padding-v, 10px) - 1px) calc(var(--input-padding-h, 20px) - 1px);
-  box-shadow: 0 4px 8px rgba(232, 184, 42, 0.2);
+  box-shadow: 0 4px 8px rgba(139, 92, 246, 0.2);
 }
 
 .simple.error .container {
@@ -199,7 +199,7 @@
 }
 
 .hero:focus-within .darkLayer {
-  background-color: var(--hool-gold-400);
+  background-color: #8b5cf6;
   /* Super sparkly animated pattern on focus */
   background-image:
     radial-gradient(rgba(255, 255, 255, 0.4) 1px, transparent 0),
@@ -316,7 +316,7 @@
   opacity: 0;
   animation: fadeInHalftone 0.2s ease forwards, scrollHalftone 1s linear infinite;
   background-image:
-    linear-gradient(to right, transparent, var(--halftone-color, rgba(232, 184, 42, 0.15))),
+    linear-gradient(to right, transparent, var(--halftone-color, rgba(139, 92, 246, 0.15))),
     radial-gradient(var(--halftone-dots, rgba(0, 0, 0, 0.08)) 1px, transparent 0),
     radial-gradient(var(--halftone-dots, rgba(0, 0, 0, 0.08)) 1px, transparent 0);
   background-size: auto, 6px 6px, 6px 6px;
@@ -325,7 +325,7 @@
 
 /* Default variant halftone */
 .default .halftone {
-  --halftone-color: rgba(232, 184, 42, 0.08);
+  --halftone-color: rgba(139, 92, 246, 0.08);
   --halftone-dots: rgba(0, 0, 0, 0.04);
 }
 
@@ -337,7 +337,7 @@
 
 /* Hero variant halftone */
 .hero .halftone {
-  --halftone-color: rgba(232, 184, 42, 0.1);
+  --halftone-color: rgba(139, 92, 246, 0.1);
   --halftone-dots: rgba(0, 0, 0, 0.04);
   border-radius: 14px;
   border-top-left-radius: 0;

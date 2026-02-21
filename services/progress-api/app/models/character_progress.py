@@ -13,7 +13,7 @@ class CharacterProgress(Base):
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     character_name = Column(String(255), nullable=False, index=True)
     realm = Column(String(255), nullable=False, index=True)
-    guild_id = Column(Integer, nullable=False, index=True)
+    guild_id = Column(Integer, nullable=True, index=True)
 
     # Character info
     class_name = Column(String(50), nullable=True)
@@ -31,6 +31,11 @@ class CharacterProgress(Base):
     gear_details = Column(JSON, nullable=True)  # Full gear breakdown from Blizzard API
     parsed_gear = Column(JSON, nullable=True)  # Processed gear data
     character_stats = Column(JSON, nullable=True)  # Character stats
+    
+    # Raider.IO tracking
+    mythic_plus_score = Column(Float, nullable=True)
+    raid_progress = Column(JSON, nullable=True)
+    last_raiderio_sync = Column(DateTime(timezone=True), nullable=True)
 
     # Metadata
     last_updated = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
@@ -39,7 +44,7 @@ class CharacterProgress(Base):
 
     # Composite index for character lookup
     __table_args__ = (
-        Index('idx_character_guild', 'character_name', 'realm', 'guild_id'),
+        Index('idx_character_user', 'character_name', 'realm', 'user_bnet_id'),
     )
 
     def __repr__(self):
@@ -63,6 +68,9 @@ class CharacterProgress(Base):
             "gear_details": self.gear_details,
             "parsed_gear": self.parsed_gear,
             "character_stats": self.character_stats,
+            "mythic_plus_score": self.mythic_plus_score,
+            "raid_progress": self.raid_progress,
+            "last_raiderio_sync": self.last_raiderio_sync.isoformat() if self.last_raiderio_sync else None,
             "last_updated": self.last_updated.isoformat() if self.last_updated else None,
             "created_at": self.created_at.isoformat() if self.created_at else None,
             "last_gear_sync": self.last_gear_sync.isoformat() if self.last_gear_sync else None,

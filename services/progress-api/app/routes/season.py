@@ -12,7 +12,7 @@ from app.services.season_service import (
 from app.services.task_definitions import get_task_definitions
 import logging
 
-bp = Blueprint("season", __name__, url_prefix="/guilds")
+bp = Blueprint("season", __name__, url_prefix="/users/me")
 logger = logging.getLogger(__name__)
 
 
@@ -35,17 +35,10 @@ def get_current_user_from_token():
     return payload.get("bnet_id")
 
 
-def check_permission(bnet_id: int, guild_id: int, tool: str = "progress"):
-    """Check user permission for guild tool access"""
-    import os
-    if os.getenv("FLASK_ENV") == "development":
-        return {"allowed": True, "rank_id": 0}
-    perm_service = PermissionService()
-    return perm_service.check_permission(bnet_id, guild_id, tool)
 
 
-@bp.route("/<int:gid>/season", methods=["GET"])
-def get_season_timeline(gid: int):
+@bp.route("/season", methods=["GET"])
+def get_season_timeline():
     """
     Get season timeline with current week, all week dates, and targets.
 
@@ -55,9 +48,6 @@ def get_season_timeline(gid: int):
     if not bnet_id:
         return jsonify({"error": "Not authenticated"}), 401
 
-    perm_check = check_permission(bnet_id, gid)
-    if not perm_check.get("allowed"):
-        return jsonify({"error": "Access denied"}), 403
 
     region = request.args.get("region", "us")
     current_week = calculate_current_week(region)
@@ -79,7 +69,6 @@ def get_season_timeline(gid: int):
         })
 
     return jsonify({
-        "guild_id": gid,
         "region": region,
         "current_week": current_week,
         "current_target_ilvl": get_weekly_target(current_week),
@@ -88,8 +77,8 @@ def get_season_timeline(gid: int):
     }), 200
 
 
-@bp.route("/<int:gid>/season/tasks/<int:week>", methods=["GET"])
-def get_week_tasks(gid: int, week: int):
+@bp.route("/season/tasks/<int:week>", methods=["GET"])
+def get_week_tasks(week: int):
     """
     Get task definitions for a specific week.
 
@@ -99,9 +88,6 @@ def get_week_tasks(gid: int, week: int):
     if not bnet_id:
         return jsonify({"error": "Not authenticated"}), 401
 
-    perm_check = check_permission(bnet_id, gid)
-    if not perm_check.get("allowed"):
-        return jsonify({"error": "Access denied"}), 403
 
     task_defs = get_task_definitions(week)
 

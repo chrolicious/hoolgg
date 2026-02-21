@@ -9,11 +9,34 @@ services:
       POSTGRES_DB: hoolgg
     volumes:
       - pgdata:/var/lib/postgresql/data
+    restart: always
+
+  pgbackups:
+    image: prodrigestivill/postgres-backup-local
+    restart: always
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_DB: hoolgg
+      POSTGRES_USER: hool
+      POSTGRES_PASSWORD: hool
+      # Backup automatically every day at midnight
+      SCHEDULE: '@daily'
+      # Backup retention policy
+      BACKUP_KEEP_DAYS: 7
+      BACKUP_KEEP_WEEKS: 4
+      BACKUP_KEEP_MONTHS: 6
+      HEALTHCHECK_PORT: 8080
+    volumes:
+      # Saves the backups locally in the ./backups folder on the host machine
+      - ./backups:/backups
+    depends_on:
+      - postgres
 
   redis:
     image: redis:7-alpine
     ports:
       - "6379:6379"
+    restart: always
 
 volumes:
   pgdata:

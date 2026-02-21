@@ -207,3 +207,92 @@ export function PageSkeleton() {
     </>
   );
 }
+
+export function RosterSkeleton({ count = 3 }: { count?: number }) {
+  return (
+    <>
+      <style>{pulseKeyframes}</style>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '40px' }}>
+        <div>
+          <SkeletonBlock width="200px" height={32} />
+          <div style={{ height: 4 }} />
+          <SkeletonBlock width="300px" height={16} />
+        </div>
+        
+        {/* Toolbar skeleton */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div style={{ display: 'flex', gap: '6px' }}>
+            <SkeletonBlock width={80} height={28} borderRadius={14} />
+            <SkeletonBlock width={80} height={28} borderRadius={14} />
+            <SkeletonBlock width={80} height={28} borderRadius={14} />
+          </div>
+          <SkeletonBlock width={100} height={28} borderRadius={14} />
+        </div>
+
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(370px, 1fr))',
+            gap: '40px 16px',
+          }}
+        >
+          {Array.from({ length: count }).map((_, i) => (
+            <div key={i} style={{ position: 'relative', paddingTop: '32px' }}>
+              {/* Avatar Skeleton */}
+              <div style={{ position: 'absolute', top: 0, left: '16px', zIndex: 10 }}>
+                <SkeletonBlock width={64} height={64} borderRadius={9999} />
+              </div>
+              
+              <div
+                style={{
+                  borderRadius: 16,
+                  border: '1px solid rgba(255, 255, 255, 0.06)',
+                  background: 'rgba(255, 255, 255, 0.03)',
+                  padding: '24px 20px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '16px',
+                  height: '100%',
+                }}
+              >
+                <div style={{ marginTop: '20px' }}>
+                  <SkeletonBlock width="40%" height={24} style={{ marginBottom: 8 }} />
+                  <SkeletonBlock width="60%" height={14} />
+                </div>
+                
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
+                  <SkeletonBlock width={60} height={36} />
+                  <SkeletonBlock width={40} height={20} />
+                </div>
+
+                <div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
+                    <SkeletonBlock width={80} height={14} />
+                    <SkeletonBlock width={30} height={14} />
+                  </div>
+                  <SkeletonBlock width="100%" height={8} borderRadius={4} />
+                </div>
+
+                <div>
+                  <SkeletonBlock width={80} height={14} style={{ marginBottom: 8 }} />
+                  <div style={{ display: 'grid', gridTemplateColumns: '36px 1fr 1fr 1fr', gap: '4px', marginBottom: 4 }}>
+                    <SkeletonBlock width="100%" height={24} />
+                    <SkeletonBlock width="100%" height={24} />
+                    <SkeletonBlock width="100%" height={24} />
+                    <SkeletonBlock width="100%" height={24} />
+                  </div>
+                  <div style={{ display: 'grid', gridTemplateColumns: '36px 1fr 1fr 1fr', gap: '4px', marginBottom: 4 }}>
+                    <SkeletonBlock width="100%" height={24} />
+                    <SkeletonBlock width="100%" height={24} />
+                    <SkeletonBlock width="100%" height={24} />
+                    <SkeletonBlock width="100%" height={24} />
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </>
+  );
+}

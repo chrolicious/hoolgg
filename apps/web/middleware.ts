@@ -43,10 +43,21 @@ export function middleware(request: NextRequest) {
     request.cookies.has('refresh_token') ||
     request.cookies.has('refresh_token_cookie');
 
+  // If NOT authenticated, block access to protected routes
   if (!hasAccessToken && !hasRefreshToken) {
+    // If they are trying to access the root, just let them. The root page handles its own redirect to /auth/login.
+    if (pathname === '/') {
+        return NextResponse.next();
+    }
+    
     const loginUrl = new URL('/auth/login', request.url);
     loginUrl.searchParams.set('redirect', pathname);
     return NextResponse.redirect(loginUrl);
+  }
+
+  // If AUTHENTICATED, redirect legacy routes to the new roster
+  if (pathname === '/' || pathname === '/guilds' || pathname === '/guilds/') {
+    return NextResponse.redirect(new URL('/roster', request.url));
   }
 
   return NextResponse.next();

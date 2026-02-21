@@ -7,7 +7,7 @@ from app.models.talent_build import TalentBuild
 from app.services.permission_service import PermissionService
 import logging
 
-bp = Blueprint("talents", __name__, url_prefix="/guilds")
+bp = Blueprint("talents", __name__, url_prefix="/users/me")
 logger = logging.getLogger(__name__)
 
 
@@ -30,17 +30,10 @@ def get_current_user_from_token():
     return payload.get("bnet_id")
 
 
-def check_permission(bnet_id: int, guild_id: int, tool: str = "progress"):
-    """Check user permission for guild tool access"""
-    import os
-    if os.getenv("FLASK_ENV") == "development":
-        return {"allowed": True, "rank_id": 0}
-    perm_service = PermissionService()
-    return perm_service.check_permission(bnet_id, guild_id, tool)
 
 
-@bp.route("/<int:gid>/characters/<int:cid>/talents", methods=["GET"])
-def list_talent_builds(gid: int, cid: int):
+@bp.route("/characters/<int:cid>/talents", methods=["GET"])
+def list_talent_builds(cid: int):
     """
     List all saved talent builds for a character.
 
@@ -50,9 +43,6 @@ def list_talent_builds(gid: int, cid: int):
     if not bnet_id:
         return jsonify({"error": "Not authenticated"}), 401
 
-    perm_check = check_permission(bnet_id, gid)
-    if not perm_check.get("allowed"):
-        return jsonify({"error": "Access denied"}), 403
 
     db = next(get_db())
 
@@ -62,7 +52,7 @@ def list_talent_builds(gid: int, cid: int):
             db.query(CharacterProgress)
             .filter(
                 CharacterProgress.id == cid,
-                CharacterProgress.guild_id == gid,
+                CharacterProgress.user_bnet_id == bnet_id,
             )
             .first()
         )
@@ -88,8 +78,8 @@ def list_talent_builds(gid: int, cid: int):
         db.close()
 
 
-@bp.route("/<int:gid>/characters/<int:cid>/talents", methods=["POST"])
-def add_talent_build(gid: int, cid: int):
+@bp.route("/characters/<int:cid>/talents", methods=["POST"])
+def add_talent_build(cid: int):
     """
     Add a talent build to the character.
 
@@ -104,9 +94,6 @@ def add_talent_build(gid: int, cid: int):
     if not bnet_id:
         return jsonify({"error": "Not authenticated"}), 401
 
-    perm_check = check_permission(bnet_id, gid)
-    if not perm_check.get("allowed"):
-        return jsonify({"error": "Access denied"}), 403
 
     data = request.get_json()
     if not data:
@@ -127,7 +114,7 @@ def add_talent_build(gid: int, cid: int):
             db.query(CharacterProgress)
             .filter(
                 CharacterProgress.id == cid,
-                CharacterProgress.guild_id == gid,
+                CharacterProgress.user_bnet_id == bnet_id,
             )
             .first()
         )
@@ -159,8 +146,8 @@ def add_talent_build(gid: int, cid: int):
         db.close()
 
 
-@bp.route("/<int:gid>/characters/<int:cid>/talents/<int:talent_id>", methods=["PUT"])
-def update_talent_build(gid: int, cid: int, talent_id: int):
+@bp.route("/characters/<int:cid>/talents/<int:talent_id>", methods=["PUT"])
+def update_talent_build(cid: int, talent_id: int):
     """
     Update a talent build.
 
@@ -175,9 +162,6 @@ def update_talent_build(gid: int, cid: int, talent_id: int):
     if not bnet_id:
         return jsonify({"error": "Not authenticated"}), 401
 
-    perm_check = check_permission(bnet_id, gid)
-    if not perm_check.get("allowed"):
-        return jsonify({"error": "Access denied"}), 403
 
     data = request.get_json()
     if not data:
@@ -191,7 +175,7 @@ def update_talent_build(gid: int, cid: int, talent_id: int):
             db.query(CharacterProgress)
             .filter(
                 CharacterProgress.id == cid,
-                CharacterProgress.guild_id == gid,
+                CharacterProgress.user_bnet_id == bnet_id,
             )
             .first()
         )
@@ -232,8 +216,8 @@ def update_talent_build(gid: int, cid: int, talent_id: int):
         db.close()
 
 
-@bp.route("/<int:gid>/characters/<int:cid>/talents/<int:talent_id>", methods=["DELETE"])
-def delete_talent_build(gid: int, cid: int, talent_id: int):
+@bp.route("/characters/<int:cid>/talents/<int:talent_id>", methods=["DELETE"])
+def delete_talent_build(cid: int, talent_id: int):
     """
     Delete a talent build.
     """
@@ -241,9 +225,6 @@ def delete_talent_build(gid: int, cid: int, talent_id: int):
     if not bnet_id:
         return jsonify({"error": "Not authenticated"}), 401
 
-    perm_check = check_permission(bnet_id, gid)
-    if not perm_check.get("allowed"):
-        return jsonify({"error": "Access denied"}), 403
 
     db = next(get_db())
 
@@ -253,7 +234,7 @@ def delete_talent_build(gid: int, cid: int, talent_id: int):
             db.query(CharacterProgress)
             .filter(
                 CharacterProgress.id == cid,
-                CharacterProgress.guild_id == gid,
+                CharacterProgress.user_bnet_id == bnet_id,
             )
             .first()
         )

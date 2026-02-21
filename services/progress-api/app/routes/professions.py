@@ -9,7 +9,7 @@ from app.services.permission_service import PermissionService
 from app.services.season_service import calculate_current_week
 import logging
 
-bp = Blueprint("professions", __name__, url_prefix="/guilds")
+bp = Blueprint("professions", __name__, url_prefix="/users/me")
 logger = logging.getLogger(__name__)
 
 # Available professions in WoW
@@ -39,17 +39,10 @@ def get_current_user_from_token():
     return payload.get("bnet_id")
 
 
-def check_permission(bnet_id: int, guild_id: int, tool: str = "progress"):
-    """Check user permission for guild tool access"""
-    import os
-    if os.getenv("FLASK_ENV") == "development":
-        return {"allowed": True, "rank_id": 0}
-    perm_service = PermissionService()
-    return perm_service.check_permission(bnet_id, guild_id, tool)
 
 
-@bp.route("/<int:gid>/characters/<int:cid>/professions", methods=["GET"])
-def get_professions(gid: int, cid: int):
+@bp.route("/characters/<int:cid>/professions", methods=["GET"])
+def get_professions(cid: int):
     """
     Get profession data for a character.
 
@@ -59,9 +52,6 @@ def get_professions(gid: int, cid: int):
     if not bnet_id:
         return jsonify({"error": "Not authenticated"}), 401
 
-    perm_check = check_permission(bnet_id, gid)
-    if not perm_check.get("allowed"):
-        return jsonify({"error": "Access denied"}), 403
 
     db = next(get_db())
 
@@ -71,7 +61,7 @@ def get_professions(gid: int, cid: int):
             db.query(CharacterProgress)
             .filter(
                 CharacterProgress.id == cid,
-                CharacterProgress.guild_id == gid,
+                CharacterProgress.user_bnet_id == bnet_id,
             )
             .first()
         )
@@ -123,8 +113,8 @@ def get_professions(gid: int, cid: int):
         db.close()
 
 
-@bp.route("/<int:gid>/characters/<int:cid>/professions", methods=["PUT"])
-def set_professions(gid: int, cid: int):
+@bp.route("/characters/<int:cid>/professions", methods=["PUT"])
+def set_professions(cid: int):
     """
     Set profession slots for a character (replaces existing).
 
@@ -137,9 +127,6 @@ def set_professions(gid: int, cid: int):
     if not bnet_id:
         return jsonify({"error": "Not authenticated"}), 401
 
-    perm_check = check_permission(bnet_id, gid)
-    if not perm_check.get("allowed"):
-        return jsonify({"error": "Access denied"}), 403
 
     data = request.get_json()
     if not data or "professions" not in data:
@@ -162,7 +149,7 @@ def set_professions(gid: int, cid: int):
             db.query(CharacterProgress)
             .filter(
                 CharacterProgress.id == cid,
-                CharacterProgress.guild_id == gid,
+                CharacterProgress.user_bnet_id == bnet_id,
             )
             .first()
         )
@@ -206,8 +193,8 @@ def set_professions(gid: int, cid: int):
         db.close()
 
 
-@bp.route("/<int:gid>/characters/<int:cid>/professions/progress", methods=["POST"])
-def update_profession_progress(gid: int, cid: int):
+@bp.route("/characters/<int:cid>/professions/progress", methods=["POST"])
+def update_profession_progress(cid: int):
     """
     Update weekly profession progress (upsert).
 
@@ -226,9 +213,6 @@ def update_profession_progress(gid: int, cid: int):
     if not bnet_id:
         return jsonify({"error": "Not authenticated"}), 401
 
-    perm_check = check_permission(bnet_id, gid)
-    if not perm_check.get("allowed"):
-        return jsonify({"error": "Access denied"}), 403
 
     data = request.get_json()
     if not data:
@@ -248,7 +232,7 @@ def update_profession_progress(gid: int, cid: int):
             db.query(CharacterProgress)
             .filter(
                 CharacterProgress.id == cid,
-                CharacterProgress.guild_id == gid,
+                CharacterProgress.user_bnet_id == bnet_id,
             )
             .first()
         )

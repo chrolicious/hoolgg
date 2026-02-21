@@ -50,8 +50,6 @@ def create_app() -> Flask:
     # Register blueprints
     from app.routes import (
         health,
-        progress,
-        characters,
         bis,
         crests,
         gear,
@@ -61,11 +59,10 @@ def create_app() -> Flask:
         vault,
         season,
         reference,
+        personal_roster,
     )
 
     app.register_blueprint(health.bp)
-    app.register_blueprint(progress.bp)
-    app.register_blueprint(characters.bp)
     app.register_blueprint(bis.bp)
     app.register_blueprint(crests.bp)
     app.register_blueprint(gear.bp)
@@ -75,5 +72,6 @@ def create_app() -> Flask:
     app.register_blueprint(vault.bp)
     app.register_blueprint(season.bp)
     app.register_blueprint(reference.bp)
+    app.register_blueprint(personal_roster.bp)
 
     return app

@@ -7,7 +7,7 @@ from app.models.bis_item import BisItem
 from app.services.permission_service import PermissionService
 import logging
 
-bp = Blueprint("bis", __name__, url_prefix="/guilds")
+bp = Blueprint("bis", __name__, url_prefix="/users/me")
 logger = logging.getLogger(__name__)
 
 
@@ -30,17 +30,10 @@ def get_current_user_from_token():
     return payload.get("bnet_id")
 
 
-def check_permission(bnet_id: int, guild_id: int, tool: str = "progress"):
-    """Check user permission for guild tool access"""
-    import os
-    if os.getenv("FLASK_ENV") == "development":
-        return {"allowed": True, "rank_id": 0}
-    perm_service = PermissionService()
-    return perm_service.check_permission(bnet_id, guild_id, tool)
 
 
-@bp.route("/<int:gid>/characters/<int:cid>/bis", methods=["GET"])
-def list_bis_items(gid: int, cid: int):
+@bp.route("/characters/<int:cid>/bis", methods=["GET"])
+def list_bis_items(cid: int):
     """
     List all BiS items for a character.
 
@@ -50,9 +43,6 @@ def list_bis_items(gid: int, cid: int):
     if not bnet_id:
         return jsonify({"error": "Not authenticated"}), 401
 
-    perm_check = check_permission(bnet_id, gid)
-    if not perm_check.get("allowed"):
-        return jsonify({"error": "Access denied"}), 403
 
     db = next(get_db())
 
@@ -62,7 +52,7 @@ def list_bis_items(gid: int, cid: int):
             db.query(CharacterProgress)
             .filter(
                 CharacterProgress.id == cid,
-                CharacterProgress.guild_id == gid,
+                CharacterProgress.user_bnet_id == bnet_id,
             )
             .first()
         )
@@ -91,8 +81,8 @@ def list_bis_items(gid: int, cid: int):
         db.close()
 
 
-@bp.route("/<int:gid>/characters/<int:cid>/bis", methods=["POST"])
-def add_bis_item(gid: int, cid: int):
+@bp.route("/characters/<int:cid>/bis", methods=["POST"])
+def add_bis_item(cid: int):
     """
     Add a BiS item to the character's list.
 
@@ -108,9 +98,6 @@ def add_bis_item(gid: int, cid: int):
     if not bnet_id:
         return jsonify({"error": "Not authenticated"}), 401
 
-    perm_check = check_permission(bnet_id, gid)
-    if not perm_check.get("allowed"):
-        return jsonify({"error": "Access denied"}), 403
 
     data = request.get_json()
     if not data:
@@ -129,7 +116,7 @@ def add_bis_item(gid: int, cid: int):
             db.query(CharacterProgress)
             .filter(
                 CharacterProgress.id == cid,
-                CharacterProgress.guild_id == gid,
+                CharacterProgress.user_bnet_id == bnet_id,
             )
             .first()
         )
@@ -160,8 +147,8 @@ def add_bis_item(gid: int, cid: int):
         db.close()
 
 
-@bp.route("/<int:gid>/characters/<int:cid>/bis/<int:bis_id>", methods=["PUT"])
-def update_bis_item(gid: int, cid: int, bis_id: int):
+@bp.route("/characters/<int:cid>/bis/<int:bis_id>", methods=["PUT"])
+def update_bis_item(cid: int, bis_id: int):
     """
     Update a BiS item.
 
@@ -178,9 +165,6 @@ def update_bis_item(gid: int, cid: int, bis_id: int):
     if not bnet_id:
         return jsonify({"error": "Not authenticated"}), 401
 
-    perm_check = check_permission(bnet_id, gid)
-    if not perm_check.get("allowed"):
-        return jsonify({"error": "Access denied"}), 403
 
     data = request.get_json()
     if not data:
@@ -194,7 +178,7 @@ def update_bis_item(gid: int, cid: int, bis_id: int):
             db.query(CharacterProgress)
             .filter(
                 CharacterProgress.id == cid,
-                CharacterProgress.guild_id == gid,
+                CharacterProgress.user_bnet_id == bnet_id,
             )
             .first()
         )
@@ -239,8 +223,8 @@ def update_bis_item(gid: int, cid: int, bis_id: int):
         db.close()
 
 
-@bp.route("/<int:gid>/characters/<int:cid>/bis/<int:bis_id>", methods=["DELETE"])
-def delete_bis_item(gid: int, cid: int, bis_id: int):
+@bp.route("/characters/<int:cid>/bis/<int:bis_id>", methods=["DELETE"])
+def delete_bis_item(cid: int, bis_id: int):
     """
     Delete a BiS item from the character's list.
     """
@@ -248,9 +232,6 @@ def delete_bis_item(gid: int, cid: int, bis_id: int):
     if not bnet_id:
         return jsonify({"error": "Not authenticated"}), 401
 
-    perm_check = check_permission(bnet_id, gid)
-    if not perm_check.get("allowed"):
-        return jsonify({"error": "Access denied"}), 403
 
     db = next(get_db())
 
@@ -260,7 +241,7 @@ def delete_bis_item(gid: int, cid: int, bis_id: int):
             db.query(CharacterProgress)
             .filter(
                 CharacterProgress.id == cid,
-                CharacterProgress.guild_id == gid,
+                CharacterProgress.user_bnet_id == bnet_id,
             )
             .first()
         )
