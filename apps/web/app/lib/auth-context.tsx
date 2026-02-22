@@ -15,7 +15,7 @@ interface AuthContextValue {
 const AuthContext = createContext<AuthContextValue | null>(null);
 
 const GUILD_API_URL =
-  process.env.NEXT_PUBLIC_GUILD_API_URL || 'http://localhost:5000';
+  process.env.NEXT_PUBLIC_GUILD_API_URL || 'http://localhost:5010';
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);

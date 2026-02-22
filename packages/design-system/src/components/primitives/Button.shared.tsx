@@ -28,13 +28,13 @@ export const variantVars = {
     '--btn-dot-color': 'rgba(0, 0, 0, 0.08)',
   },
   purple: {
-    '--btn-bg': '#C81EE8',
+    '--btn-bg': colors.purple[700],
     '--btn-color': '#FFFFFF',
     '--btn-border-color': colors.sticker.border,
     '--btn-outline-color': colors.sticker.outline,
-    '--btn-hover-bg': '#E91EFF',
-    '--btn-hover-bg-fade': `rgba(233, 30, 255, 0.9)`,
-    '--btn-dot-color': 'rgba(255, 255, 255, 0.4)',
+    '--btn-hover-bg': colors.purple[500],
+    '--btn-hover-bg-fade': `rgba(168, 85, 247, 0.9)`,
+    '--btn-dot-color': 'rgba(255, 255, 255, 0.3)',
   },
   warning: {
     '--btn-bg': '#0070E6',

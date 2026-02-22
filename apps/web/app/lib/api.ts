@@ -12,11 +12,11 @@ export class ApiError extends Error {
 }
 
 const GUILD_API_URL =
-  process.env.NEXT_PUBLIC_GUILD_API_URL || 'http://localhost:5000';
+  process.env.NEXT_PUBLIC_GUILD_API_URL || 'http://localhost:5010';
 const PROGRESS_API_URL =
-  process.env.NEXT_PUBLIC_PROGRESS_API_URL || 'http://localhost:5002';
+  process.env.NEXT_PUBLIC_PROGRESS_API_URL || 'http://localhost:5001';
 const RECRUITMENT_API_URL =
-  process.env.NEXT_PUBLIC_RECRUITMENT_API_URL || 'http://localhost:5001';
+  process.env.NEXT_PUBLIC_RECRUITMENT_API_URL || 'http://localhost:5002';
 
 type RequestOptions = Omit<RequestInit, 'method' | 'body'> & {
   params?: Record<string, string>;

@@ -13,6 +13,7 @@ class CharacterProgress(Base):
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     character_name = Column(String(255), nullable=False, index=True)
     realm = Column(String(255), nullable=False, index=True)
+    region = Column(String(10), nullable=True, default='us')
     guild_id = Column(Integer, nullable=True, index=True)
 
     # Character info
@@ -56,6 +57,7 @@ class CharacterProgress(Base):
             "id": self.id,
             "character_name": self.character_name,
             "realm": self.realm,
+            "region": self.region or "us",
             "guild_id": self.guild_id,
             "class_name": self.class_name,
             "spec": self.spec,

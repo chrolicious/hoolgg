@@ -11,19 +11,21 @@ logger = logging.getLogger(__name__)
 class BlizzardService:
     """Service for interacting with Blizzard API"""
 
-    def __init__(self):
+    def __init__(self, region: Optional[str] = None):
         self.access_token: Optional[str] = None
         self.token_expires_at: Optional[float] = None
+        self._region = region  # Per-instance region override
+
+    def _get_region(self) -> str:
+        return self._region or current_app.config.get("BLIZZARD_REGION", "us")
 
     def _get_oauth_url(self) -> str:
         """Get OAuth URL for region"""
-        region = current_app.config.get("BLIZZARD_REGION", "us")
-        return f"https://{region}.battle.net"
+        return f"https://{self._get_region()}.battle.net"
 
     def _get_api_url(self) -> str:
         """Get API URL for region"""
-        region = current_app.config.get("BLIZZARD_REGION", "us")
-        return f"https://{region}.api.blizzard.com"
+        return f"https://{self._get_region()}.api.blizzard.com"
 
     def _get_access_token(self) -> Optional[str]:
         """
@@ -88,8 +90,7 @@ class BlizzardService:
             return None
 
         api_url = self._get_api_url()
-        region = current_app.config.get("BLIZZARD_REGION", "us")
-        namespace = f"profile-{region}"
+        namespace = f"profile-{self._get_region()}"
 
         # Normalize character name
         character_name_lower = character_name.lower()
@@ -149,8 +150,7 @@ class BlizzardService:
             return None
 
         api_url = self._get_api_url()
-        region = current_app.config.get("BLIZZARD_REGION", "us")
-        namespace = f"profile-{region}"
+        namespace = f"profile-{self._get_region()}"
 
         character_name_lower = character_name.lower()
         realm_slug_lower = realm_slug.lower()
@@ -191,8 +191,7 @@ class BlizzardService:
             return None
 
         api_url = self._get_api_url()
-        region = current_app.config.get("BLIZZARD_REGION", "us")
-        namespace = f"profile-{region}"
+        namespace = f"profile-{self._get_region()}"
 
         character_name_lower = character_name.lower()
         realm_slug_lower = realm_slug.lower()
