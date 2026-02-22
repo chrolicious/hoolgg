@@ -457,6 +457,44 @@ export default function RosterLayoutInner({ children }: { children: React.ReactN
             </AnimatePresence>
           </div>
         </div>
+
+        {/* Attribution */}
+        {!sidebarCollapsed && (
+          <div
+            style={{
+              padding: '0.5rem 0.875rem 0.75rem',
+              fontSize: '0.6rem',
+              lineHeight: 1.6,
+              color: 'rgba(255, 255, 255, 0.2)',
+            }}
+          >
+            <div>© {new Date().getFullYear()} hool.gg</div>
+            <div>
+              Data via{' '}
+              <a
+                href="https://raider.io/api"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: 'rgba(255, 255, 255, 0.3)', textDecoration: 'none' }}
+                onMouseEnter={(e) => (e.currentTarget.style.color = 'rgba(255,255,255,0.6)')}
+                onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(255,255,255,0.3)')}
+              >
+                Raider.IO
+              </a>
+              {' · '}
+              <a
+                href="https://docs.google.com/document/d/e/2PACX-1vTGkZ2Cjr0jlv90XqW9vy9VXsVucd-yMCgHdyCvX_kQfOrexNDAC7Lf3LifuhqxrcWqJ0W3zIhvK3ii/pub"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: 'rgba(255, 255, 255, 0.3)', textDecoration: 'none' }}
+                onMouseEnter={(e) => (e.currentTarget.style.color = 'rgba(255,255,255,0.6)')}
+                onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(255,255,255,0.3)')}
+              >
+                Laria&apos;s Guide
+              </a>
+            </div>
+          </div>
+        )}
       </aside>
 
       {/* Main content area */}

@@ -170,7 +170,7 @@ def add_my_character():
 
     name = data.get("name")
     realm = data.get("realm")
-    # For future multi-region support, could extract region here
+    region = data.get("region", "us")
 
     if not name or not realm:
         return jsonify({"error": "name and realm are required"}), 400
@@ -201,6 +201,7 @@ def add_my_character():
         character = CharacterProgress(
             character_name=name,
             realm=realm,
+            region=region,
             guild_id=None,
             user_bnet_id=bnet_id,
             display_order=next_order,
@@ -304,7 +305,7 @@ def sync_my_character_gear(cid: int):
             
         from flask import current_app
         region = getattr(char, "region", None) or current_app.config.get("BLIZZARD_REGION", "us")
-        blizz = BlizzardService()
+        blizz = BlizzardService(region=region)
         
         # Use existing sync logic from gear service if we want to be thorough, but for MVP personal roster:
         from app.services.gear_parser import parse_equipment_response, calculate_avg_ilvl
@@ -401,7 +402,7 @@ def sync_all_my_characters(cid: int):
             try:
                 from flask import current_app
                 region = getattr(char, "region", None) or current_app.config.get("BLIZZARD_REGION", "us")
-                blizz = BlizzardService()
+                blizz = BlizzardService(region=region)
                 gear_data = blizz.get_character_equipment(char.character_name, char.realm)
                 stats_data = blizz.get_character_stats(char.character_name, char.realm)
 

@@ -118,6 +118,15 @@ body {
   color: #ffffff;
 }
 
+/* ── Form Element Reset ───────────────────────────────────── */
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+  font-size: inherit;
+}
+
 /* ── Link Reset ───────────────────────────────────────────── */
 a {
   color: inherit;
