@@ -164,8 +164,6 @@ export function CharacterHeader({
               fallback={character.character_name.substring(0, 2).toUpperCase()}
               alt={character.character_name}
               size="xl"
-              objectPosition="50% 15%"
-              enableOverflow={true}
             />
 
             <h2 style={{ color: '#fff', fontSize: '18px', fontWeight: 700, margin: '8px 0 4px 0', textShadow: '0 1px 3px rgba(0,0,0,0.8)' }}>

@@ -93,11 +93,6 @@
   border-radius: 9999px;
 }
 
-/* Overflow effect (opt-in) — scales image to create chest-up framing */
-.imageOverflow {
-  transform: scale(2.5);
-}
-
 /* Fallback initials — clipped to circle */
 .fallback {
   position: relative;
