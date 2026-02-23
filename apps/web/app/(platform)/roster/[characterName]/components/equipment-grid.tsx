@@ -329,7 +329,7 @@ export function EquipmentGrid({ gearData, avatarUrl }: EquipmentGridProps) {
             alignItems: 'center',
             gap: '8px',
             overflow: 'hidden',
-            marginTop: '-120px',
+            marginTop: '-150px',
           }}
         >
           <div
