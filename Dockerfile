@@ -21,22 +21,15 @@ RUN pnpm build
 # Production stage
 FROM node:20-slim
 
-# Install pnpm and curl for health checks
-RUN corepack enable && corepack prepare pnpm@latest --activate && \
-    apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+# Install curl for health checks
+RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
-# Copy built app and dependencies
-COPY --from=base /app/apps/web/.next ./apps/web/.next
+# Copy standalone output and static files
+COPY --from=base /app/apps/web/.next/standalone ./
+COPY --from=base /app/apps/web/.next/static ./apps/web/.next/static
 COPY --from=base /app/apps/web/public ./apps/web/public
-COPY --from=base /app/apps/web/package.json ./apps/web/package.json
-COPY --from=base /app/apps/web/next.config.ts ./apps/web/next.config.ts
-COPY --from=base /app/node_modules ./node_modules
-COPY --from=base /app/packages ./packages
-COPY --from=base /app/pnpm-workspace.yaml ./pnpm-workspace.yaml
-COPY --from=base /app/package.json ./package.json
-COPY --from=base /app/tsconfig.base.json ./tsconfig.base.json
 
 # Expose port
 EXPOSE 3000
@@ -45,5 +38,5 @@ EXPOSE 3000
 HEALTHCHECK --interval=30s --timeout=5s --start-period=30s --retries=3 \
     CMD curl -f http://localhost:3000 || exit 1
 
-# Start the app from workspace root
-CMD ["pnpm", "--filter", "@hool/web", "start"]
+# Start the standalone server
+CMD ["node", "apps/web/server.js"]
