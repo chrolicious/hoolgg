@@ -95,7 +95,7 @@
 
 /* Overflow effect (opt-in) — scales image to create chest-up framing */
 .imageOverflow {
-  transform: scale(1.8);
+  transform: scale(2.5);
 }
 
 /* Fallback initials — clipped to circle */
