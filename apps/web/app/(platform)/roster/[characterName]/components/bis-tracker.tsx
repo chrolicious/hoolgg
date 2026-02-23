@@ -62,10 +62,17 @@ export function BisTracker({ bisData, characterId, classColor }: BisTrackerProps
 
       console.log('BiS API response:', result);
 
+      // Handle different response structures
+      const itemData = result.item || result;
+
+      if (!itemData || !itemData.id) {
+        throw new Error('Invalid API response: missing item data');
+      }
+
       // Ensure item has required fields with defaults
       const newItem: BisItem = {
-        ...result.item,
-        obtained: result.item.obtained ?? false,
+        ...itemData,
+        obtained: itemData.obtained ?? false,
       };
 
       setItems((prev) => [...prev, newItem]);
