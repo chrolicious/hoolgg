@@ -238,28 +238,3 @@ def logout():
     # For now, cookies are just cleared (tokens still valid until expiry)
 
     return response
-
-from app.models.user import User
-from app.models import get_db
-from app.middleware.auth import require_auth
-
-@bp.route("/me", methods=["GET"])
-@require_auth
-def get_me():
-    """
-    Get current authenticated user info
-    """
-    bnet_id = request.user["bnet_id"]
-    db = next(get_db())
-    
-    try:
-        user = db.query(User).filter(User.bnet_id == bnet_id).first()
-        if not user:
-            return jsonify({"error": "User not found"}), 404
-            
-        return jsonify({
-            "bnet_id": user.bnet_id,
-            "username": user.bnet_username
-        })
-    finally:
-        db.close()
