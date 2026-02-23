@@ -96,6 +96,7 @@
 /* Overflow effect (opt-in) — scales image to create 3D effect */
 .imageOverflow {
   transform: scale(1.12);
+  border-radius: 0; /* Remove clipping to allow overflow beyond circular frame */
 }
 
 /* Fallback initials — clipped to circle */
