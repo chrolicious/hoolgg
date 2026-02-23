@@ -164,7 +164,7 @@ export function CharacterHeader({
               fallback={character.character_name.substring(0, 2).toUpperCase()}
               alt={character.character_name}
               size="xl"
-              objectPosition="50% 35%"
+              objectPosition="50% 15%"
               enableOverflow={true}
             />
 
