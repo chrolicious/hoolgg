@@ -226,7 +226,7 @@ export function BisTracker({ bisData, characterId, classColor }: BisTrackerProps
       {/* Item List */}
       {items.length > 0 && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-          {items.map((item) => (
+          {items.filter((item) => item != null).map((item) => (
             <div
               key={item.id}
               style={{
