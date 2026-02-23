@@ -350,7 +350,7 @@ export function EquipmentGrid({ gearData, avatarUrl }: EquipmentGridProps) {
                   width: '100%',
                   height: '100%',
                   objectFit: 'cover',
-                  objectPosition: '50% 5%',
+                  objectPosition: '50% -5%',
                   display: 'block',
                   filter: `
                     drop-shadow(3px 0px 0.5px black)
