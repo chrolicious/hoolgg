@@ -93,9 +93,9 @@
   border-radius: 9999px;
 }
 
-/* Overflow effect (opt-in) — scales image to create 3D effect */
+/* Overflow effect (opt-in) — scales image to create chest-up framing */
 .imageOverflow {
-  transform: scale(1.12);
+  transform: scale(2.2);
   border-radius: 0; /* Remove clipping to allow overflow beyond circular frame */
 }
 
