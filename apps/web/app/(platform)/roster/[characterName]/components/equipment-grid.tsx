@@ -343,29 +343,64 @@ export function EquipmentGrid({ gearData, avatarUrl }: EquipmentGridProps) {
             }}
           >
             {renderUrl ? (
-              <img
-                src={renderUrl}
-                alt="Character"
+              <div
                 style={{
                   width: '100%',
                   height: '100%',
-                  objectFit: 'cover',
-                  objectPosition: '50% 5%',
-                  display: 'block',
-                  filter: `
-                    drop-shadow(3px 0 0 rgba(0, 0, 0, 1))
-                    drop-shadow(-3px 0 0 rgba(0, 0, 0, 1))
-                    drop-shadow(0 3px 0 rgba(0, 0, 0, 1))
-                    drop-shadow(0 -3px 0 rgba(0, 0, 0, 1))
-                    drop-shadow(5px 0 0 rgba(255, 255, 255, 1))
-                    drop-shadow(-5px 0 0 rgba(255, 255, 255, 1))
-                    drop-shadow(0 5px 0 rgba(255, 255, 255, 1))
-                    drop-shadow(0 -5px 0 rgba(255, 255, 255, 1))
-                    drop-shadow(0 8px 16px rgba(0, 0, 0, 0.4))
-                  `,
+                  position: 'relative',
                 }}
-                onError={() => setRenderError(true)}
-              />
+              >
+                {/* Black outline layer */}
+                <img
+                  src={renderUrl}
+                  alt=""
+                  aria-hidden="true"
+                  style={{
+                    position: 'absolute',
+                    top: '-3px',
+                    left: '-3px',
+                    width: 'calc(100% + 6px)',
+                    height: 'calc(100% + 6px)',
+                    objectFit: 'cover',
+                    objectPosition: '50% 5%',
+                    filter: 'brightness(0)',
+                    zIndex: 1,
+                  }}
+                />
+                {/* White outline layer */}
+                <img
+                  src={renderUrl}
+                  alt=""
+                  aria-hidden="true"
+                  style={{
+                    position: 'absolute',
+                    top: '-5px',
+                    left: '-5px',
+                    width: 'calc(100% + 10px)',
+                    height: 'calc(100% + 10px)',
+                    objectFit: 'cover',
+                    objectPosition: '50% 5%',
+                    filter: 'brightness(100) saturate(0)',
+                    zIndex: 0,
+                  }}
+                />
+                {/* Main character image */}
+                <img
+                  src={renderUrl}
+                  alt="Character"
+                  style={{
+                    position: 'relative',
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                    objectPosition: '50% 5%',
+                    display: 'block',
+                    filter: 'drop-shadow(0 8px 16px rgba(0, 0, 0, 0.4))',
+                    zIndex: 2,
+                  }}
+                  onError={() => setRenderError(true)}
+                />
+              </div>
             ) : (
               <svg
                 width="40"
