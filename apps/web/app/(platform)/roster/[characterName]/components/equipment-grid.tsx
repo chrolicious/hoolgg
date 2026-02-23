@@ -267,6 +267,11 @@ function getCharacterRenderUrl(avatarUrl: string | null | undefined): string | n
 export function EquipmentGrid({ gearData, avatarUrl }: EquipmentGridProps) {
   const [renderError, setRenderError] = useState(false);
 
+  // Responsive character model width
+  // Uses min() to prevent layout breaks on smaller viewports
+  const CHARACTER_MODEL_WIDTH = 560;
+  const CHARACTER_MODEL_MAX_WIDTH = 'min(560px, 40vw)';
+
   useEffect(() => {
     const timer = setTimeout(() => {
       (window as any).$WowheadPower?.refreshLinks?.();
@@ -299,7 +304,7 @@ export function EquipmentGrid({ gearData, avatarUrl }: EquipmentGridProps) {
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: '1fr 560px 1fr',
+          gridTemplateColumns: `1fr ${CHARACTER_MODEL_MAX_WIDTH} 1fr`,
           gap: '8px',
           alignItems: 'start',
         }}
@@ -410,7 +415,7 @@ export function EquipmentGrid({ gearData, avatarUrl }: EquipmentGridProps) {
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: '1fr 560px 1fr',
+          gridTemplateColumns: `1fr ${CHARACTER_MODEL_MAX_WIDTH} 1fr`,
           gap: '8px',
           marginTop: '8px',
         }}
