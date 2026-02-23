@@ -57,7 +57,26 @@
       "Bash(FLASK_ENV=development python -m flask run:*)",
       "Bash(pgrep:*)",
       "Bash(git merge:*)",
-      "Bash(git stash:*)"
+      "Bash(git stash:*)",
+      "Bash(cd /Users/michel.epe/Development/poc/hoolgg/services/progress-api && .venv/bin/python run.py 2>&12)",
+      "Bash(pnpm dev:*)",
+      "Bash(lsof:*)",
+      "Bash(echo === BEFORE SYNC ===:*)",
+      "Bash(git status)",
+      "Bash(gh pr:*)",
+      "Bash(echo gh not installed:*)",
+      "Bash(tail:*)",
+      "Bash(curl -sS https://webi.sh/gh | sh 2>&1)",
+      "Bash(~/.local/bin/gh:*)",
+      "Bash(head:*)",
+      "Bash(git pull:*)",
+      "Bash(docker compose:*)",
+      "Bash(PORT=5001 python:*)",
+      "Bash(git show:*)",
+      "Bash(find:*)",
+      "Bash(pnpm test:*)",
+      "Bash(cat:*)",
+      "Bash(ssh:*)"
     ]
   }
 }
