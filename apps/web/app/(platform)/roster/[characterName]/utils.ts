@@ -113,8 +113,8 @@ export function formatRelativeTime(isoString: string | null | undefined): string
  * After the backend stores main-raw.jpg, Avatar components use this to get
  * the appropriate small circular portrait.
  */
-export function getBustUrl(url: string | null | undefined): string | null {
-  if (!url) return null;
+export function getBustUrl(url: string | null | undefined): string | undefined {
+  if (!url) return undefined;
   return url
     .replace('/main-raw.jpg', '/avatar.jpg')
     .replace('/main-raw.png', '/avatar.png')

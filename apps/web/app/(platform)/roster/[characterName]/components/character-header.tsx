@@ -160,7 +160,7 @@ export function CharacterHeader({
           {/* ── Left Column ── */}
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', minWidth: '140px' }}>
             <Avatar
-              src={getBustUrl(character.avatar_url ?? undefined)}
+              src={getBustUrl(character.avatar_url)}
               fallback={character.character_name.substring(0, 2).toUpperCase()}
               alt={character.character_name}
               size="xl"
