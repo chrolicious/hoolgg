@@ -4,12 +4,14 @@ from flask import Blueprint, request, redirect, jsonify, current_app, make_respo
 import requests
 import secrets
 from urllib.parse import urlencode
+from datetime import datetime
 from app.services.jwt_service import (
     generate_access_token,
     generate_refresh_token,
     verify_token,
 )
-from app.services.sync_service import sync_user_characters_on_login
+from app.models import get_db
+from app.models.user import User
 
 bp = Blueprint("auth", __name__, url_prefix="/auth")
 
@@ -118,11 +120,23 @@ def callback():
         current_app.logger.error(f"Failed to fetch user info: {e}")
         return jsonify({"error": "Failed to fetch user info"}), 500
 
-    # Sync user's characters and guild memberships
-    region = current_app.config["BLIZZARD_REGION"]
-    sync_result = sync_user_characters_on_login(
-        bnet_id, bnet_username, blizzard_access_token, region
-    )
+    # Create or update user in database
+    db = next(get_db())
+    try:
+        user = db.query(User).filter(User.bnet_id == bnet_id).first()
+        if user:
+            user.bnet_username = bnet_username
+            user.last_login = datetime.utcnow()
+        else:
+            user = User(bnet_id=bnet_id, bnet_username=bnet_username)
+            db.add(user)
+        db.commit()
+    except Exception as e:
+        db.rollback()
+        current_app.logger.error(f"Failed to create/update user: {e}")
+        return jsonify({"error": "Failed to save user"}), 500
+    finally:
+        db.close()
 
     # Generate JWT tokens
     access_token = generate_access_token(bnet_id)
