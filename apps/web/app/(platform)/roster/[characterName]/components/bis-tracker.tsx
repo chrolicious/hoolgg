@@ -42,7 +42,7 @@ export function BisTracker({ bisData, characterId, classColor }: BisTrackerProps
 
   const btnStyle = buildBtnStyle(classColor);
 
-  const obtainedCount = items.filter((item) => item.obtained).length;
+  const obtainedCount = items.filter((item) => item && item.obtained).length;
   const totalCount = items.length;
 
   const handleAdd = async () => {
@@ -290,20 +290,28 @@ export function BisTracker({ bisData, characterId, classColor }: BisTrackerProps
                 )}
               </div>
 
-              {/* Obtained Toggle */}
-              <Toggle
-                checked={item.obtained}
-                onChange={(val) => handleToggleObtained(item, val)}
-                size="sm"
-              />
+              {/* Actions */}
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                flexShrink: 0,
+              }}>
+                {/* Obtained Toggle */}
+                <Toggle
+                  checked={item.obtained}
+                  onChange={(val) => handleToggleObtained(item, val)}
+                  size="sm"
+                />
 
-              {/* Delete Button */}
-              <Button
-                variant="destructive"
-                size="sm"
-                icon={<Icon name="trash" size={14} />}
-                onClick={() => handleDelete(item)}
-              />
+                {/* Delete Button */}
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  icon={<Icon name="trash" size={14} />}
+                  onClick={() => handleDelete(item)}
+                />
+              </div>
             </div>
           ))}
         </div>
