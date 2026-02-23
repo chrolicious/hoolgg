@@ -91,6 +91,7 @@
   object-position: center;
   z-index: 0;
   border-radius: 9999px;
+  transform: scale(1.12);
 }
 
 /* Fallback initials — clipped to circle */
