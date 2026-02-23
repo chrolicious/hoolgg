@@ -395,20 +395,29 @@ export default function CharacterDetailPage() {
               />
             </div>
 
-            {/* 5. Equipment Grid */}
+            {/* 5. Weekly Progress Granular */}
+            <WeeklyProgressGranular
+              vaultData={sections.vault}
+              characterId={character.id}
+              currentWeek={currentWeek}
+              classColor={classColor}
+              onVaultUpdate={handleVaultUpdate}
+            />
+
+            {/* 6. Equipment Grid */}
             <EquipmentGrid
               gearData={sections.gear}
               renderUrl={character.render_url}
             />
 
-            {/* 6. BiS Tracker */}
+            {/* 7. BiS Tracker */}
             <BisTracker
               bisData={sections.bis}
               characterId={character.id}
               classColor={classColor}
             />
 
-            {/* 7. Professions */}
+            {/* 8. Professions */}
             <ProfessionsSection
               professionsData={sections.professions}
               characterId={character.id}
@@ -416,20 +425,11 @@ export default function CharacterDetailPage() {
               classColor={classColor}
             />
 
-            {/* 8. Talent Builds */}
+            {/* 9. Talent Builds */}
             <TalentBuildsSection
               talentsData={sections.talents}
               characterId={character.id}
               classColor={classColor}
-            />
-
-            {/* 9. Weekly Progress Granular */}
-            <WeeklyProgressGranular
-              vaultData={sections.vault}
-              characterId={character.id}
-              currentWeek={currentWeek}
-              classColor={classColor}
-              onVaultUpdate={handleVaultUpdate}
             />
           </>
         )}
