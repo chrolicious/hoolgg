@@ -353,31 +353,15 @@ export function EquipmentGrid({ gearData, avatarUrl }: EquipmentGridProps) {
                   objectPosition: '50% 5%',
                   display: 'block',
                   filter: `
-                    drop-shadow(2px 0 0 rgba(0, 0, 0, 1))
-                    drop-shadow(-2px 0 0 rgba(0, 0, 0, 1))
-                    drop-shadow(0 2px 0 rgba(0, 0, 0, 1))
-                    drop-shadow(0 -2px 0 rgba(0, 0, 0, 1))
-                    drop-shadow(2px 2px 0 rgba(0, 0, 0, 1))
-                    drop-shadow(-2px -2px 0 rgba(0, 0, 0, 1))
-                    drop-shadow(2px -2px 0 rgba(0, 0, 0, 1))
-                    drop-shadow(-2px 2px 0 rgba(0, 0, 0, 1))
                     drop-shadow(3px 0 0 rgba(0, 0, 0, 1))
                     drop-shadow(-3px 0 0 rgba(0, 0, 0, 1))
                     drop-shadow(0 3px 0 rgba(0, 0, 0, 1))
                     drop-shadow(0 -3px 0 rgba(0, 0, 0, 1))
-                    drop-shadow(4px 0 0 rgba(255, 255, 255, 1))
-                    drop-shadow(-4px 0 0 rgba(255, 255, 255, 1))
-                    drop-shadow(0 4px 0 rgba(255, 255, 255, 1))
-                    drop-shadow(0 -4px 0 rgba(255, 255, 255, 1))
-                    drop-shadow(4px 4px 0 rgba(255, 255, 255, 1))
-                    drop-shadow(-4px -4px 0 rgba(255, 255, 255, 1))
-                    drop-shadow(4px -4px 0 rgba(255, 255, 255, 1))
-                    drop-shadow(-4px 4px 0 rgba(255, 255, 255, 1))
                     drop-shadow(5px 0 0 rgba(255, 255, 255, 1))
                     drop-shadow(-5px 0 0 rgba(255, 255, 255, 1))
                     drop-shadow(0 5px 0 rgba(255, 255, 255, 1))
                     drop-shadow(0 -5px 0 rgba(255, 255, 255, 1))
-                    drop-shadow(0 6px 12px rgba(0, 0, 0, 0.4))
+                    drop-shadow(0 8px 16px rgba(0, 0, 0, 0.4))
                   `,
                 }}
                 onError={() => setRenderError(true)}
