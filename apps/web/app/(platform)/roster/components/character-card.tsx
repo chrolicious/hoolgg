@@ -236,7 +236,7 @@ export function CharacterCard({
         size="lg"
         className={cardStyles.cardAvatar}
         style={{ position: 'absolute', top: 0, left: '16px', zIndex: 10 }}
-        objectPosition="50% 0%"
+        objectPosition="50% 35%"
         enableOverflow={true}
       />
 
