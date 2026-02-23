@@ -76,7 +76,8 @@
       "Bash(find:*)",
       "Bash(pnpm test:*)",
       "Bash(cat:*)",
-      "Bash(ssh:*)"
+      "Bash(ssh:*)",
+      "Bash(git ls-tree:*)"
     ]
   }
 }
