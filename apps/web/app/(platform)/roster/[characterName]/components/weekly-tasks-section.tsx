@@ -1,9 +1,9 @@
 'use client';
 
-import { useState, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { TasksResponse, TaskItem } from '../types';
-import { hexToRgba } from '../utils';
+import { hexToRgba, buildBtnStyle } from '../utils';
 import { SectionCard } from './section-card';
 import { Checkbox, Icon } from '@hool/design-system';
 import { progressApi } from '../../../../lib/api';
@@ -148,6 +148,8 @@ export function WeeklyTasksSection({
     });
   };
 
+  const checkboxButtonStyle = buildBtnStyle(classColor);
+
   return (
     <SectionCard title="Tasks" subtitle={weekName || 'Weekly Tasks'}>
       {isLoadingWeek ? (
@@ -273,6 +275,7 @@ export function WeeklyTasksSection({
                   label={task.label}
                   onChange={(checked) => handleToggle(task, 'weekly', checked)}
                   size="sm"
+                  buttonStyle={checkboxButtonStyle}
                 />
                 {task.done && task.completed_at && (
                   <span
@@ -321,6 +324,7 @@ export function WeeklyTasksSection({
                       label={task.label}
                       onChange={(checked) => handleToggle(task, 'daily', checked)}
                       size="sm"
+                      buttonStyle={checkboxButtonStyle}
                     />
                     {task.done && task.completed_at && (
                       <span

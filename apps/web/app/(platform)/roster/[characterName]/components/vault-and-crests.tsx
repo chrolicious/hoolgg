@@ -237,6 +237,11 @@ function Crests({ crestsData, characterId,  currentWeek, selectedWeek }: CrestsP
 
   return (
     <SectionCard title="Crests">
+      <style>{`
+        .crest-input::-webkit-inner-spin-button,
+        .crest-input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+        .crest-input { -moz-appearance: textfield; }
+      `}</style>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
         {CREST_TYPES.map((crest) => {
           const data = crestsData?.crests?.[crest.key] ?? null;
@@ -286,6 +291,7 @@ function Crests({ crestsData, characterId,  currentWeek, selectedWeek }: CrestsP
                 <span style={{ fontSize: '10px', color: 'rgba(255,255,255,0.35)' }}>wk</span>
                 <input
                   type="number"
+                  className="crest-input"
                   min={0}
                   max={PER_WEEK_CAP}
                   value={weekValue}

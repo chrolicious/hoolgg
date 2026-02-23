@@ -271,7 +271,7 @@ export default function RosterPage() {
   const [error, setError] = useState<string | null>(null);
   const [sortBy, setSortBy] = useState<SortBy>('custom');
   const [isSyncingAll, setIsSyncingAll] = useState(false);
-  const [targetIlvl, setTargetIlvl] = useState<number>(0); // TODO: fetch from global config later
+  const [targetIlvl, setTargetIlvl] = useState<number>(0);
 
   // Drag state
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
@@ -284,10 +284,17 @@ export default function RosterPage() {
     setError(null);
 
     try {
-      const data = await progressApi.get<{
-        characters: Array<Record<string, any>>;
-        current_week?: number;
-      }>(`/users/me/characters?t=${Date.now()}`);
+      const [data, seasonData] = await Promise.all([
+        progressApi.get<{
+          characters: Array<Record<string, any>>;
+          current_week?: number;
+        }>(`/users/me/characters`),
+        progressApi.get<{ current_target_ilvl?: number }>(`/users/me/season`).catch(() => null),
+      ]);
+
+      if (seasonData?.current_target_ilvl) {
+        setTargetIlvl(seasonData.current_target_ilvl);
+      }
 
       // Map API response to CharacterData shape
       const mapped: CharacterData[] = data.characters

@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Button, Icon, Select } from '@hool/design-system';
+import { buildBtnStyle, buildSoftBtnStyle } from '../utils';
 import { progressApi } from '../../../../lib/api';
 import { SectionCard } from './section-card';
 import type { TalentsResponse, TalentBuild } from '../types';
@@ -10,6 +11,7 @@ import { TALENT_CATEGORIES } from '../types';
 interface TalentBuildsSectionProps {
   talentsData: TalentsResponse | null;
   characterId: number;
+  classColor: string;
 }
 
 const categoryColors: Record<string, { bg: string; text: string }> = {
@@ -37,7 +39,10 @@ const categoryOptions = TALENT_CATEGORIES.map((cat) => ({
 export function TalentBuildsSection({
   talentsData,
   characterId,
+  classColor,
 }: TalentBuildsSectionProps) {
+  const btnStyle = buildBtnStyle(classColor);
+  const softBtnStyle = buildSoftBtnStyle(classColor);
   const [builds, setBuilds] = useState<TalentBuild[]>(talentsData?.builds ?? []);
   const [showAddForm, setShowAddForm] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('');
@@ -85,6 +90,7 @@ export function TalentBuildsSection({
           variant="primary"
           size="sm"
           onClick={() => setShowAddForm((prev) => !prev)}
+          style={btnStyle}
         >
           {showAddForm ? 'Cancel' : 'Add Build'}
         </Button>
@@ -110,6 +116,7 @@ export function TalentBuildsSection({
             onChange={setSelectedCategory}
             placeholder="Category"
             size="sm"
+            style={btnStyle}
           />
 
           <input
@@ -137,6 +144,7 @@ export function TalentBuildsSection({
               size="sm"
               onClick={handleAdd}
               disabled={!selectedCategory || !buildName || !talentString}
+              style={btnStyle}
             >
               Add
             </Button>
@@ -239,6 +247,7 @@ export function TalentBuildsSection({
                   variant="primary-soft"
                   size="sm"
                   onClick={() => handleCopy(build)}
+                  style={softBtnStyle}
                   icon={
                     <Icon
                       name={copiedId === build.id ? 'check' : 'link'}

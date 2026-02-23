@@ -224,6 +224,48 @@ class BlizzardService:
             logger.error(f"Failed to fetch character stats: {e}")
             return None
 
+    def get_item_icon_url(self, item_id: int) -> Optional[str]:
+        """
+        Fetch the icon URL for a WoW item from Blizzard's static game data API.
+
+        Args:
+            item_id: The WoW item ID
+
+        Returns:
+            Icon URL string or None if failed
+        """
+        if not item_id:
+            return None
+
+        access_token = self._get_access_token()
+        if not access_token:
+            return None
+
+        region = self._get_region()
+        api_url = self._get_api_url()
+        # Static game data uses static-{region} namespace, not profile-{region}
+        namespace = f"static-{region}"
+
+        endpoint = f"{api_url}/data/wow/media/item/{item_id}"
+        params = {"namespace": namespace, "locale": "en_US"}
+        headers = {"Authorization": f"Bearer {access_token}"}
+        timeout = current_app.config.get("BLIZZARD_API_TIMEOUT", 10)
+
+        try:
+            response = requests.get(endpoint, params=params, headers=headers, timeout=timeout)
+            response.raise_for_status()
+            data = response.json()
+
+            assets = data.get("assets", [])
+            for asset in assets:
+                if asset.get("key") == "icon":
+                    return asset.get("value")
+            return None
+
+        except requests.RequestException as e:
+            logger.debug(f"Failed to fetch icon for item {item_id}: {e}")
+            return None
+
     def calculate_average_ilvl(self, equipment_data: Dict[str, Any]) -> Optional[float]:
         """
         Calculate average item level from equipment data
@@ -355,13 +397,14 @@ class BlizzardService:
             response.raise_for_status()
             data = response.json()
 
-            # Look for avatar or inset avatar in assets
+            # Prefer full-body transparent render; fall back to bust portrait
             assets = data.get("assets", [])
-            for asset in assets:
-                if asset.get("key") == "avatar":
-                    return asset.get("value")
+            asset_map = {a.get("key"): a.get("value") for a in assets}
+            for key in ("main-raw", "main", "avatar"):
+                if asset_map.get(key):
+                    return asset_map[key]
 
-            # Fallback: use render_url or bust_url
+            # Last resort: legacy render_url field
             render_url = data.get("render_url")
             if render_url:
                 return render_url

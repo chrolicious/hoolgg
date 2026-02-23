@@ -18,6 +18,8 @@ export interface AvatarProps {
   className?: string;
   /** Custom style */
   style?: React.CSSProperties;
+  /** Override object-position on the image (e.g. "top" to show head/torso) */
+  objectPosition?: string;
 }
 
 /**
@@ -36,6 +38,7 @@ export const Avatar = React.forwardRef<HTMLDivElement, AvatarProps>(
       size = 'md',
       className,
       style,
+      objectPosition,
     },
     ref,
   ) => {
@@ -51,6 +54,7 @@ export const Avatar = React.forwardRef<HTMLDivElement, AvatarProps>(
             src={src}
             alt={alt}
             className={styles.image}
+            style={objectPosition ? { objectPosition } : undefined}
           />
         ) : (
           <div className={styles.fallback}>

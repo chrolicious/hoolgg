@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Button, Icon, Select, Toggle } from '@hool/design-system';
+import { buildBtnStyle } from '../utils';
 import { progressApi } from '../../../../lib/api';
 import { SectionCard } from './section-card';
 import type { BisResponse, BisItem } from '../types';
@@ -30,7 +31,7 @@ const slotOptions = BIS_SLOTS.map((slot) => ({
   label: slot,
 }));
 
-export function BisTracker({ bisData, characterId,  classColor }: BisTrackerProps) {
+export function BisTracker({ bisData, characterId, classColor }: BisTrackerProps) {
   const [items, setItems] = useState<BisItem[]>(bisData?.items ?? []);
   const [showAddForm, setShowAddForm] = useState(false);
   const [selectedSlot, setSelectedSlot] = useState<string>(BIS_SLOTS[0]);
@@ -38,6 +39,8 @@ export function BisTracker({ bisData, characterId,  classColor }: BisTrackerProp
   const [itemId, setItemId] = useState('');
   const [targetIlvl, setTargetIlvl] = useState('');
   const [isAdding, setIsAdding] = useState(false);
+
+  const btnStyle = buildBtnStyle(classColor);
 
   const obtainedCount = items.filter((item) => item.obtained).length;
   const totalCount = items.length;
@@ -126,6 +129,7 @@ export function BisTracker({ bisData, characterId,  classColor }: BisTrackerProp
           size="sm"
           icon={<Icon name={showAddForm ? 'x' : 'plus'} size={14} />}
           onClick={() => setShowAddForm(!showAddForm)}
+          style={btnStyle}
         >
           {showAddForm ? 'Cancel' : 'Add Item'}
         </Button>
@@ -155,6 +159,7 @@ export function BisTracker({ bisData, characterId,  classColor }: BisTrackerProp
               onChange={(val) => setSelectedSlot(val)}
               size="sm"
               placeholder="Slot"
+              style={btnStyle}
             />
             <input
               type="text"
@@ -190,6 +195,7 @@ export function BisTracker({ bisData, characterId,  classColor }: BisTrackerProp
               onClick={handleAdd}
               disabled={!itemName.trim() || isAdding}
               loading={isAdding}
+              style={btnStyle}
             >
               Add
             </Button>

@@ -1,5 +1,7 @@
 from flask import Blueprint, request, jsonify
+from typing import Dict
 from sqlalchemy import func as sa_func
+from sqlalchemy.orm.attributes import flag_modified
 from app.models import get_db
 from app.models.character_progress import CharacterProgress
 from app.models.weekly_task_completion import WeeklyTaskCompletion
@@ -207,7 +209,7 @@ def add_my_character():
             display_order=next_order,
         )
         db.add(character)
-            
+
         db.commit()
         db.refresh(character)
 
@@ -219,7 +221,7 @@ def add_my_character():
         return jsonify({"error": "Failed to add character"}), 500
     finally:
         db.close()
-        
+
 @bp.route("/characters/<int:cid>", methods=["DELETE"])
 def delete_my_character(cid: int):
     bnet_id = get_current_user_from_token()
@@ -291,28 +293,28 @@ def sync_my_character_gear(cid: int):
     bnet_id = get_current_user_from_token()
     if not bnet_id:
         return jsonify({"error": "Unauthorized"}), 401
-        
+
     db = next(get_db())
-    
+
     try:
         char = db.query(CharacterProgress).filter(
             CharacterProgress.id == cid,
             CharacterProgress.user_bnet_id == bnet_id
         ).first()
-        
+
         if not char:
             return jsonify({"error": "Character not found"}), 404
-            
+
         from flask import current_app
         region = getattr(char, "region", None) or current_app.config.get("BLIZZARD_REGION", "us")
         blizz = BlizzardService(region=region)
-        
+
         # Use existing sync logic from gear service if we want to be thorough, but for MVP personal roster:
         from app.services.gear_parser import parse_equipment_response, calculate_avg_ilvl
         from app.services.stats_parser import parse_character_stats
-        from app.services.raiderio_service import RaiderIOService, parse_raiderio_profile
+        from app.services.raiderio_service import RaiderIOService, parse_raiderio_profile, extract_raiderio_gear_icons
         from datetime import datetime, timezone, timedelta
-        
+
         gear_data = blizz.get_character_equipment(char.character_name, char.realm)
         stats_data = blizz.get_character_stats(char.character_name, char.realm)
 
@@ -331,6 +333,7 @@ def sync_my_character_gear(cid: int):
 
         # Sync Raider.IO if never synced or older than 6 hours
         now = datetime.now(timezone.utc)
+        rio_icons: Dict[str, str] = {}
         if not char.last_raiderio_sync or now - char.last_raiderio_sync > timedelta(hours=6):
             rio_service = RaiderIOService()
             rio_data = rio_service.get_character_profile(char.character_name, char.realm, region)
@@ -339,6 +342,9 @@ def sync_my_character_gear(cid: int):
                 char.mythic_plus_score = mplus
                 char.raid_progress = raid
                 char.last_raiderio_sync = now
+
+                # Collect icons now; apply after Blizzard gear parse so item_ids are current
+                rio_icons = extract_raiderio_gear_icons(rio_data)
 
                 # Update this week's Great Vault entry with M+ runs
                 if recent_runs:
@@ -364,22 +370,43 @@ def sync_my_character_gear(cid: int):
             avg_ilvl = calculate_avg_ilvl(parsed_gear)
 
             char.gear_details = gear_data
-            char.parsed_gear = parsed_gear
             char.current_ilvl = avg_ilvl
             char.last_gear_sync = datetime.now(timezone.utc)
 
+            # Apply raider.io icons first (fast CDN URLs from zamimg)
+            for slot_name, icon_url in rio_icons.items():
+                if slot_name in parsed_gear and icon_url:
+                    if not parsed_gear[slot_name].get("icon_url"):
+                        parsed_gear[slot_name]["icon_url"] = icon_url
+
+            # Blizzard API fallback for any slots still missing icons
+            try:
+                for slot_name, slot_data in parsed_gear.items():
+                    if isinstance(slot_data, dict):
+                        item_id = slot_data.get("item_id", 0)
+                        existing_icon = slot_data.get("icon_url", "")
+                        if item_id and not existing_icon:
+                            icon_url = blizz.get_item_icon_url(item_id)
+                            if icon_url:
+                                parsed_gear[slot_name]["icon_url"] = icon_url
+            except Exception as e:
+                logger.warning(f"Failed to fetch some icon URLs: {e}")
+
+            char.parsed_gear = parsed_gear
+
             if stats_data:
                 parsed_stats = parse_character_stats(stats_data)
-                char.stats_data = parsed_stats
-                
+                char.character_stats = parsed_stats
+
         # Always commit any updates (Raider.IO or Gear)
+        flag_modified(char, 'parsed_gear')
         db.commit()
-        
+
         if gear_data:
             return jsonify({"message": "Synced successfully", "ilvl": avg_ilvl})
         else:
             return jsonify({"error": "Failed to sync gear from Blizzard, but Raider.IO updated"}), 206
-        
+
     finally:
         db.close()
 
@@ -389,14 +416,14 @@ def sync_all_my_characters(cid: int):
     bnet_id = get_current_user_from_token()
     if not bnet_id:
         return jsonify({"error": "Unauthorized"}), 401
-        
+
     db = next(get_db())
-    
+
     try:
         chars = db.query(CharacterProgress).filter(
             CharacterProgress.user_bnet_id == bnet_id
         ).all()
-        
+
         results = []
         for char in chars:
             try:
@@ -420,9 +447,10 @@ def sync_all_my_characters(cid: int):
                             char.avatar_url = avatar
 
                 from datetime import datetime, timezone, timedelta
-                from app.services.raiderio_service import RaiderIOService, parse_raiderio_profile
+                from app.services.raiderio_service import RaiderIOService, parse_raiderio_profile, extract_raiderio_gear_icons
 
                 now = datetime.now(timezone.utc)
+                rio_icons: Dict[str, str] = {}
                 if not char.last_raiderio_sync or now - char.last_raiderio_sync > timedelta(hours=6):
                     rio_service = RaiderIOService()
                     rio_data = rio_service.get_character_profile(char.character_name, char.realm, region)
@@ -431,6 +459,9 @@ def sync_all_my_characters(cid: int):
                         char.mythic_plus_score = mplus
                         char.raid_progress = raid
                         char.last_raiderio_sync = now
+
+                        # Collect icons now; apply after Blizzard gear parse so item_ids are current
+                        rio_icons = extract_raiderio_gear_icons(rio_data)
 
                         # Update this week's Great Vault entry with M+ runs
                         if recent_runs:
@@ -459,23 +490,46 @@ def sync_all_my_characters(cid: int):
                     avg_ilvl = calculate_avg_ilvl(parsed_gear)
 
                     char.gear_details = gear_data
-                    char.parsed_gear = parsed_gear
                     char.current_ilvl = avg_ilvl
                     char.last_gear_sync = datetime.now(timezone.utc)
 
+                    # Apply raider.io icons first (fast CDN URLs from zamimg)
+                    for slot_name, icon_url in rio_icons.items():
+                        if slot_name in parsed_gear and icon_url:
+                            if not parsed_gear[slot_name].get("icon_url"):
+                                parsed_gear[slot_name]["icon_url"] = icon_url
+
+                    # Blizzard API fallback for any slots still missing icons
+                    try:
+                        for slot_name, slot_data in parsed_gear.items():
+                            if isinstance(slot_data, dict):
+                                item_id = slot_data.get("item_id", 0)
+                                existing_icon = slot_data.get("icon_url", "")
+                                if item_id and not existing_icon:
+                                    icon_url = blizz.get_item_icon_url(item_id)
+                                    if icon_url:
+                                        parsed_gear[slot_name]["icon_url"] = icon_url
+                    except Exception as icon_err:
+                        logger.warning(f"Failed to fetch some icon URLs for {char.character_name}: {icon_err}")
+
+                    char.parsed_gear = parsed_gear
+
                     if stats_data:
                         parsed_stats = parse_character_stats(stats_data)
-                        char.stats_data = parsed_stats
-                        
+                        char.character_stats = parsed_stats
+
                     results.append({"name": char.character_name, "status": "ok"})
                 else:
                     results.append({"name": char.character_name, "status": "error"})
+
+                flag_modified(char, 'parsed_gear')
+
             except Exception as e:
                 logger.error(f"Error syncing {char.character_name}: {e}")
                 results.append({"name": char.character_name, "status": "error"})
-                
+
         db.commit()
         return jsonify({"results": results})
-        
+
     finally:
         db.close()

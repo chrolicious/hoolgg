@@ -1,9 +1,10 @@
 'use client';
 
-import { useState, useRef, useCallback, useEffect } from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { Select, Checkbox, Button } from '@hool/design-system';
 import { SectionCard } from './section-card';
 import { progressApi } from '../../../../lib/api';
+import { buildBtnStyle } from '../utils';
 import type {
   ProfessionsResponse,
   ProfessionWeeklyProgress,
@@ -14,6 +15,7 @@ interface ProfessionsSectionProps {
   professionsData: ProfessionsResponse | null;
   characterId: number;
   currentWeek: number;
+  classColor: string;
 }
 
 const professionOptions = AVAILABLE_PROFESSIONS.map((p) => ({
@@ -36,7 +38,10 @@ export function ProfessionsSection({
   professionsData,
   characterId,
   currentWeek,
+  classColor,
 }: ProfessionsSectionProps) {
+  const btnStyle = buildBtnStyle(classColor);
+  const checkboxButtonStyle = btnStyle;
   // Initialize profession slots from data
   const initialProf1 =
     professionsData?.professions.find((p) => p.profession.slot_index === 0)
@@ -203,6 +208,11 @@ export function ProfessionsSection({
 
   return (
     <SectionCard title="Professions">
+      <style>{`
+        .prof-input::-webkit-inner-spin-button,
+        .prof-input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+        .prof-input { -moz-appearance: textfield; }
+      `}</style>
       {/* Profession selectors */}
       <div
         style={{
@@ -219,6 +229,7 @@ export function ProfessionsSection({
             onChange={(val) => setProf1(val)}
             placeholder="Select profession..."
             size="sm"
+            style={btnStyle}
           />
         </div>
         <div style={{ flex: 1 }}>
@@ -228,13 +239,16 @@ export function ProfessionsSection({
             onChange={(val) => setProf2(val)}
             placeholder="Select profession..."
             size="sm"
+            style={btnStyle}
           />
         </div>
         <Button
+          variant="primary"
           size="sm"
           onClick={saveProfessions}
           disabled={isSaving}
           loading={isSaving}
+          style={btnStyle}
         >
           Save
         </Button>
@@ -292,6 +306,7 @@ export function ProfessionsSection({
                 }
                 label="Weekly Quest"
                 size="sm"
+                buttonStyle={checkboxButtonStyle}
               />
               <Checkbox
                 checked={profProgress.patron_orders}
@@ -300,6 +315,7 @@ export function ProfessionsSection({
                 }
                 label="Patron Orders"
                 size="sm"
+                buttonStyle={checkboxButtonStyle}
               />
               <Checkbox
                 checked={profProgress.treatise}
@@ -308,6 +324,7 @@ export function ProfessionsSection({
                 }
                 label="Treatise"
                 size="sm"
+                buttonStyle={checkboxButtonStyle}
               />
 
               <div
@@ -333,6 +350,7 @@ export function ProfessionsSection({
                 </label>
                 <input
                   type="number"
+                  className="prof-input"
                   min={0}
                   value={profProgress.knowledge_points}
                   onChange={(e) =>
@@ -360,6 +378,7 @@ export function ProfessionsSection({
                 </label>
                 <input
                   type="number"
+                  className="prof-input"
                   min={0}
                   value={profProgress.concentration}
                   onChange={(e) =>

@@ -319,7 +319,7 @@ export default function CharacterDetailPage() {
       {/* Wowhead tooltip script — lazy-loaded for equipment grid */}
       <Script
         id="wowhead-config"
-        strategy="beforeInteractive"
+        strategy="afterInteractive"
         dangerouslySetInnerHTML={{
           __html: `var whTooltips = {colorLinks: false, iconizeLinks: false, renameLinks: false};`,
         }}
@@ -396,7 +396,10 @@ export default function CharacterDetailPage() {
             </div>
 
             {/* 5. Equipment Grid */}
-            <EquipmentGrid gearData={sections.gear} />
+            <EquipmentGrid
+              gearData={sections.gear}
+              avatarUrl={character.avatar_url}
+            />
 
             {/* 6. BiS Tracker */}
             <BisTracker
@@ -410,12 +413,14 @@ export default function CharacterDetailPage() {
               professionsData={sections.professions}
               characterId={character.id}
               currentWeek={currentWeek}
+              classColor={classColor}
             />
 
             {/* 8. Talent Builds */}
             <TalentBuildsSection
               talentsData={sections.talents}
               characterId={character.id}
+              classColor={classColor}
             />
 
             {/* 9. Weekly Progress Granular */}
@@ -423,6 +428,7 @@ export default function CharacterDetailPage() {
               vaultData={sections.vault}
               characterId={character.id}
               currentWeek={currentWeek}
+              classColor={classColor}
               onVaultUpdate={handleVaultUpdate}
             />
           </>

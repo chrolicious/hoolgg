@@ -1,15 +1,17 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Icon } from '@hool/design-system';
 import { progressApi } from '../../../../lib/api';
 import { SectionCard } from './section-card';
+import { buildBtnStyle } from '../utils';
 import type { VaultResponse } from '../types';
 
 interface WeeklyProgressGranularProps {
   vaultData: VaultResponse | null;
   characterId: number;
   currentWeek: number;
+  classColor: string;
   onVaultUpdate: () => void;
 }
 
@@ -21,7 +23,7 @@ const inputStyle: React.CSSProperties = {
   color: '#fff',
   fontSize: '13px',
   outline: 'none',
-  width: '60px',
+  width: '64px',
   textAlign: 'center',
 };
 
@@ -31,10 +33,18 @@ const labelStyle: React.CSSProperties = {
   marginBottom: '4px',
 };
 
+const columnHeadingStyle: React.CSSProperties = {
+  fontSize: '13px',
+  fontWeight: 600,
+  color: 'rgba(255,255,255,0.8)',
+  margin: '0 0 12px 0',
+};
+
 export function WeeklyProgressGranular({
   vaultData,
   characterId,
   currentWeek,
+  classColor,
   onVaultUpdate,
 }: WeeklyProgressGranularProps) {
   const progress = vaultData?.progress;
@@ -104,22 +114,6 @@ export function WeeklyProgressGranular({
     );
   };
 
-  const addDelveRun = () => {
-    if (delveRuns.length < 8) {
-      setDelveRuns((prev) => [...prev, { tier: 0 }]);
-    }
-  };
-
-  const removeDelveRun = (index: number) => {
-    setDelveRuns((prev) => prev.filter((_, i) => i !== index));
-  };
-
-  const updateDelveTier = (index: number, value: number) => {
-    setDelveRuns((prev) =>
-      prev.map((run, i) => (i === index ? { tier: value } : run))
-    );
-  };
-
   const handleSave = async () => {
     setIsSaving(true);
     setSaveStatus(null);
@@ -147,242 +141,170 @@ export function WeeklyProgressGranular({
     }
   };
 
+  const btnStyle = buildBtnStyle(classColor);
+
   return (
     <SectionCard
       title="Weekly Progress"
       subtitle="Input your weekly raid, M+ and delve data"
     >
-      {/* Raid Bosses Killed */}
-      <div style={{ marginBottom: '20px' }}>
-        <h3 style={{
-          fontSize: '13px',
-          fontWeight: 600,
-          color: 'rgba(255,255,255,0.8)',
-          margin: '0 0 12px 0',
-        }}>
-          Raid Bosses Killed
-        </h3>
-        <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <label style={labelStyle}>LFR</label>
-            <input
-              type="number"
-              min={0}
-              value={raidLfr}
-              onChange={(e) => setRaidLfr(Math.max(0, parseInt(e.target.value, 10) || 0))}
-              style={inputStyle}
-            />
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <label style={labelStyle}>Normal</label>
-            <input
-              type="number"
-              min={0}
-              value={raidNormal}
-              onChange={(e) => setRaidNormal(Math.max(0, parseInt(e.target.value, 10) || 0))}
-              style={inputStyle}
-            />
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <label style={labelStyle}>Heroic</label>
-            <input
-              type="number"
-              min={0}
-              value={raidHeroic}
-              onChange={(e) => setRaidHeroic(Math.max(0, parseInt(e.target.value, 10) || 0))}
-              style={inputStyle}
-            />
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <label style={labelStyle}>Mythic</label>
-            <input
-              type="number"
-              min={0}
-              value={raidMythic}
-              onChange={(e) => setRaidMythic(Math.max(0, parseInt(e.target.value, 10) || 0))}
-              style={inputStyle}
-            />
+      {/* Remove number input spinners */}
+      <style>{`
+        .wpg-input::-webkit-inner-spin-button,
+        .wpg-input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+        .wpg-input { -moz-appearance: textfield; }
+      `}</style>
+
+      {/* 3-column grid */}
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: '1fr 1fr 1fr',
+        gap: '24px',
+        alignItems: 'start',
+        marginBottom: '20px',
+      }}>
+
+        {/* Column 1: Raid Bosses Killed */}
+        <div>
+          <h3 style={columnHeadingStyle}>Raid Bosses Killed</h3>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            {[
+              { label: 'LFR', value: raidLfr, set: setRaidLfr },
+              { label: 'Normal', value: raidNormal, set: setRaidNormal },
+              { label: 'Heroic', value: raidHeroic, set: setRaidHeroic },
+              { label: 'Mythic', value: raidMythic, set: setRaidMythic },
+            ].map(({ label, value, set }) => (
+              <div key={label} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <label style={{ ...labelStyle, marginBottom: 0, minWidth: '52px' }}>{label}</label>
+                <input
+                  type="number"
+                  className="wpg-input"
+                  min={0}
+                  value={value}
+                  onChange={(e) => set(Math.max(0, parseInt(e.target.value, 10) || 0))}
+                  style={inputStyle}
+                />
+              </div>
+            ))}
           </div>
         </div>
-      </div>
 
-      {/* M+ Dungeons */}
-      <div style={{ marginBottom: '20px' }}>
-        <h3 style={{
-          fontSize: '13px',
-          fontWeight: 600,
-          color: 'rgba(255,255,255,0.8)',
-          margin: '0 0 12px 0',
-        }}>
-          M+ Dungeons
-        </h3>
+        {/* Column 2: M+ Dungeons */}
+        <div>
+          <h3 style={columnHeadingStyle}>M+ Dungeons</h3>
 
-        {mplusRuns.length > 0 && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '12px' }}>
-            {mplusRuns.map((run, index) => (
-              <div
-                key={index}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '10px',
-                }}
-              >
-                <span style={{
-                  fontSize: '13px',
-                  color: 'rgba(255,255,255,0.5)',
-                  minWidth: '50px',
-                }}>
-                  Run {index + 1}
-                </span>
-                <input
-                  type="number"
-                  min={0}
-                  placeholder="Key level"
-                  value={run.keyLevel || ''}
-                  onChange={(e) =>
-                    updateRunKeyLevel(index, Math.max(0, parseInt(e.target.value, 10) || 0))
-                  }
-                  style={{ ...inputStyle, width: '80px' }}
-                />
-                <button
-                  type="button"
-                  onClick={() => removeRun(index)}
-                  style={{
-                    background: 'none',
-                    border: 'none',
-                    cursor: 'pointer',
-                    padding: '4px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: 'rgba(255,255,255,0.3)',
-                    transition: 'color 0.15s',
-                  }}
-                  onMouseEnter={(e) => {
-                    (e.currentTarget as HTMLButtonElement).style.color = 'rgba(255,100,100,0.8)';
-                  }}
-                  onMouseLeave={(e) => {
-                    (e.currentTarget as HTMLButtonElement).style.color = 'rgba(255,255,255,0.3)';
-                  }}
-                  aria-label={`Remove run ${index + 1}`}
-                >
-                  <Icon name="x-mark" size={14} />
-                </button>
-              </div>
-            ))}
-          </div>
-        )}
+          {mplusRuns.length > 0 && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginBottom: '10px' }}>
+              {mplusRuns.map((run, index) => (
+                <div key={index} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <span style={{ fontSize: '12px', color: 'rgba(255,255,255,0.4)', minWidth: '36px' }}>
+                    #{index + 1}
+                  </span>
+                  <input
+                    type="number"
+                    className="wpg-input"
+                    min={0}
+                    placeholder="Key"
+                    value={run.keyLevel || ''}
+                    onChange={(e) =>
+                      updateRunKeyLevel(index, Math.max(0, parseInt(e.target.value, 10) || 0))
+                    }
+                    style={inputStyle}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => removeRun(index)}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      cursor: 'pointer',
+                      padding: '4px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      color: 'rgba(255,255,255,0.3)',
+                      transition: 'color 0.15s',
+                    }}
+                    onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.color = 'rgba(255,100,100,0.8)'; }}
+                    onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.color = 'rgba(255,255,255,0.3)'; }}
+                    aria-label={`Remove run ${index + 1}`}
+                  >
+                    <Icon name="x-mark" size={12} />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
 
-        {mplusRuns.length < 8 && (
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={addRun}
-          >
-            Add Run
-          </Button>
-        )}
+          {mplusRuns.length < 8 && (
+            <Button variant="primary" size="sm" onClick={addRun} style={btnStyle}>
+              Add Run
+            </Button>
+          )}
 
-        {mplusRuns.length === 0 && (
-          <p style={{
-            fontSize: '12px',
-            color: 'rgba(255,255,255,0.35)',
-            margin: '8px 0 0 0',
-          }}>
-            No M+ runs added yet. Click "Add Run" to start tracking.
-          </p>
-        )}
-      </div>
+          {mplusRuns.length === 0 && (
+            <p style={{ fontSize: '12px', color: 'rgba(255,255,255,0.3)', margin: '8px 0 0 0' }}>
+              No runs yet.
+            </p>
+          )}
+        </div>
 
-      {/* Delves */}
-      <div style={{ marginBottom: '20px' }}>
-        <h3 style={{
-          fontSize: '13px',
-          fontWeight: 600,
-          color: 'rgba(255,255,255,0.8)',
-          margin: '0 0 12px 0',
-        }}>
-          Delves
-        </h3>
+        {/* Column 3: Delves */}
+        <div>
+          <h3 style={columnHeadingStyle}>Delves</h3>
 
-        {delveRuns.length > 0 && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '12px' }}>
-            {delveRuns.map((run, index) => (
-              <div
-                key={index}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '10px',
-                }}
-              >
-                <span style={{
-                  fontSize: '13px',
-                  color: 'rgba(255,255,255,0.5)',
-                  minWidth: '50px',
-                }}>
-                  Run {index + 1}
-                </span>
-                <input
-                  type="number"
-                  min={1}
-                  max={11}
-                  placeholder="Tier"
-                  value={run.tier || ''}
-                  onChange={(e) =>
-                    updateDelveTier(index, Math.min(11, Math.max(0, parseInt(e.target.value, 10) || 0)))
-                  }
-                  style={{ ...inputStyle, width: '80px' }}
-                />
-                <button
-                  type="button"
-                  onClick={() => removeDelveRun(index)}
-                  style={{
-                    background: 'none',
-                    border: 'none',
-                    cursor: 'pointer',
-                    padding: '4px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: 'rgba(255,255,255,0.3)',
-                    transition: 'color 0.15s',
-                  }}
-                  onMouseEnter={(e) => {
-                    (e.currentTarget as HTMLButtonElement).style.color = 'rgba(255,100,100,0.8)';
-                  }}
-                  onMouseLeave={(e) => {
-                    (e.currentTarget as HTMLButtonElement).style.color = 'rgba(255,255,255,0.3)';
-                  }}
-                  aria-label={`Remove delve run ${index + 1}`}
-                >
-                  <Icon name="x-mark" size={14} />
-                </button>
-              </div>
-            ))}
-          </div>
-        )}
+          {delveRuns.length > 0 && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginBottom: '10px' }}>
+              {delveRuns.map((run, index) => (
+                <div key={index} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <span style={{ fontSize: '12px', color: 'rgba(255,255,255,0.4)', minWidth: '36px' }}>
+                    #{index + 1}
+                  </span>
+                  <input
+                    type="number"
+                    className="wpg-input"
+                    min={1}
+                    max={11}
+                    placeholder="Tier"
+                    value={run.tier || ''}
+                    onChange={(e) =>
+                      setDelveRuns((prev) =>
+                        prev.map((r, i) =>
+                          i === index ? { tier: Math.min(11, Math.max(0, parseInt(e.target.value, 10) || 0)) } : r
+                        )
+                      )
+                    }
+                    style={inputStyle}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setDelveRuns((prev) => prev.filter((_, i) => i !== index))}
+                    style={{
+                      background: 'none', border: 'none', cursor: 'pointer', padding: '4px',
+                      display: 'flex', alignItems: 'center', color: 'rgba(255,255,255,0.3)', transition: 'color 0.15s',
+                    }}
+                    onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.color = 'rgba(255,100,100,0.8)'; }}
+                    onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.color = 'rgba(255,255,255,0.3)'; }}
+                    aria-label={`Remove delve ${index + 1}`}
+                  >
+                    <Icon name="x-mark" size={12} />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
 
-        {delveRuns.length < 8 && (
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={addDelveRun}
-          >
-            Add Run
-          </Button>
-        )}
+          {delveRuns.length < 8 && (
+            <Button variant="primary" size="sm" onClick={() => setDelveRuns((prev) => [...prev, { tier: 0 }])} style={btnStyle}>
+              Add Run
+            </Button>
+          )}
 
-        {delveRuns.length === 0 && (
-          <p style={{
-            fontSize: '12px',
-            color: 'rgba(255,255,255,0.35)',
-            margin: '8px 0 0 0',
-          }}>
-            No delve runs added yet. Click &quot;Add Run&quot; to start tracking.
-          </p>
-        )}
+          {delveRuns.length === 0 && (
+            <p style={{ fontSize: '12px', color: 'rgba(255,255,255,0.3)', margin: '8px 0 0 0' }}>
+              No runs yet.
+            </p>
+          )}
+        </div>
       </div>
 
       {/* Save Button and Status */}
@@ -392,25 +314,18 @@ export function WeeklyProgressGranular({
           size="md"
           onClick={handleSave}
           disabled={isSaving}
+          style={btnStyle}
         >
           {isSaving ? 'Saving...' : 'Save Progress'}
         </Button>
 
         {saveStatus === 'saved' && (
-          <span style={{
-            fontSize: '13px',
-            color: '#4ade80',
-            fontWeight: 500,
-          }}>
+          <span style={{ fontSize: '13px', color: '#4ade80', fontWeight: 500 }}>
             Progress saved successfully
           </span>
         )}
         {saveStatus === 'error' && (
-          <span style={{
-            fontSize: '13px',
-            color: '#f87171',
-            fontWeight: 500,
-          }}>
+          <span style={{ fontSize: '13px', color: '#f87171', fontWeight: 500 }}>
             Failed to save. Please try again.
           </span>
         )}
