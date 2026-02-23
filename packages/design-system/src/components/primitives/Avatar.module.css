@@ -91,6 +91,10 @@
   object-position: center;
   z-index: 0;
   border-radius: 9999px;
+}
+
+/* Overflow effect (opt-in) — scales image to create 3D effect */
+.imageOverflow {
   transform: scale(1.12);
 }
 

@@ -20,6 +20,8 @@ export interface AvatarProps {
   style?: React.CSSProperties;
   /** Override object-position on the image (e.g. "top" to show head/torso) */
   objectPosition?: string;
+  /** Enable 3D overflow effect (scales image to 112%) */
+  enableOverflow?: boolean;
 }
 
 /**
@@ -39,6 +41,7 @@ export const Avatar = React.forwardRef<HTMLDivElement, AvatarProps>(
       className,
       style,
       objectPosition,
+      enableOverflow = false,
     },
     ref,
   ) => {
@@ -53,7 +56,7 @@ export const Avatar = React.forwardRef<HTMLDivElement, AvatarProps>(
           <img
             src={src}
             alt={alt}
-            className={styles.image}
+            className={`${styles.image} ${enableOverflow ? styles.imageOverflow : ''}`.trim()}
             style={objectPosition ? { objectPosition } : undefined}
           />
         ) : (
