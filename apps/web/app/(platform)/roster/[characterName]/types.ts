@@ -13,6 +13,7 @@ export interface CharacterRoster {
   role: 'Tank' | 'Healer' | 'DPS' | null;
   level: number | null;
   avatar_url: string | null;
+  render_url: string | null;
   user_bnet_id: number | null;
   display_order: number | null;
   current_ilvl: number | null;
