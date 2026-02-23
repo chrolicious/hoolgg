@@ -7,7 +7,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  overflow: visible;
+  overflow: hidden;
   background-color: #E5E7EB;
   border: 2px solid #FFFFFF;
   border-radius: 9999px;
@@ -16,24 +16,6 @@
     0 4px 12px rgba(0, 0, 0, 0.25),
     inset 1px 1px 0 rgba(255, 255, 255, 0.5);
   flex-shrink: 0;
-}
-
-/* When overflow is enabled, the circular border becomes a frame that the image can escape */
-.avatarOverflow {
-  background-color: transparent;
-  border-radius: 0; /* Remove clipping from container */
-  border: none; /* Remove container border */
-}
-
-/* Create circular border as overlay so image can escape */
-.avatarOverflow::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border: 2px solid #FFFFFF;
-  border-radius: 9999px;
-  pointer-events: none;
-  z-index: 10;
 }
 
 /* Animated texture overlay */

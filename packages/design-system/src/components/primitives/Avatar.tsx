@@ -48,7 +48,7 @@ export const Avatar = React.forwardRef<HTMLDivElement, AvatarProps>(
     return (
       <div
         ref={ref}
-        className={`${styles.avatar} ${styles[size]} ${enableOverflow ? styles.avatarOverflow : ''} ${className || ''}`.trim()}
+        className={`${styles.avatar} ${styles[size]} ${className || ''}`.trim()}
         style={style}
       >
         {/* Image or fallback */}
