@@ -353,10 +353,10 @@ export function EquipmentGrid({ gearData, avatarUrl }: EquipmentGridProps) {
                   objectPosition: '50% 5%',
                   display: 'block',
                   filter: `
-                    drop-shadow(2px 0px 0.5px black)
-                    drop-shadow(-2px 0px 0.5px black)
-                    drop-shadow(0px 2px 0.5px black)
-                    drop-shadow(0px -2px 0.5px black)
+                    drop-shadow(3px 0px 0.5px black)
+                    drop-shadow(-3px 0px 0.5px black)
+                    drop-shadow(0px 3px 0.5px black)
+                    drop-shadow(0px -3px 0.5px black)
                     drop-shadow(4px 0px 0.5px white)
                     drop-shadow(-4px 0px 0.5px white)
                     drop-shadow(0px 4px 0.5px white)
