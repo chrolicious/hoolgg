@@ -327,9 +327,11 @@ def sync_my_character_gear(cid: int):
                 char.role = blizz._determine_role(char.class_name, char.spec)
             media_href = profile_data.get("media", {}).get("href")
             if media_href:
-                avatar = blizz._fetch_media_avatar(media_href)
-                if avatar:
-                    char.avatar_url = avatar
+                avatar_url, render_url = blizz._fetch_media_assets(media_href)
+                if avatar_url:
+                    char.avatar_url = avatar_url
+                if render_url:
+                    char.render_url = render_url
 
         # Sync Raider.IO if never synced or older than 6 hours
         now = datetime.now(timezone.utc)
@@ -442,9 +444,11 @@ def sync_all_my_characters(cid: int):
                         char.role = blizz._determine_role(char.class_name, char.spec)
                     media_href = profile_data.get("media", {}).get("href")
                     if media_href:
-                        avatar = blizz._fetch_media_avatar(media_href)
-                        if avatar:
-                            char.avatar_url = avatar
+                        avatar_url, render_url = blizz._fetch_media_assets(media_href)
+                        if avatar_url:
+                            char.avatar_url = avatar_url
+                        if render_url:
+                            char.render_url = render_url
 
                 from datetime import datetime, timezone, timedelta
                 from app.services.raiderio_service import RaiderIOService, parse_raiderio_profile, extract_raiderio_gear_icons

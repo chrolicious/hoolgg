@@ -398,7 +398,7 @@ export default function CharacterDetailPage() {
             {/* 5. Equipment Grid */}
             <EquipmentGrid
               gearData={sections.gear}
-              avatarUrl={character.avatar_url}
+              renderUrl={character.render_url}
             />
 
             {/* 6. BiS Tracker */}

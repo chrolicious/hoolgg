@@ -372,22 +372,19 @@ class BlizzardService:
         else:
             return "DPS"
 
-    def _fetch_media_avatar(self, media_href: str) -> Optional[str]:
+    def _fetch_media_assets(self, media_href: str) -> tuple[Optional[str], Optional[str]]:
         """
-        Fetch the character avatar URL from the media endpoint.
-
-        The profile response contains a media.href that points to a
-        character-media endpoint with the actual render/avatar URLs.
+        Fetch both avatar and render URLs from the media endpoint.
 
         Args:
             media_href: Full URL to the character-media endpoint
 
         Returns:
-            Avatar URL string or None
+            Tuple of (avatar_url, render_url) - either can be None
         """
         access_token = self._get_access_token()
         if not access_token:
-            return None
+            return None, None
 
         headers = {"Authorization": f"Bearer {access_token}"}
         timeout = current_app.config.get("BLIZZARD_API_TIMEOUT", 10)
@@ -397,20 +394,21 @@ class BlizzardService:
             response.raise_for_status()
             data = response.json()
 
-            # Prefer full-body transparent render; fall back to bust portrait
             assets = data.get("assets", [])
             asset_map = {a.get("key"): a.get("value") for a in assets}
-            for key in ("main-raw", "main", "avatar"):
-                if asset_map.get(key):
-                    return asset_map[key]
 
-            # Last resort: legacy render_url field
-            render_url = data.get("render_url")
-            if render_url:
-                return render_url
+            # Get avatar (bust portrait)
+            avatar_url = asset_map.get("avatar")
 
-            return None
+            # Get full-body render (prefer main-raw, fallback to main)
+            render_url = asset_map.get("main-raw") or asset_map.get("main")
+
+            # Legacy fallback
+            if not render_url:
+                render_url = data.get("render_url")
+
+            return avatar_url, render_url
 
         except requests.RequestException as e:
-            logger.warning(f"Failed to fetch character avatar: {e}")
-            return None
+            logger.warning(f"Failed to fetch character media: {e}")
+            return None, None

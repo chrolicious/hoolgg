@@ -6,7 +6,7 @@ import { SectionCard } from './section-card';
 
 interface EquipmentGridProps {
   gearData: GearResponse | null;
-  avatarUrl?: string | null;
+  renderUrl?: string | null;
 }
 
 const LEFT_SLOTS = ['head', 'neck', 'shoulder', 'back', 'chest', 'wrist'] as const;
@@ -255,16 +255,7 @@ function SlotCard({ slotKey, item, alignRight = false }: SlotCardProps) {
 
 /** Derive Blizzard's full-body transparent render from the avatar URL.
  *  avatar.jpg  → main-raw.jpg (full body, transparent background)
- *  Falls back to the original avatarUrl if the pattern doesn't match. */
-function getCharacterRenderUrl(avatarUrl: string | null | undefined): string | null {
-  if (!avatarUrl) return null;
-  if (avatarUrl.includes('/avatar.jpg')) {
-    return avatarUrl.replace('/avatar.jpg', '/main-raw.jpg');
-  }
-  return avatarUrl;
-}
-
-export function EquipmentGrid({ gearData, avatarUrl }: EquipmentGridProps) {
+export function EquipmentGrid({ gearData, renderUrl }: EquipmentGridProps) {
   const [renderError, setRenderError] = useState(false);
 
   // Responsive character model width
@@ -279,12 +270,12 @@ export function EquipmentGrid({ gearData, avatarUrl }: EquipmentGridProps) {
     return () => clearTimeout(timer);
   }, [gearData]);
 
-  // Reset render error if avatarUrl changes (e.g. after sync)
+  // Reset render error if renderUrl changes (e.g. after sync)
   useEffect(() => {
     setRenderError(false);
-  }, [avatarUrl]);
+  }, [renderUrl]);
 
-  const renderUrl = !renderError ? getCharacterRenderUrl(avatarUrl) : null;
+  const characterRender = !renderError ? renderUrl : null;
 
   const parsedGear = gearData?.parsed_gear ?? {};
   const avgIlvl = gearData?.avg_ilvl ?? 0;
@@ -343,9 +334,9 @@ export function EquipmentGrid({ gearData, avatarUrl }: EquipmentGridProps) {
               position: 'relative',
             }}
           >
-            {renderUrl ? (
+            {characterRender ? (
               <img
-                src={renderUrl}
+                src={characterRender}
                 alt="Character"
                 style={{
                   width: '100%',
