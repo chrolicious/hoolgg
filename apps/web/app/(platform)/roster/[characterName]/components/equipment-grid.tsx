@@ -361,7 +361,6 @@ export function EquipmentGrid({ gearData, avatarUrl }: EquipmentGridProps) {
                     drop-shadow(-4px 0px 0px white)
                     drop-shadow(0px 4px 0px white)
                     drop-shadow(0px -4px 0px white)
-                    drop-shadow(0px 8px 16px rgba(0, 0, 0, 0.4))
                   `,
                 }}
                 onError={() => setRenderError(true)}
