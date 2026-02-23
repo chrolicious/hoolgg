@@ -253,8 +253,6 @@ function SlotCard({ slotKey, item, alignRight = false }: SlotCardProps) {
   );
 }
 
-/** Derive Blizzard's full-body transparent render from the avatar URL.
- *  avatar.jpg  → main-raw.jpg (full body, transparent background)
 export function EquipmentGrid({ gearData, renderUrl }: EquipmentGridProps) {
   const [renderError, setRenderError] = useState(false);
 
