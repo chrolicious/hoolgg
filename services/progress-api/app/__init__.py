@@ -29,6 +29,10 @@ def create_app() -> Flask:
     app.config["BLIZZARD_API_TIMEOUT"] = int(os.getenv("BLIZZARD_API_TIMEOUT", "10"))
     app.config["BLIZZARD_REDIRECT_URI"] = os.getenv("BLIZZARD_REDIRECT_URI", "http://localhost:3000/auth/callback")
 
+    # Cookie domain for cross-subdomain auth (e.g., .hool.gg)
+    # Leave empty for localhost development
+    app.config["COOKIE_DOMAIN"] = os.getenv("COOKIE_DOMAIN")
+
     # WarcraftLogs API
     app.config["WARCRAFTLOGS_CLIENT_ID"] = os.getenv("WARCRAFTLOGS_CLIENT_ID")
     app.config["WARCRAFTLOGS_CLIENT_SECRET"] = os.getenv("WARCRAFTLOGS_CLIENT_SECRET")

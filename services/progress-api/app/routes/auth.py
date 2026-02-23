@@ -154,10 +154,14 @@ def callback():
     # Clear the state cookie
     response.set_cookie("oauth_state", "", max_age=0)
 
+    # Cookie domain for cross-subdomain auth (e.g., .hool.gg works for dev.hool.gg and api-dev.hool.gg)
+    cookie_domain = current_app.config.get("COOKIE_DOMAIN")
+
     # Set access token cookie (15 minutes)
     response.set_cookie(
         "access_token",
         access_token,
+        domain=cookie_domain,
         httponly=True,
         secure=not current_app.config.get("DEBUG"),
         samesite="Lax",
@@ -168,6 +172,7 @@ def callback():
     response.set_cookie(
         "refresh_token",
         refresh_token,
+        domain=cookie_domain,
         httponly=True,
         secure=not current_app.config.get("DEBUG"),
         samesite="Lax",
@@ -206,10 +211,14 @@ def refresh():
     response_data = {"message": "Access token refreshed successfully"}
     response = make_response(jsonify(response_data))
 
+    # Cookie domain for cross-subdomain auth
+    cookie_domain = current_app.config.get("COOKIE_DOMAIN")
+
     # Set new access token cookie
     response.set_cookie(
         "access_token",
         new_access_token,
+        domain=cookie_domain,
         httponly=True,
         secure=not current_app.config.get("DEBUG"),
         samesite="Lax",
@@ -230,9 +239,12 @@ def logout():
     response_data = {"message": "Logged out successfully"}
     response = make_response(jsonify(response_data))
 
+    # Cookie domain for cross-subdomain auth
+    cookie_domain = current_app.config.get("COOKIE_DOMAIN")
+
     # Clear both tokens by setting max_age to 0
-    response.set_cookie("access_token", "", max_age=0)
-    response.set_cookie("refresh_token", "", max_age=0)
+    response.set_cookie("access_token", "", domain=cookie_domain, max_age=0)
+    response.set_cookie("refresh_token", "", domain=cookie_domain, max_age=0)
 
     # TODO: Task 0.26 will add Redis blacklist for immediate token revocation
     # For now, cookies are just cleared (tokens still valid until expiry)
