@@ -7,7 +7,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
+  overflow: visible;
   background-color: #E5E7EB;
   border: 2px solid #FFFFFF;
   border-radius: 9999px;
@@ -96,7 +96,8 @@
 /* Overflow effect (opt-in) — scales image to create chest-up framing */
 .imageOverflow {
   transform: scale(2.2);
-  border-radius: 0; /* Remove clipping to allow overflow beyond circular frame */
+  /* Clip bottom and sides to circle, leave top open for overflow */
+  clip-path: ellipse(50% 65% at 50% 60%);
 }
 
 /* Fallback initials — clipped to circle */
