@@ -38,8 +38,6 @@ COPY --from=base /app/pnpm-workspace.yaml ./pnpm-workspace.yaml
 COPY --from=base /app/package.json ./package.json
 COPY --from=base /app/tsconfig.base.json ./tsconfig.base.json
 
-WORKDIR /app/apps/web
-
 # Expose port
 EXPOSE 3000
 
@@ -47,5 +45,5 @@ EXPOSE 3000
 HEALTHCHECK --interval=30s --timeout=5s --start-period=30s --retries=3 \
     CMD curl -f http://localhost:3000 || exit 1
 
-# Start the app
-CMD ["pnpm", "start"]
+# Start the app from workspace root
+CMD ["pnpm", "--filter", "@hool/web", "start"]
