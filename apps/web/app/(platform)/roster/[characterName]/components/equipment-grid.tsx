@@ -299,7 +299,7 @@ export function EquipmentGrid({ gearData, avatarUrl }: EquipmentGridProps) {
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: '1fr 420px 1fr',
+          gridTemplateColumns: '1fr 560px 1fr',
           gap: '8px',
           alignItems: 'start',
         }}
@@ -323,6 +323,7 @@ export function EquipmentGrid({ gearData, avatarUrl }: EquipmentGridProps) {
             flexDirection: 'column',
             alignItems: 'center',
             gap: '8px',
+            overflow: 'hidden',
           }}
         >
           <div
@@ -409,7 +410,7 @@ export function EquipmentGrid({ gearData, avatarUrl }: EquipmentGridProps) {
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: '1fr 420px 1fr',
+          gridTemplateColumns: '1fr 560px 1fr',
           gap: '8px',
           marginTop: '8px',
         }}
