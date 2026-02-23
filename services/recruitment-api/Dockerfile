@@ -21,6 +21,7 @@ WORKDIR /app
 # Install runtime dependencies
 RUN apt-get update && apt-get install -y \
     postgresql-client \
+    curl \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy dependencies from builder
@@ -37,7 +38,7 @@ EXPOSE 5001
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
-    CMD python -c "import requests; requests.get('http://localhost:5001/health')"
+    CMD curl -f http://localhost:5001/health || exit 1
 
 # Run migrations and start server
 CMD ["sh", "-c", "alembic upgrade head && gunicorn -w 4 -b 0.0.0.0:5001 --timeout 120 run:app"]
