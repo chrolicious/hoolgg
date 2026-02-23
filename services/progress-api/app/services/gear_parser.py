@@ -39,6 +39,26 @@ ALL_SLOTS = [
 ]
 
 
+def _parse_track(display_string: str) -> Optional[str]:
+    """Extract upgrade track name from Blizzard name_description display_string."""
+    if not display_string:
+        return None
+    s = display_string.lower()
+    if "myth" in s:
+        return "Myth"
+    if "hero" in s:
+        return "Hero"
+    if "champion" in s:
+        return "Champion"
+    if "veteran" in s:
+        return "Veteran"
+    if "explorer" in s:
+        return "Explorer"
+    if "adventurer" in s:
+        return "Adventurer"
+    return None
+
+
 def create_empty_gear() -> Dict[str, Dict[str, Any]]:
     """
     Create a default empty 16-slot gear structure.
@@ -49,13 +69,14 @@ def create_empty_gear() -> Dict[str, Dict[str, Any]]:
     return {
         slot: {
             "ilvl": 0,
-            "track": "Adventurer",
+            "track": None,
             "item_name": "",
             "item_id": 0,
             "quality": "COMMON",
             "sockets": 0,
             "enchanted": False,
             "icon_id": 0,
+            "icon_url": "",
         }
         for slot in ALL_SLOTS
     }
@@ -116,6 +137,22 @@ def parse_equipment_response(
         media_obj = item.get("media", {})
         icon_id = media_obj.get("id", 0) if isinstance(media_obj, dict) else 0
 
+        # Preserve icon_url if the item hasn't changed
+        old_item_id = existing_gear[local_slot].get("item_id", 0)
+        old_icon_url = existing_gear[local_slot].get("icon_url", "")
+
+        # Store media href for potential deferred icon fetching
+        media_key = media_obj.get("key", {}) if isinstance(media_obj, dict) else {}
+        media_href = media_key.get("href", "") if isinstance(media_key, dict) else ""
+
+        # Parse upgrade track from name_description
+        name_desc = item.get("name_description", {})
+        if isinstance(name_desc, dict):
+            display_string = name_desc.get("display_string", "")
+            track = _parse_track(display_string)
+        else:
+            track = None
+
         existing_gear[local_slot]["ilvl"] = ilvl
         existing_gear[local_slot]["item_name"] = item.get("name", "")
         existing_gear[local_slot]["item_id"] = item_id
@@ -123,6 +160,13 @@ def parse_equipment_response(
         existing_gear[local_slot]["sockets"] = sockets
         existing_gear[local_slot]["enchanted"] = len(enchantments) > 0
         existing_gear[local_slot]["icon_id"] = icon_id
+        existing_gear[local_slot]["media_href"] = media_href
+
+        # Preserve icon_url if same item, otherwise clear it so it gets re-fetched
+        existing_gear[local_slot]["icon_url"] = old_icon_url if old_item_id == item_id else ""
+
+        # Set track from name_description if parsed, otherwise clear it
+        existing_gear[local_slot]["track"] = track  # None if not found
 
         # Check if this is a two-handed weapon
         if local_slot == "main_hand":

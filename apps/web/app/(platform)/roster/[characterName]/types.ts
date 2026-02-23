@@ -145,6 +145,7 @@ export interface GearSlotData {
   quality: string | null;
   sockets: number | null;
   enchanted: boolean | null;
+  icon_url: string | null;
 }
 
 export type ParsedGear = Record<string, GearSlotData>;
@@ -236,8 +237,8 @@ export interface TalentsResponse {
 export const GEAR_SLOT_ORDER = [
   'head', 'neck', 'shoulder', 'back',
   'chest', 'wrist', 'hands', 'waist',
-  'legs', 'feet', 'finger_1', 'finger_2',
-  'trinket_1', 'trinket_2', 'main_hand', 'off_hand',
+  'legs', 'feet', 'ring1', 'ring2',
+  'trinket1', 'trinket2', 'main_hand', 'off_hand',
 ] as const;
 
 export const GEAR_SLOT_LABELS: Record<string, string> = {
@@ -251,10 +252,10 @@ export const GEAR_SLOT_LABELS: Record<string, string> = {
   waist: 'Waist',
   legs: 'Legs',
   feet: 'Feet',
-  finger_1: 'Ring 1',
-  finger_2: 'Ring 2',
-  trinket_1: 'Trinket 1',
-  trinket_2: 'Trinket 2',
+  ring1: 'Ring 1',
+  ring2: 'Ring 2',
+  trinket1: 'Trinket 1',
+  trinket2: 'Trinket 2',
   main_hand: 'Main Hand',
   off_hand: 'Off Hand',
 };

@@ -6,7 +6,7 @@ import { Suspense } from 'react';
 import { Card, Button, Icon } from '@hool/design-system';
 
 const GUILD_API_URL =
-  process.env.NEXT_PUBLIC_GUILD_API_URL || 'http://localhost:5000';
+  process.env.NEXT_PUBLIC_GUILD_API_URL || 'http://localhost:5010';
 
 function CallbackHandler() {
   const router = useRouter();
@@ -48,7 +48,7 @@ function CallbackHandler() {
           );
         }
 
-        router.replace('/guilds');
+        window.location.href = '/roster';
       } catch (err) {
         setError(
           err instanceof Error ? err.message : 'An unexpected error occurred.'

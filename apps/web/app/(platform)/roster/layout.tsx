@@ -490,7 +490,7 @@ export default function RosterLayoutInner({ children }: { children: React.ReactN
                 onMouseEnter={(e) => (e.currentTarget.style.color = 'rgba(255,255,255,0.6)')}
                 onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(255,255,255,0.3)')}
               >
-                Laria&apos;s Guide
+                Larias&apos; Guide
               </a>
             </div>
           </div>

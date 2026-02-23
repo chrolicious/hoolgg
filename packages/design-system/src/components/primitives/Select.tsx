@@ -25,6 +25,7 @@ export interface SelectProps {
   disabled?: boolean;
   label?: string;
   className?: string;
+  style?: React.CSSProperties;
 }
 
 export const Select = React.forwardRef<HTMLDivElement, SelectProps>(
@@ -39,6 +40,7 @@ export const Select = React.forwardRef<HTMLDivElement, SelectProps>(
       disabled = false,
       label,
       className,
+      style,
     },
     ref,
   ) => {
@@ -87,7 +89,7 @@ export const Select = React.forwardRef<HTMLDivElement, SelectProps>(
           {/* Trigger button */}
           <motion.button
             className={`${styles.trigger} ${styles[size]}${isSoft ? ` ${styles.soft}` : ''}${disabled ? ` ${styles.disabled}` : ''}${isOpen ? ` ${styles.open}` : ''}`}
-            style={variantVars[variant] as React.CSSProperties}
+            style={{ ...variantVars[variant], ...style } as React.CSSProperties}
             onClick={() => !disabled && setIsOpen(!isOpen)}
             onKeyDown={handleKeyDown}
             whileHover={disabled ? undefined : { y: -1 }}

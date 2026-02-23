@@ -19,6 +19,8 @@ export interface CheckboxProps {
   disabled?: boolean;
   indeterminate?: boolean;
   className?: string;
+  /** Override CSS variables on the inner Button (e.g. class color theming) */
+  buttonStyle?: React.CSSProperties;
 }
 
 export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
@@ -33,6 +35,7 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
       disabled = false,
       indeterminate = false,
       className,
+      buttonStyle,
     },
     ref,
   ) => {
@@ -87,6 +90,7 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
           size={size}
           disabled={disabled}
           selected={isCheckedOrIndeterminate} // Only selected when checked for lift effect
+          style={buttonStyle}
           icon={
             <div style={{ width: iconSizes[size], height: iconSizes[size], display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <AnimatePresence mode="wait">
