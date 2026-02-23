@@ -7,7 +7,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  overflow: visible;
+  overflow: hidden;
   background-color: #E5E7EB;
   border: 2px solid #FFFFFF;
   border-radius: 9999px;
@@ -95,15 +95,7 @@
 
 /* Overflow effect (opt-in) — scales image to create chest-up framing */
 .imageOverflow {
-  transform: scale(2.2);
-  /* Clip to partial circle - open at top, circular on bottom and sides */
-  clip-path: polygon(
-    0% 0%, 100% 0%, /* Top edge - straight across */
-    100% 30%, /* Start curve on right */
-    95% 50%, 85% 65%, 70% 80%, 50% 85%, /* Right side curve */
-    30% 80%, 15% 65%, 5% 50%, /* Bottom curve */
-    0% 30% /* Left side curve back to top */
-  );
+  transform: scale(1.8);
 }
 
 /* Fallback initials — clipped to circle */
