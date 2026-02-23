@@ -60,13 +60,22 @@ export function BisTracker({ bisData, characterId, classColor }: BisTrackerProps
         },
       );
 
-      setItems((prev) => [...prev, result.item]);
+      console.log('BiS API response:', result);
+
+      // Ensure item has required fields with defaults
+      const newItem: BisItem = {
+        ...result.item,
+        obtained: result.item.obtained ?? false,
+      };
+
+      setItems((prev) => [...prev, newItem]);
       setItemName('');
       setItemId('');
       setTargetIlvl('');
       setShowAddForm(false);
     } catch (err) {
       console.error('Failed to add BiS item:', err);
+      alert('Failed to add BiS item. Check console for details.');
     } finally {
       setIsAdding(false);
     }
