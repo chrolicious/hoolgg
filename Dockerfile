@@ -34,6 +34,9 @@ COPY --from=base /app/apps/web/public ./apps/web/public
 # Expose port
 EXPOSE 3000
 
+# Set hostname to listen on all interfaces
+ENV HOSTNAME="0.0.0.0"
+
 # Health check
 HEALTHCHECK --interval=30s --timeout=5s --start-period=30s --retries=3 \
     CMD curl -f http://localhost:3000 || exit 1
