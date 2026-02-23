@@ -238,3 +238,40 @@ def logout():
     # For now, cookies are just cleared (tokens still valid until expiry)
 
     return response
+
+
+@bp.route("/me", methods=["GET"])
+def get_me():
+    """
+    Get current authenticated user info
+
+    Reads JWT from access_token cookie, validates it, and returns user data.
+    """
+    access_token = request.cookies.get("access_token")
+
+    if not access_token:
+        return jsonify({"error": "Not authenticated"}), 401
+
+    # Verify access token
+    payload = verify_token(access_token, token_type="access")
+
+    if not payload:
+        return jsonify({"error": "Invalid or expired token"}), 401
+
+    bnet_id = payload.get("bnet_id")
+    if not bnet_id:
+        return jsonify({"error": "Invalid token payload"}), 401
+
+    # Get user from database
+    db = next(get_db())
+    try:
+        user = db.query(User).filter(User.bnet_id == bnet_id).first()
+        if not user:
+            return jsonify({"error": "User not found"}), 404
+
+        return jsonify({
+            "bnet_id": user.bnet_id,
+            "username": user.bnet_username
+        })
+    finally:
+        db.close()
