@@ -96,8 +96,14 @@
 /* Overflow effect (opt-in) — scales image to create chest-up framing */
 .imageOverflow {
   transform: scale(2.2);
-  /* Clip bottom and sides to circle, leave top open for overflow */
-  clip-path: ellipse(50% 65% at 50% 60%);
+  /* Clip to partial circle - open at top, circular on bottom and sides */
+  clip-path: polygon(
+    0% 0%, 100% 0%, /* Top edge - straight across */
+    100% 30%, /* Start curve on right */
+    95% 50%, 85% 65%, 70% 80%, 50% 85%, /* Right side curve */
+    30% 80%, 15% 65%, 5% 50%, /* Bottom curve */
+    0% 30% /* Left side curve back to top */
+  );
 }
 
 /* Fallback initials — clipped to circle */
