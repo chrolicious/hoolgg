@@ -332,6 +332,30 @@ export function EquipmentGrid({ gearData, renderUrl }: EquipmentGridProps) {
               position: 'relative',
             }}
           >
+            {/* SVG filter for character outline effect */}
+            <svg style={{ position: 'absolute', width: 0, height: 0 }}>
+              <defs>
+                <filter id="character-outline-filter" colorInterpolationFilters="sRGB">
+                  {/* Black outline - dilate alpha channel by 3px */}
+                  <feMorphology operator="dilate" radius="3" in="SourceAlpha" result="dilated-black" />
+                  <feFlood floodColor="black" result="black" />
+                  <feComposite in="black" in2="dilated-black" operator="in" result="black-outline" />
+
+                  {/* White outline - dilate alpha channel by 5px */}
+                  <feMorphology operator="dilate" radius="5" in="SourceAlpha" result="dilated-white" />
+                  <feFlood floodColor="white" result="white" />
+                  <feComposite in="white" in2="dilated-white" operator="in" result="white-outline" />
+
+                  {/* Stack layers: white outline (bottom), black outline (middle), original image (top) */}
+                  <feMerge>
+                    <feMergeNode in="white-outline" />
+                    <feMergeNode in="black-outline" />
+                    <feMergeNode in="SourceGraphic" />
+                  </feMerge>
+                </filter>
+              </defs>
+            </svg>
+
             {characterRender ? (
               <img
                 src={characterRender}
@@ -342,16 +366,7 @@ export function EquipmentGrid({ gearData, renderUrl }: EquipmentGridProps) {
                   objectFit: 'cover',
                   objectPosition: '50% -5%',
                   display: 'block',
-                  filter: `
-                    drop-shadow(3px 0px 0px black)
-                    drop-shadow(-3px 0px 0px black)
-                    drop-shadow(0px 3px 0px black)
-                    drop-shadow(0px -3px 0px black)
-                    drop-shadow(4px 0px 0px white)
-                    drop-shadow(-4px 0px 0px white)
-                    drop-shadow(0px 4px 0px white)
-                    drop-shadow(0px -4px 0px white)
-                  `,
+                  filter: 'url(#character-outline-filter)',
                 }}
                 onError={() => setRenderError(true)}
               />
