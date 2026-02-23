@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import { Button, Icon, Select, Toggle } from '@hool/design-system';
 import { buildBtnStyle } from '../utils';
 import { progressApi } from '../../../../lib/api';
@@ -11,7 +11,7 @@ import { BIS_SLOTS } from '../types';
 interface BisTrackerProps {
   bisData: BisResponse | null;
   characterId: number;
-  
+
   classColor: string;
 }
 
@@ -31,12 +31,6 @@ const slotOptions = BIS_SLOTS.map((slot) => ({
   label: slot,
 }));
 
-interface WowheadItem {
-  name: string;
-  id: number;
-  quality: number;
-}
-
 export function BisTracker({ bisData, characterId, classColor }: BisTrackerProps) {
   const [items, setItems] = useState<BisItem[]>(bisData?.items ?? []);
   const [showAddForm, setShowAddForm] = useState(false);
@@ -45,63 +39,8 @@ export function BisTracker({ bisData, characterId, classColor }: BisTrackerProps
   const [itemId, setItemId] = useState('');
   const [targetIlvl, setTargetIlvl] = useState('');
   const [isAdding, setIsAdding] = useState(false);
-  const [suggestions, setSuggestions] = useState<WowheadItem[]>([]);
-  const [showSuggestions, setShowSuggestions] = useState(false);
-  const suggestionsRef = useRef<HTMLDivElement>(null);
 
   const btnStyle = buildBtnStyle(classColor);
-
-  // Close suggestions when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (suggestionsRef.current && !suggestionsRef.current.contains(event.target as Node)) {
-        setShowSuggestions(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
-  // Debounced Wowhead search
-  const searchWowhead = async (query: string) => {
-    if (query.length < 3) {
-      setSuggestions([]);
-      return;
-    }
-
-    try {
-      const response = await fetch(
-        `https://www.wowhead.com/search/suggestions?q=${encodeURIComponent(query)}&type=item`
-      );
-      const data = await response.json();
-
-      if (data && data.results) {
-        setSuggestions(data.results.slice(0, 10));
-      }
-    } catch (err) {
-      console.error('Wowhead search failed:', err);
-    }
-  };
-
-  const handleItemNameChange = (value: string) => {
-    setItemName(value);
-    setShowSuggestions(true);
-
-    // Debounce search
-    const timer = setTimeout(() => {
-      searchWowhead(value);
-    }, 300);
-
-    return () => clearTimeout(timer);
-  };
-
-  const selectSuggestion = (item: WowheadItem) => {
-    setItemName(item.name);
-    setItemId(String(item.id));
-    setShowSuggestions(false);
-    setSuggestions([]);
-  };
 
   const obtainedCount = items.filter((item) => item && item.obtained).length;
   const totalCount = items.length;
@@ -238,49 +177,13 @@ export function BisTracker({ bisData, characterId, classColor }: BisTrackerProps
               placeholder="Slot"
               style={btnStyle}
             />
-            <div ref={suggestionsRef} style={{ position: 'relative' }}>
-              <input
-                type="text"
-                placeholder="Item name (search Wowhead)"
-                value={itemName}
-                onChange={(e) => handleItemNameChange(e.target.value)}
-                onFocus={() => setShowSuggestions(true)}
-                style={inputStyle}
-              />
-              {showSuggestions && suggestions.length > 0 && (
-                <div style={{
-                  position: 'absolute',
-                  top: '100%',
-                  left: 0,
-                  right: 0,
-                  marginTop: '4px',
-                  backgroundColor: 'rgba(0,0,0,0.95)',
-                  border: '1px solid rgba(255,255,255,0.15)',
-                  borderRadius: '6px',
-                  maxHeight: '200px',
-                  overflowY: 'auto',
-                  zIndex: 100,
-                }}>
-                  {suggestions.map((item) => (
-                    <div
-                      key={item.id}
-                      onClick={() => selectSuggestion(item)}
-                      style={{
-                        padding: '8px 12px',
-                        cursor: 'pointer',
-                        fontSize: '13px',
-                        color: '#fff',
-                        borderBottom: '1px solid rgba(255,255,255,0.05)',
-                      }}
-                      onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.1)'}
-                      onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
-                    >
-                      {item.name}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
+            <input
+              type="text"
+              placeholder="Item name (required)"
+              value={itemName}
+              onChange={(e) => setItemName(e.target.value)}
+              style={inputStyle}
+            />
           </div>
           <div style={{
             display: 'grid',
