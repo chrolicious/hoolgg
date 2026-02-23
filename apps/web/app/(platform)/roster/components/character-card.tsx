@@ -230,7 +230,7 @@ export function CharacterCard({
     <div className={cardStyles.cardWrapper} style={{ position: 'relative', paddingTop: '32px' }}>
       {/* Avatar — positioned to overlap the card border */}
       <Avatar
-        src={getBustUrl(avatarUrl)}
+        src={avatarUrl ?? undefined}
         fallback={characterName.substring(0, 2).toUpperCase()}
         alt={characterName}
         size="lg"
