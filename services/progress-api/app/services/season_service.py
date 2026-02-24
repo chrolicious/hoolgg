@@ -79,7 +79,8 @@ def calculate_current_week(region: str = "us") -> int:
     """
     Calculate current season week based on today's date and region.
 
-    US/TW resets on Tuesday. EU/KR resets on Wednesday (+1 day offset).
+    Early Access (week -2) is a global simultaneous release (no regional offset).
+    Weekly resets: US/TW on Tuesday, EU/KR on Wednesday (+1 day offset).
 
     Args:
         region: Server region ('us', 'eu', 'kr', 'tw')
@@ -89,11 +90,15 @@ def calculate_current_week(region: str = "us") -> int:
     """
     today = date.today()
 
-    # EU/KR/TW reset Wednesday = +1 day from Tuesday anchor dates
-    offset = timedelta(days=1) if region in ("eu", "kr", "tw") else timedelta(0)
+    # EU/KR reset Wednesday = +1 day from Tuesday anchor dates
+    # EXCEPT for Early Access which is a global simultaneous release
+    regional_offset = timedelta(days=1) if region in ("eu", "kr") else timedelta(0)
 
     current_week = -2  # default to earliest
     for week_num, start_date in SEASON_WEEK_DATES:
+        # Early Access is global - no regional offset
+        offset = timedelta(0) if week_num == -2 else regional_offset
+
         if today >= (start_date + offset):
             current_week = week_num
         else:
