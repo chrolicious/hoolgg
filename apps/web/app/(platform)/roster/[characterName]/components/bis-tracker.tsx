@@ -138,6 +138,12 @@ export function BisTracker({ bisData, characterId, classColor }: BisTrackerProps
         </span>
       }
     >
+      {/* Fix toggle vertical alignment - the sticker frame adds extra visual height */}
+      <style>{`
+        .bis-toggle {
+          transform: translateY(2px);
+        }
+      `}</style>
       {/* Add Item Toggle */}
       <div style={{ marginBottom: items.length > 0 || showAddForm ? '16px' : '0' }}>
         <Button
@@ -321,6 +327,7 @@ export function BisTracker({ bisData, characterId, classColor }: BisTrackerProps
                   onChange={(val) => handleToggleObtained(item, val)}
                   size="sm"
                   variant="purple"
+                  className="bis-toggle"
                 />
 
                 {/* Delete Button */}
