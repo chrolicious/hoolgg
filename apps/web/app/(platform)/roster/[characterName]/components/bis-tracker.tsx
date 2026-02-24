@@ -315,12 +315,8 @@ export function BisTracker({ bisData, characterId, classColor }: BisTrackerProps
                 gap: '8px',
                 flexShrink: 0,
               }}>
-                {/* Obtained Toggle - wrapped to force vertical centering */}
-                <div style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  height: '32px', // Match button height
-                }}>
+                {/* Obtained Toggle - nudge down to compensate for sticker frame's negative margin */}
+                <div style={{ transform: 'translateY(3px)' }}>
                   <Toggle
                     checked={item.obtained}
                     onChange={(val) => handleToggleObtained(item, val)}
