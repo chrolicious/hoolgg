@@ -316,7 +316,7 @@ export function BisTracker({ bisData, characterId, classColor }: BisTrackerProps
                 flexShrink: 0,
               }}>
                 {/* Obtained Toggle */}
-                <div style={{ transform: 'translateY(-2px)' }}>
+                <div style={{ transform: 'translateY(-4px)' }}>
                   <Toggle
                     checked={item.obtained}
                     onChange={(val) => handleToggleObtained(item, val)}
