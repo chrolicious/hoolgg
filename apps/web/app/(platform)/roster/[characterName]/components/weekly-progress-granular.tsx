@@ -62,7 +62,10 @@ export function WeeklyProgressGranular({
   });
 
   const [delveRuns, setDelveRuns] = useState<Array<{ tier: number }>>(() => {
-    if (progress?.highest_delve && progress.highest_delve > 0) {
+    if (progress?.delve_runs && progress.delve_runs.length > 0) {
+      return progress.delve_runs.map((tier: number) => ({ tier }));
+    } else if (progress?.highest_delve && progress.highest_delve > 0) {
+      // Fall back to legacy highest_delve field
       return [{ tier: progress.highest_delve }];
     }
     return [];
@@ -83,7 +86,9 @@ export function WeeklyProgressGranular({
     } else {
       setMplusRuns([]);
     }
-    if (p?.highest_delve && p.highest_delve > 0) {
+    if (p?.delve_runs && p.delve_runs.length > 0) {
+      setDelveRuns(p.delve_runs.map((tier: number) => ({ tier })));
+    } else if (p?.highest_delve && p.highest_delve > 0) {
       setDelveRuns([{ tier: p.highest_delve }]);
     } else {
       setDelveRuns([]);
@@ -126,9 +131,7 @@ export function WeeklyProgressGranular({
         raid_heroic: raidHeroic,
         raid_mythic: raidMythic,
         m_plus_runs: mplusRuns.map((r) => r.keyLevel).filter((k) => k > 0),
-        highest_delve: delveRuns.length > 0
-          ? Math.max(...delveRuns.map((r) => r.tier).filter((t) => t > 0), 0)
-          : 0,
+        delve_runs: delveRuns.map((r) => r.tier).filter((t) => t > 0),
       });
 
       setSaveStatus('saved');

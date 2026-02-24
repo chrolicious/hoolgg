@@ -24,7 +24,8 @@ class GreatVaultEntry(Base):
     m_plus_runs = Column(JSON, nullable=True)  # List of completed M+ key levels
 
     # Delves progress
-    highest_delve = Column(Integer, server_default="0")
+    highest_delve = Column(Integer, server_default="0")  # Legacy - kept for backward compatibility
+    delve_runs = Column(JSON, nullable=True)  # List of completed delve tiers
 
     # World/PvP vault
     world_vault = Column(JSON, nullable=True)  # Flexible structure for world activities
@@ -52,7 +53,8 @@ class GreatVaultEntry(Base):
             "raid_heroic": self.raid_heroic,
             "raid_mythic": self.raid_mythic,
             "m_plus_runs": self.m_plus_runs,
-            "highest_delve": self.highest_delve,
+            "highest_delve": self.highest_delve,  # Legacy field
+            "delve_runs": self.delve_runs,
             "world_vault": self.world_vault,
             "created_at": self.created_at.isoformat() if self.created_at else None,
             "updated_at": self.updated_at.isoformat() if self.updated_at else None,

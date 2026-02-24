@@ -101,7 +101,8 @@ export interface VaultProgress {
   raid_heroic: number;
   raid_mythic: number;
   m_plus_runs: number[];
-  highest_delve: number;
+  highest_delve: number; // Legacy field
+  delve_runs?: number[]; // New field - array of delve tiers
   world_vault: unknown;
 }
 

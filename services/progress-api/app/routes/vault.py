@@ -89,6 +89,7 @@ def get_vault(cid: int):
                 "raid_mythic": 0,
                 "m_plus_runs": [],
                 "highest_delve": 0,
+                "delve_runs": [],
                 "world_vault": None,
             }
             calculated_slots = calculate_vault_slots(vault_data)
@@ -165,7 +166,7 @@ def update_vault(cid: int):
             # Update existing fields
             updatable = [
                 "raid_lfr", "raid_normal", "raid_heroic", "raid_mythic",
-                "m_plus_runs", "highest_delve", "world_vault",
+                "m_plus_runs", "highest_delve", "delve_runs", "world_vault",
             ]
             for field in updatable:
                 if field in data:
@@ -180,6 +181,7 @@ def update_vault(cid: int):
                 raid_mythic=data.get("raid_mythic", 0),
                 m_plus_runs=data.get("m_plus_runs"),
                 highest_delve=data.get("highest_delve", 0),
+                delve_runs=data.get("delve_runs"),
                 world_vault=data.get("world_vault"),
             )
             db.add(entry)
