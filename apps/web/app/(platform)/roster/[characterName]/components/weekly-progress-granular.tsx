@@ -182,6 +182,7 @@ export function WeeklyProgressGranular({
                   min={0}
                   value={value}
                   onChange={(e) => set(Math.max(0, parseInt(e.target.value, 10) || 0))}
+                  onFocus={(e) => e.target.select()}
                   style={inputStyle}
                 />
               </div>
@@ -209,6 +210,7 @@ export function WeeklyProgressGranular({
                     onChange={(e) =>
                       updateRunKeyLevel(index, Math.max(0, parseInt(e.target.value, 10) || 0))
                     }
+                    onFocus={(e) => e.target.select()}
                     style={inputStyle}
                   />
                   <button
@@ -273,6 +275,7 @@ export function WeeklyProgressGranular({
                         )
                       )
                     }
+                    onFocus={(e) => e.target.select()}
                     style={inputStyle}
                   />
                   <button

@@ -286,7 +286,7 @@ export function CharacterHeader({
                 ].map(({ label, value, total, color, textColor }) => (
                   <div key={label} style={{
                     textAlign: 'center', padding: '6px 4px', borderRadius: '6px',
-                    backgroundColor: value > 0 ? `${color}0.2)` : 'rgba(0,0,0,0.35)',
+                    backgroundColor: 'rgba(0,0,0,0.35)',
                     border: `1px solid ${value > 0 ? `${color}0.35)` : 'rgba(255,255,255,0.08)'}`,
                   }}>
                     <div style={{ fontSize: '8px', color: 'rgba(255,255,255,0.5)', marginBottom: '2px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>

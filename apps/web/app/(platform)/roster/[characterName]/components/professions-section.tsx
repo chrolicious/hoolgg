@@ -360,6 +360,7 @@ export function ProfessionsSection({
                       parseInt(e.target.value, 10) || 0,
                     )
                   }
+                  onFocus={(e) => e.target.select()}
                   onBlur={() => handleNumberBlur(profName, 'knowledge_points')}
                   style={inputStyle}
                 />
@@ -388,6 +389,7 @@ export function ProfessionsSection({
                       parseInt(e.target.value, 10) || 0,
                     )
                   }
+                  onFocus={(e) => e.target.select()}
                   onBlur={() => handleNumberBlur(profName, 'concentration')}
                   style={inputStyle}
                 />

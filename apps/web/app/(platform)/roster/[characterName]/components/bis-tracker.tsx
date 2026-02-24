@@ -196,6 +196,7 @@ export function BisTracker({ bisData, characterId, classColor }: BisTrackerProps
               placeholder="Item ID (optional)"
               value={itemId}
               onChange={(e) => setItemId(e.target.value)}
+              onFocus={(e) => e.target.select()}
               style={inputStyle}
             />
             <input
@@ -203,6 +204,7 @@ export function BisTracker({ bisData, characterId, classColor }: BisTrackerProps
               placeholder="Target ilvl (optional)"
               value={targetIlvl}
               onChange={(e) => setTargetIlvl(e.target.value)}
+              onFocus={(e) => e.target.select()}
               style={inputStyle}
             />
             <Button

@@ -392,6 +392,7 @@ export default function CharacterDetailPage() {
                 characterId={character.id}
                 currentWeek={currentWeek}
                 selectedWeek={selectedWeek}
+                onCrestsUpdate={handleSync}
               />
             </div>
 
