@@ -23,5 +23,5 @@ COPY . .
 # Expose port 5000
 EXPOSE 5000
 
-# Run the application
-CMD ["python", "run.py"]
+# Run migrations and start the application
+CMD ["sh", "-c", "alembic upgrade head && python run.py"]
