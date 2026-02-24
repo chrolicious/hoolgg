@@ -27,6 +27,11 @@ def create_app() -> Flask:
     app.config["BLIZZARD_CLIENT_SECRET"] = os.getenv("BLIZZARD_CLIENT_SECRET")
     app.config["BLIZZARD_REGION"] = os.getenv("BLIZZARD_REGION", "us")
     app.config["BLIZZARD_API_TIMEOUT"] = int(os.getenv("BLIZZARD_API_TIMEOUT", "10"))
+    app.config["BLIZZARD_REDIRECT_URI"] = os.getenv("BLIZZARD_REDIRECT_URI", "http://localhost:3000/auth/callback")
+
+    # Cookie domain for cross-subdomain auth (e.g., .hool.gg)
+    # Leave empty for localhost development
+    app.config["COOKIE_DOMAIN"] = os.getenv("COOKIE_DOMAIN")
 
     # WarcraftLogs API
     app.config["WARCRAFTLOGS_CLIENT_ID"] = os.getenv("WARCRAFTLOGS_CLIENT_ID")
@@ -50,6 +55,7 @@ def create_app() -> Flask:
     # Register blueprints
     from app.routes import (
         health,
+        auth,
         bis,
         crests,
         gear,
@@ -63,6 +69,7 @@ def create_app() -> Flask:
     )
 
     app.register_blueprint(health.bp)
+    app.register_blueprint(auth.bp)
     app.register_blueprint(bis.bp)
     app.register_blueprint(crests.bp)
     app.register_blueprint(gear.bp)

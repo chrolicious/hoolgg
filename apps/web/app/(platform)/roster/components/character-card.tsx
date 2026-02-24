@@ -40,6 +40,15 @@ const CLASS_COLORS: Record<string, string> = {
   'Warrior': '#C69B6D',
 };
 
+function getBustUrl(url: string | undefined): string | undefined {
+  if (!url) return undefined;
+  return url
+    .replace('/main-raw.jpg', '/avatar.jpg')
+    .replace('/main-raw.png', '/avatar.png')
+    .replace('/main.jpg', '/avatar.jpg')
+    .replace('/main.png', '/avatar.png');
+}
+
 interface VaultSlotData {
   unlocked: boolean;
   ilvl: number;
@@ -221,7 +230,7 @@ export function CharacterCard({
     <div className={cardStyles.cardWrapper} style={{ position: 'relative', paddingTop: '32px' }}>
       {/* Avatar — positioned to overlap the card border */}
       <Avatar
-        src={avatarUrl}
+        src={getBustUrl(avatarUrl)}
         fallback={characterName.substring(0, 2).toUpperCase()}
         alt={characterName}
         size="lg"

@@ -11,19 +11,21 @@ logger = logging.getLogger(__name__)
 class BlizzardService:
     """Service for interacting with Blizzard API"""
 
-    def __init__(self):
+    def __init__(self, region: Optional[str] = None):
         self.access_token: Optional[str] = None
         self.token_expires_at: Optional[float] = None
+        self._region = region  # Per-instance region override
+
+    def _get_region(self) -> str:
+        return self._region or current_app.config.get("BLIZZARD_REGION", "us")
 
     def _get_oauth_url(self) -> str:
         """Get OAuth URL for region"""
-        region = current_app.config.get("BLIZZARD_REGION", "us")
-        return f"https://{region}.battle.net"
+        return f"https://{self._get_region()}.battle.net"
 
     def _get_api_url(self) -> str:
         """Get API URL for region"""
-        region = current_app.config.get("BLIZZARD_REGION", "us")
-        return f"https://{region}.api.blizzard.com"
+        return f"https://{self._get_region()}.api.blizzard.com"
 
     def _get_access_token(self) -> Optional[str]:
         """
@@ -88,8 +90,7 @@ class BlizzardService:
             return None
 
         api_url = self._get_api_url()
-        region = current_app.config.get("BLIZZARD_REGION", "us")
-        namespace = f"profile-{region}"
+        namespace = f"profile-{self._get_region()}"
 
         # Normalize character name
         character_name_lower = character_name.lower()
@@ -149,8 +150,7 @@ class BlizzardService:
             return None
 
         api_url = self._get_api_url()
-        region = current_app.config.get("BLIZZARD_REGION", "us")
-        namespace = f"profile-{region}"
+        namespace = f"profile-{self._get_region()}"
 
         character_name_lower = character_name.lower()
         realm_slug_lower = realm_slug.lower()
@@ -191,8 +191,7 @@ class BlizzardService:
             return None
 
         api_url = self._get_api_url()
-        region = current_app.config.get("BLIZZARD_REGION", "us")
-        namespace = f"profile-{region}"
+        namespace = f"profile-{self._get_region()}"
 
         character_name_lower = character_name.lower()
         realm_slug_lower = realm_slug.lower()
@@ -223,6 +222,48 @@ class BlizzardService:
 
         except requests.RequestException as e:
             logger.error(f"Failed to fetch character stats: {e}")
+            return None
+
+    def get_item_icon_url(self, item_id: int) -> Optional[str]:
+        """
+        Fetch the icon URL for a WoW item from Blizzard's static game data API.
+
+        Args:
+            item_id: The WoW item ID
+
+        Returns:
+            Icon URL string or None if failed
+        """
+        if not item_id:
+            return None
+
+        access_token = self._get_access_token()
+        if not access_token:
+            return None
+
+        region = self._get_region()
+        api_url = self._get_api_url()
+        # Static game data uses static-{region} namespace, not profile-{region}
+        namespace = f"static-{region}"
+
+        endpoint = f"{api_url}/data/wow/media/item/{item_id}"
+        params = {"namespace": namespace, "locale": "en_US"}
+        headers = {"Authorization": f"Bearer {access_token}"}
+        timeout = current_app.config.get("BLIZZARD_API_TIMEOUT", 10)
+
+        try:
+            response = requests.get(endpoint, params=params, headers=headers, timeout=timeout)
+            response.raise_for_status()
+            data = response.json()
+
+            assets = data.get("assets", [])
+            for asset in assets:
+                if asset.get("key") == "icon":
+                    return asset.get("value")
+            return None
+
+        except requests.RequestException as e:
+            logger.debug(f"Failed to fetch icon for item {item_id}: {e}")
             return None
 
     def calculate_average_ilvl(self, equipment_data: Dict[str, Any]) -> Optional[float]:
@@ -331,22 +372,19 @@ class BlizzardService:
         else:
             return "DPS"
 
-    def _fetch_media_avatar(self, media_href: str) -> Optional[str]:
+    def _fetch_media_assets(self, media_href: str) -> tuple[Optional[str], Optional[str]]:
         """
-        Fetch the character avatar URL from the media endpoint.
-
-        The profile response contains a media.href that points to a
-        character-media endpoint with the actual render/avatar URLs.
+        Fetch both avatar and render URLs from the media endpoint.
 
         Args:
             media_href: Full URL to the character-media endpoint
 
         Returns:
-            Avatar URL string or None
+            Tuple of (avatar_url, render_url) - either can be None
         """
         access_token = self._get_access_token()
         if not access_token:
-            return None
+            return None, None
 
         headers = {"Authorization": f"Bearer {access_token}"}
         timeout = current_app.config.get("BLIZZARD_API_TIMEOUT", 10)
@@ -356,19 +394,21 @@ class BlizzardService:
             response.raise_for_status()
             data = response.json()
 
-            # Look for avatar or inset avatar in assets
             assets = data.get("assets", [])
-            for asset in assets:
-                if asset.get("key") == "avatar":
-                    return asset.get("value")
+            asset_map = {a.get("key"): a.get("value") for a in assets}
 
-            # Fallback: use render_url or bust_url
-            render_url = data.get("render_url")
-            if render_url:
-                return render_url
+            # Get avatar (bust portrait)
+            avatar_url = asset_map.get("avatar")
 
-            return None
+            # Get full-body render (prefer main-raw, fallback to main)
+            render_url = asset_map.get("main-raw") or asset_map.get("main")
+
+            # Legacy fallback
+            if not render_url:
+                render_url = data.get("render_url")
+
+            return avatar_url, render_url
 
         except requests.RequestException as e:
-            logger.warning(f"Failed to fetch character avatar: {e}")
-            return None
+            logger.warning(f"Failed to fetch character media: {e}")
+            return None, None

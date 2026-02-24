@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react';
 import type { BadgeVariant } from '@hool/design-system';
 
 // WoW class colors from official Blizzard palette
@@ -34,12 +35,61 @@ export const CLASS_TO_VARIANT: Record<string, BadgeVariant> = {
   'Warrior': 'warrior',
 };
 
+export function getContrastColor(hex: string): string {
+  const clean = hex.replace('#', '');
+  const r = parseInt(clean.substring(0, 2), 16);
+  const g = parseInt(clean.substring(2, 4), 16);
+  const b = parseInt(clean.substring(4, 6), 16);
+  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+  return luminance > 0.55 ? '#1a1a1a' : '#FFFFFF';
+}
+
+export function lightenHex(hex: string, amount = 20): string {
+  const clean = hex.replace('#', '');
+  const r = Math.min(255, parseInt(clean.substring(0, 2), 16) + amount);
+  const g = Math.min(255, parseInt(clean.substring(2, 4), 16) + amount);
+  const b = Math.min(255, parseInt(clean.substring(4, 6), 16) + amount);
+  return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+}
+
 export function hexToRgba(hex: string, alpha: number): string {
   const clean = hex.replace('#', '');
   const r = parseInt(clean.substring(0, 2), 16);
   const g = parseInt(clean.substring(2, 4), 16);
   const b = parseInt(clean.substring(4, 6), 16);
   return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
+/**
+ * Build a complete Button style override using the character's class color.
+ * Sets all CSS variables including the halftone overlay vars so hover
+ * renders in the class color instead of the default gold.
+ */
+export function buildBtnStyle(classColor: string): CSSProperties {
+  const hoverBg = lightenHex(classColor);
+  const textColor = getContrastColor(classColor);
+  return {
+    '--btn-bg': classColor,
+    '--btn-color': textColor,
+    '--btn-hover-bg': hoverBg,
+    '--btn-hover-bg-fade': hexToRgba(hoverBg, 0.9),
+    '--btn-dot-color': textColor === '#FFFFFF' ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.12)',
+    '--btn-hover-color': getContrastColor(hoverBg),
+  } as CSSProperties;
+}
+
+/**
+ * Build a soft Button style override (e.g. primary-soft) that keeps the
+ * cream default background but changes hover to the class color.
+ */
+export function buildSoftBtnStyle(classColor: string): CSSProperties {
+  const textColor = getContrastColor(classColor);
+  return {
+    '--btn-hover-bg': classColor,
+    '--btn-hover-bg-fade': hexToRgba(classColor, 0.9),
+    '--btn-dot-color': textColor === '#FFFFFF' ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.12)',
+    '--btn-hover-color': textColor,
+  } as CSSProperties;
 }
 
 export function formatRelativeTime(isoString: string | null | undefined): string {
@@ -56,6 +106,20 @@ export function formatRelativeTime(isoString: string | null | undefined): string
   if (diffHours < 24) return `${diffHours}h ago`;
   const diffDays = Math.floor(diffHours / 24);
   return `${diffDays}d ago`;
+}
+
+/**
+ * Derive the small bust portrait (avatar.jpg) from any Blizzard render URL.
+ * After the backend stores main-raw.jpg, Avatar components use this to get
+ * the appropriate small circular portrait.
+ */
+export function getBustUrl(url: string | null | undefined): string | undefined {
+  if (!url) return undefined;
+  return url
+    .replace('/main-raw.jpg', '/avatar.jpg')
+    .replace('/main-raw.png', '/avatar.png')
+    .replace('/main.jpg', '/avatar.jpg')
+    .replace('/main.png', '/avatar.png');
 }
 
 export function getDaysUntilReset(): number {

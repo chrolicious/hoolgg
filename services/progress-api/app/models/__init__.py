@@ -45,6 +45,7 @@ def get_db():
 from app.models.character_progress import CharacterProgress
 from app.models.weekly_target import WeeklyTarget
 from app.models.guild_message import GuildMessage
+from app.models.user import User
 
 __all__ = [
     "Base",
@@ -53,4 +54,5 @@ __all__ = [
     "CharacterProgress",
     "WeeklyTarget",
     "GuildMessage",
+    "User",
 ]

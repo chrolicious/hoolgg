@@ -9,9 +9,10 @@ interface VaultAndCrestsProps {
   vaultData: VaultResponse | null;
   crestsData: CrestsResponse | null;
   characterId: number;
-  
+
   currentWeek: number;
   selectedWeek?: number;
+  onCrestsUpdate?: () => void;
 }
 
 // ─── Vault row configuration ───
@@ -159,14 +160,15 @@ function GreatVault({ vaultData }: { vaultData: VaultResponse | null }) {
 interface CrestsProps {
   crestsData: CrestsResponse | null;
   characterId: number;
-  
+
   currentWeek: number;
   selectedWeek?: number;
+  onCrestsUpdate?: () => void;
 }
 
 const PER_WEEK_CAP = 100; // Fixed per-type weekly cap (raised from 90 to 100 in Midnight)
 
-function Crests({ crestsData, characterId,  currentWeek, selectedWeek }: CrestsProps) {
+function Crests({ crestsData, characterId,  currentWeek, selectedWeek, onCrestsUpdate }: CrestsProps) {
   // Cumulative cap increases by 100 each season week (e.g. W1=100, W2=200, W3=300)
   // Computed purely from week number — allows catch-up on missed weeks
   const displayWeek = selectedWeek ?? currentWeek;
@@ -206,11 +208,13 @@ function Crests({ crestsData, characterId,  currentWeek, selectedWeek }: CrestsP
             collected,
           },
         );
+        // Refresh parent data to update header
+        onCrestsUpdate?.();
       } catch (err) {
         console.error('Failed to save crest:', err);
       }
     },
-    [ characterId, currentWeek],
+    [ characterId, currentWeek, onCrestsUpdate],
   );
 
   const handleChange = (crestKey: string, value: number) => {
@@ -237,6 +241,11 @@ function Crests({ crestsData, characterId,  currentWeek, selectedWeek }: CrestsP
 
   return (
     <SectionCard title="Crests">
+      <style>{`
+        .crest-input::-webkit-inner-spin-button,
+        .crest-input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+        .crest-input { -moz-appearance: textfield; }
+      `}</style>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
         {CREST_TYPES.map((crest) => {
           const data = crestsData?.crests?.[crest.key] ?? null;
@@ -286,12 +295,14 @@ function Crests({ crestsData, characterId,  currentWeek, selectedWeek }: CrestsP
                 <span style={{ fontSize: '10px', color: 'rgba(255,255,255,0.35)' }}>wk</span>
                 <input
                   type="number"
+                  className="crest-input"
                   min={0}
                   max={PER_WEEK_CAP}
                   value={weekValue}
                   onChange={(e) =>
                     handleChange(crest.key, parseInt(e.target.value, 10) || 0)
                   }
+                  onFocus={(e) => e.target.select()}
                   onBlur={() => handleBlur(crest.key)}
                   style={crestInputStyle}
                 />
@@ -319,7 +330,7 @@ function Crests({ crestsData, characterId,  currentWeek, selectedWeek }: CrestsP
 
 // ─── Main export ───
 
-export function VaultAndCrests({ vaultData, crestsData, characterId,  currentWeek, selectedWeek }: VaultAndCrestsProps) {
+export function VaultAndCrests({ vaultData, crestsData, characterId,  currentWeek, selectedWeek, onCrestsUpdate }: VaultAndCrestsProps) {
   return (
     <div
       style={{
@@ -334,6 +345,7 @@ export function VaultAndCrests({ vaultData, crestsData, characterId,  currentWee
         characterId={characterId}
         currentWeek={currentWeek}
         selectedWeek={selectedWeek}
+        onCrestsUpdate={onCrestsUpdate}
       />
     </div>
   );
