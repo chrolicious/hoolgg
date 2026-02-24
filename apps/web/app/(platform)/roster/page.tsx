@@ -19,6 +19,7 @@ interface CharacterData {
   id: number;
   character_name: string;
   realm: string;
+  region: string;
   class_name: string;
   spec: string;
   role: 'Tank' | 'Healer' | 'DPS';
@@ -200,6 +201,7 @@ function DraggableCard({
         characterId={char.id}
         characterName={char.character_name}
         realm={char.realm}
+        region={char.region}
         avatarUrl={char.avatar_url ?? undefined}
         className={char.class_name}
         spec={char.spec}
