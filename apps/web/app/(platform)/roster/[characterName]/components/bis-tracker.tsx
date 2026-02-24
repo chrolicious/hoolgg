@@ -208,11 +208,12 @@ export function BisTracker({ bisData, characterId, classColor }: BisTrackerProps
               style={inputStyle}
             />
             <Button
-              variant="secondary"
+              variant="primary"
               size="sm"
               onClick={handleAdd}
               disabled={!itemName.trim() || isAdding}
               loading={isAdding}
+              style={btnStyle}
             >
               Add
             </Button>
