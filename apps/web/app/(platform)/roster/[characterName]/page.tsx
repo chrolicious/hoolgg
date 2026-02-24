@@ -276,6 +276,18 @@ export default function CharacterDetailPage() {
     }
   }, [character]);
 
+  const handleCrestsUpdate = useCallback(async () => {
+    if (!character) return;
+    try {
+      const crests = await progressApi.get<CrestsResponse>(
+        `/users/me/characters/${character.id}/crests`
+      );
+      setSections((prev) => ({ ...prev, crests }));
+    } catch {
+      // silently fail — user will see stale data
+    }
+  }, [character]);
+
   // Loading state
   if (isLoading) {
     return <PageSkeleton />;
@@ -392,7 +404,7 @@ export default function CharacterDetailPage() {
                 characterId={character.id}
                 currentWeek={currentWeek}
                 selectedWeek={selectedWeek}
-                onCrestsUpdate={handleSync}
+                onCrestsUpdate={handleCrestsUpdate}
               />
             </div>
 
