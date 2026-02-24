@@ -208,12 +208,11 @@ export function BisTracker({ bisData, characterId, classColor }: BisTrackerProps
               style={inputStyle}
             />
             <Button
-              variant="primary"
+              variant="secondary"
               size="sm"
               onClick={handleAdd}
               disabled={!itemName.trim() || isAdding}
               loading={isAdding}
-              style={btnStyle}
             >
               Add
             </Button>
@@ -314,26 +313,21 @@ export function BisTracker({ bisData, characterId, classColor }: BisTrackerProps
                 alignItems: 'center',
                 gap: '8px',
                 flexShrink: 0,
-                height: '32px', // Fixed height for alignment
               }}>
                 {/* Obtained Toggle */}
-                <div style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
-                  <Toggle
-                    checked={item.obtained}
-                    onChange={(val) => handleToggleObtained(item, val)}
-                    size="sm"
-                  />
-                </div>
+                <Toggle
+                  checked={item.obtained}
+                  onChange={(val) => handleToggleObtained(item, val)}
+                  size="sm"
+                />
 
                 {/* Delete Button */}
-                <div style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
-                  <Button
-                    variant="destructive"
-                    size="sm"
-                    icon={<Icon name="trash" size={14} />}
-                    onClick={() => handleDelete(item)}
-                  />
-                </div>
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  icon={<Icon name="trash" size={14} />}
+                  onClick={() => handleDelete(item)}
+                />
               </div>
             </div>
           ))}
