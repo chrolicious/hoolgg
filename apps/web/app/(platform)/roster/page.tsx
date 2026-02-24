@@ -317,6 +317,7 @@ export default function RosterPage() {
             id: c.id,
             character_name: c.character_name,
             realm: c.realm,
+            region: c.region ?? 'us',
             class_name: c.class_name ?? '',
             spec: c.spec ?? '',
             role: c.role ?? 'DPS',
