@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Button, Icon, Select, Toggle } from '@hool/design-system';
+import { buildBtnStyle } from '../utils';
 import { progressApi } from '../../../../lib/api';
 import { SectionCard } from './section-card';
 import type { BisResponse, BisItem } from '../types';
@@ -10,7 +11,7 @@ import { BIS_SLOTS } from '../types';
 interface BisTrackerProps {
   bisData: BisResponse | null;
   characterId: number;
-  
+
   classColor: string;
 }
 
@@ -30,7 +31,7 @@ const slotOptions = BIS_SLOTS.map((slot) => ({
   label: slot,
 }));
 
-export function BisTracker({ bisData, characterId,  classColor }: BisTrackerProps) {
+export function BisTracker({ bisData, characterId, classColor }: BisTrackerProps) {
   const [items, setItems] = useState<BisItem[]>(bisData?.items ?? []);
   const [showAddForm, setShowAddForm] = useState(false);
   const [selectedSlot, setSelectedSlot] = useState<string>(BIS_SLOTS[0]);
@@ -39,7 +40,9 @@ export function BisTracker({ bisData, characterId,  classColor }: BisTrackerProp
   const [targetIlvl, setTargetIlvl] = useState('');
   const [isAdding, setIsAdding] = useState(false);
 
-  const obtainedCount = items.filter((item) => item.obtained).length;
+  const btnStyle = buildBtnStyle(classColor);
+
+  const obtainedCount = items.filter((item) => item && item.obtained).length;
   const totalCount = items.length;
 
   const handleAdd = async () => {
@@ -57,13 +60,29 @@ export function BisTracker({ bisData, characterId,  classColor }: BisTrackerProp
         },
       );
 
-      setItems((prev) => [...prev, result.item]);
+      console.log('BiS API response:', result);
+
+      // Handle different response structures
+      const itemData = result.item || result;
+
+      if (!itemData || !itemData.id) {
+        throw new Error('Invalid API response: missing item data');
+      }
+
+      // Ensure item has required fields with defaults
+      const newItem: BisItem = {
+        ...itemData,
+        obtained: itemData.obtained ?? false,
+      };
+
+      setItems((prev) => [...prev, newItem]);
       setItemName('');
       setItemId('');
       setTargetIlvl('');
       setShowAddForm(false);
     } catch (err) {
       console.error('Failed to add BiS item:', err);
+      alert('Failed to add BiS item. Check console for details.');
     } finally {
       setIsAdding(false);
     }
@@ -126,6 +145,7 @@ export function BisTracker({ bisData, characterId,  classColor }: BisTrackerProp
           size="sm"
           icon={<Icon name={showAddForm ? 'x' : 'plus'} size={14} />}
           onClick={() => setShowAddForm(!showAddForm)}
+          style={btnStyle}
         >
           {showAddForm ? 'Cancel' : 'Add Item'}
         </Button>
@@ -155,6 +175,7 @@ export function BisTracker({ bisData, characterId,  classColor }: BisTrackerProp
               onChange={(val) => setSelectedSlot(val)}
               size="sm"
               placeholder="Slot"
+              style={btnStyle}
             />
             <input
               type="text"
@@ -175,6 +196,7 @@ export function BisTracker({ bisData, characterId,  classColor }: BisTrackerProp
               placeholder="Item ID (optional)"
               value={itemId}
               onChange={(e) => setItemId(e.target.value)}
+              onFocus={(e) => e.target.select()}
               style={inputStyle}
             />
             <input
@@ -182,6 +204,7 @@ export function BisTracker({ bisData, characterId,  classColor }: BisTrackerProp
               placeholder="Target ilvl (optional)"
               value={targetIlvl}
               onChange={(e) => setTargetIlvl(e.target.value)}
+              onFocus={(e) => e.target.select()}
               style={inputStyle}
             />
             <Button
@@ -190,6 +213,7 @@ export function BisTracker({ bisData, characterId,  classColor }: BisTrackerProp
               onClick={handleAdd}
               disabled={!itemName.trim() || isAdding}
               loading={isAdding}
+              style={btnStyle}
             >
               Add
             </Button>
@@ -220,7 +244,7 @@ export function BisTracker({ bisData, characterId,  classColor }: BisTrackerProp
       {/* Item List */}
       {items.length > 0 && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-          {items.map((item) => (
+          {items.filter((item) => item != null).map((item) => (
             <div
               key={item.id}
               style={{
@@ -284,20 +308,31 @@ export function BisTracker({ bisData, characterId,  classColor }: BisTrackerProp
                 )}
               </div>
 
-              {/* Obtained Toggle */}
-              <Toggle
-                checked={item.obtained}
-                onChange={(val) => handleToggleObtained(item, val)}
-                size="sm"
-              />
+              {/* Actions */}
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                flexShrink: 0,
+              }}>
+                {/* Obtained Toggle */}
+                <div style={{ transform: 'translateY(-3px)' }}>
+                  <Toggle
+                    checked={item.obtained}
+                    onChange={(val) => handleToggleObtained(item, val)}
+                    size="sm"
+                    variant="purple"
+                  />
+                </div>
 
-              {/* Delete Button */}
-              <Button
-                variant="destructive"
-                size="sm"
-                icon={<Icon name="trash" size={14} />}
-                onClick={() => handleDelete(item)}
-              />
+                {/* Delete Button */}
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  icon={<Icon name="trash" size={14} />}
+                  onClick={() => handleDelete(item)}
+                />
+              </div>
             </div>
           ))}
         </div>

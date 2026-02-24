@@ -13,6 +13,7 @@ class CharacterProgress(Base):
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     character_name = Column(String(255), nullable=False, index=True)
     realm = Column(String(255), nullable=False, index=True)
+    region = Column(String(10), nullable=True, default='us')
     guild_id = Column(Integer, nullable=True, index=True)
 
     # Character info
@@ -20,7 +21,8 @@ class CharacterProgress(Base):
     spec = Column(String(50), nullable=True)
     role = Column(String(20), nullable=True)  # Tank, Healer, DPS
     level = Column(Integer, nullable=True)
-    avatar_url = Column(String(512), nullable=True)
+    avatar_url = Column(String(512), nullable=True)  # Bust portrait (avatar.jpg)
+    render_url = Column(String(512), nullable=True)  # Full body render (main-raw.jpg)
 
     # Roster tracking
     user_bnet_id = Column(Integer, nullable=True, index=True)
@@ -56,12 +58,14 @@ class CharacterProgress(Base):
             "id": self.id,
             "character_name": self.character_name,
             "realm": self.realm,
+            "region": self.region or "us",
             "guild_id": self.guild_id,
             "class_name": self.class_name,
             "spec": self.spec,
             "role": self.role,
             "level": self.level,
             "avatar_url": self.avatar_url,
+            "render_url": self.render_url,
             "user_bnet_id": self.user_bnet_id,
             "display_order": self.display_order,
             "current_ilvl": self.current_ilvl,

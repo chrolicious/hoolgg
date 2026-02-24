@@ -3,6 +3,7 @@
 import { useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '../../lib/auth-context';
+import { Button } from '@hool/design-system';
 
 function LoginContent() {
   const { login, isAuthenticated, isLoading } = useAuth();
@@ -32,9 +33,9 @@ function LoginContent() {
           Personal WoW Roster Tracker. Sign in with your Battle.net account to get started.
         </p>
       </div>
-      <button onClick={login} style={{ background: '#8b5cf6', color: 'white', border: 'none', padding: '12px 24px', borderRadius: '8px', fontSize: '16px', fontWeight: 600, cursor: 'pointer' }}>
+      <Button variant="purple" size="lg" onClick={login}>
         Login with Battle.net
-      </button>
+      </Button>
     </div>
   );
 }

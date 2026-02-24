@@ -276,6 +276,18 @@ export default function CharacterDetailPage() {
     }
   }, [character]);
 
+  const handleCrestsUpdate = useCallback(async () => {
+    if (!character) return;
+    try {
+      const crests = await progressApi.get<CrestsResponse>(
+        `/users/me/characters/${character.id}/crests`
+      );
+      setSections((prev) => ({ ...prev, crests }));
+    } catch {
+      // silently fail — user will see stale data
+    }
+  }, [character]);
+
   // Loading state
   if (isLoading) {
     return <PageSkeleton />;
@@ -319,7 +331,7 @@ export default function CharacterDetailPage() {
       {/* Wowhead tooltip script — lazy-loaded for equipment grid */}
       <Script
         id="wowhead-config"
-        strategy="beforeInteractive"
+        strategy="afterInteractive"
         dangerouslySetInnerHTML={{
           __html: `var whTooltips = {colorLinks: false, iconizeLinks: false, renameLinks: false};`,
         }}
@@ -392,38 +404,45 @@ export default function CharacterDetailPage() {
                 characterId={character.id}
                 currentWeek={currentWeek}
                 selectedWeek={selectedWeek}
+                onCrestsUpdate={handleCrestsUpdate}
               />
             </div>
 
-            {/* 5. Equipment Grid */}
-            <EquipmentGrid gearData={sections.gear} />
+            {/* 5. Weekly Progress Granular */}
+            <WeeklyProgressGranular
+              vaultData={sections.vault}
+              characterId={character.id}
+              currentWeek={currentWeek}
+              classColor={classColor}
+              onVaultUpdate={handleVaultUpdate}
+            />
 
-            {/* 6. BiS Tracker */}
+            {/* 6. Equipment Grid */}
+            <EquipmentGrid
+              gearData={sections.gear}
+              renderUrl={character.render_url}
+            />
+
+            {/* 7. BiS Tracker */}
             <BisTracker
               bisData={sections.bis}
               characterId={character.id}
               classColor={classColor}
             />
 
-            {/* 7. Professions */}
+            {/* 8. Professions */}
             <ProfessionsSection
               professionsData={sections.professions}
               characterId={character.id}
               currentWeek={currentWeek}
+              classColor={classColor}
             />
 
-            {/* 8. Talent Builds */}
+            {/* 9. Talent Builds */}
             <TalentBuildsSection
               talentsData={sections.talents}
               characterId={character.id}
-            />
-
-            {/* 9. Weekly Progress Granular */}
-            <WeeklyProgressGranular
-              vaultData={sections.vault}
-              characterId={character.id}
-              currentWeek={currentWeek}
-              onVaultUpdate={handleVaultUpdate}
+              classColor={classColor}
             />
           </>
         )}
