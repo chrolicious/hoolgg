@@ -8,7 +8,6 @@ WORKDIR /app
 
 # Copy workspace files
 COPY pnpm-workspace.yaml package.json pnpm-lock.yaml tsconfig.base.json ./
-COPY healthcheck.sh ./
 COPY packages ./packages
 COPY apps/web ./apps/web
 
@@ -45,10 +44,6 @@ WORKDIR /app
 COPY --from=base /app/apps/web/.next/standalone ./
 COPY --from=base /app/apps/web/.next/static ./apps/web/.next/static
 COPY --from=base /app/apps/web/public ./apps/web/public
-COPY --from=base /app/healthcheck.sh ./healthcheck.sh
-
-# Make healthcheck script executable
-RUN chmod +x ./healthcheck.sh
 
 # Expose port
 EXPOSE 3000
@@ -56,9 +51,9 @@ EXPOSE 3000
 # Set hostname to listen on all interfaces
 ENV HOSTNAME="0.0.0.0"
 
-# Health check - uses PORT env var (defaults to 3000) via script for runtime evaluation
+# Health check
 HEALTHCHECK --interval=30s --timeout=5s --start-period=30s --retries=3 \
-    CMD /app/healthcheck.sh
+    CMD curl -f http://localhost:3000 || exit 1
 
 # Start the standalone server
 CMD ["node", "apps/web/server.js"]
