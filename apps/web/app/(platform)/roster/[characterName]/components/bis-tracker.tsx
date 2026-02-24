@@ -315,8 +315,12 @@ export function BisTracker({ bisData, characterId, classColor }: BisTrackerProps
                 gap: '8px',
                 flexShrink: 0,
               }}>
-                {/* Obtained Toggle - nudge down to compensate for sticker frame's negative margin */}
-                <div style={{ transform: 'translateY(3px)' }}>
+                {/* Obtained Toggle - EXTREME TEST: 50px to verify transform works */}
+                <div style={{
+                  transform: 'translateY(50px)',
+                  backgroundColor: 'red',
+                  border: '3px solid yellow',
+                }}>
                   <Toggle
                     checked={item.obtained}
                     onChange={(val) => handleToggleObtained(item, val)}
