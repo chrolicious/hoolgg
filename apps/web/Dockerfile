@@ -34,19 +34,23 @@ COPY --from=base /app/apps/web/.next ./apps/web/.next
 COPY --from=base /app/apps/web/public ./apps/web/public
 COPY --from=base /app/apps/web/package.json ./apps/web/package.json
 COPY --from=base /app/apps/web/next.config.ts ./apps/web/next.config.ts
+COPY --from=base /app/apps/web/healthcheck.sh ./apps/web/healthcheck.sh
 COPY --from=base /app/node_modules ./node_modules
 COPY --from=base /app/packages ./packages
 COPY --from=base /app/pnpm-workspace.yaml ./pnpm-workspace.yaml
 COPY --from=base /app/package.json ./package.json
+
+# Make healthcheck script executable
+RUN chmod +x ./apps/web/healthcheck.sh
 
 WORKDIR /app/apps/web
 
 # Expose port
 EXPOSE 3000
 
-# Health check - uses PORT env var (defaults to 3000)
+# Health check - uses PORT env var (defaults to 3000) via script for runtime evaluation
 HEALTHCHECK --interval=30s --timeout=5s --start-period=30s --retries=3 \
-    CMD curl -f http://localhost:${PORT:-3000}/api/health || exit 1
+    CMD /app/apps/web/healthcheck.sh
 
 # Start the app
 CMD ["pnpm", "start"]
