@@ -319,6 +319,7 @@ export function BisTracker({ bisData, characterId, classColor }: BisTrackerProps
                   checked={item.obtained}
                   onChange={(val) => handleToggleObtained(item, val)}
                   size="sm"
+                  variant="secondary"
                 />
 
                 {/* Delete Button */}
