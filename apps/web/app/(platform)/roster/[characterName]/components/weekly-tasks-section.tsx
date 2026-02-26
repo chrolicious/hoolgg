@@ -343,6 +343,46 @@ export function WeeklyTasksSection({
               </div>
             </>
           )}
+
+          {/* Tips — informational, not trackable */}
+          {tasksData.tips && tasksData.tips.length > 0 && (
+            <>
+              <div
+                style={{
+                  fontSize: 13,
+                  fontWeight: 600,
+                  color: 'rgba(255, 255, 255, 0.5)',
+                  marginTop: 20,
+                  marginBottom: 10,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.05em',
+                }}
+              >
+                Tips
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                {tasksData.tips.map((tip, i) => (
+                  <div
+                    key={i}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'flex-start',
+                      gap: 8,
+                      padding: '8px 10px',
+                      borderRadius: 6,
+                      backgroundColor: 'rgba(59, 130, 246, 0.08)',
+                      border: '1px solid rgba(59, 130, 246, 0.15)',
+                    }}
+                  >
+                    <Icon name="alert-circle" size={14} style={{ color: '#60a5fa', flexShrink: 0, marginTop: 1 }} />
+                    <span style={{ fontSize: 13, color: 'rgba(255, 255, 255, 0.6)', lineHeight: 1.4 }}>
+                      {tip}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
         </>
       )}
     </SectionCard>

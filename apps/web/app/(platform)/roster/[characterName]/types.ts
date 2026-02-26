@@ -61,6 +61,7 @@ export interface TasksResponse {
   week_name: string;
   weekly: TaskItem[];
   daily: TaskItem[];
+  tips: string[];
 }
 
 // ─── Task Summary (from GET /guilds/{gid}/characters/{cid}/tasks/summary) ───

@@ -118,7 +118,8 @@ export const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
               <label
                 className={`${styles.label} ${disabled ? styles.labelDisabled : ''}`}
                 onClick={(e) => {
-                  // Prevent double-triggering when clicking the label
+                  // Prevent double-triggering: stop propagation to container's onClick
+                  e.stopPropagation();
                   e.preventDefault();
                   handleClick();
                 }}
