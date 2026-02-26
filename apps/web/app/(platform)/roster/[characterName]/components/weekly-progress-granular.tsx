@@ -27,19 +27,6 @@ const inputStyle: React.CSSProperties = {
   textAlign: 'center',
 };
 
-const labelStyle: React.CSSProperties = {
-  fontSize: '12px',
-  color: 'rgba(255,255,255,0.6)',
-  marginBottom: '4px',
-};
-
-const columnHeadingStyle: React.CSSProperties = {
-  fontSize: '13px',
-  fontWeight: 600,
-  color: 'rgba(255,255,255,0.8)',
-  margin: '0 0 12px 0',
-};
-
 export function WeeklyProgressGranular({
   vaultData,
   characterId,
@@ -49,24 +36,10 @@ export function WeeklyProgressGranular({
 }: WeeklyProgressGranularProps) {
   const progress = vaultData?.progress;
 
-  const [raidLfr, setRaidLfr] = useState<number>(progress?.raid_lfr ?? 0);
-  const [raidNormal, setRaidNormal] = useState<number>(progress?.raid_normal ?? 0);
-  const [raidHeroic, setRaidHeroic] = useState<number>(progress?.raid_heroic ?? 0);
-  const [raidMythic, setRaidMythic] = useState<number>(progress?.raid_mythic ?? 0);
-  // Raid fields are read-only (auto-filled on sync) — state is only for display
-
-  const [mplusRuns, setMplusRuns] = useState<Array<{ keyLevel: number }>>(() => {
-    if (progress?.m_plus_runs && progress.m_plus_runs.length > 0) {
-      return progress.m_plus_runs.map((level) => ({ keyLevel: level }));
-    }
-    return [];
-  });
-
   const [delveRuns, setDelveRuns] = useState<Array<{ tier: number }>>(() => {
     if (progress?.delve_runs && progress.delve_runs.length > 0) {
       return progress.delve_runs.map((tier: number) => ({ tier }));
     } else if (progress?.highest_delve && progress.highest_delve > 0) {
-      // Fall back to legacy highest_delve field
       return [{ tier: progress.highest_delve }];
     }
     return [];
@@ -75,18 +48,8 @@ export function WeeklyProgressGranular({
   const [isSaving, setIsSaving] = useState(false);
   const [saveStatus, setSaveStatus] = useState<string | null>(null);
 
-  // Re-sync state when vaultData changes externally
   useEffect(() => {
     const p = vaultData?.progress;
-    setRaidLfr(p?.raid_lfr ?? 0);
-    setRaidNormal(p?.raid_normal ?? 0);
-    setRaidHeroic(p?.raid_heroic ?? 0);
-    setRaidMythic(p?.raid_mythic ?? 0);
-    if (p?.m_plus_runs && p.m_plus_runs.length > 0) {
-      setMplusRuns(p.m_plus_runs.map((level) => ({ keyLevel: level })));
-    } else {
-      setMplusRuns([]);
-    }
     if (p?.delve_runs && p.delve_runs.length > 0) {
       setDelveRuns(p.delve_runs.map((tier: number) => ({ tier })));
     } else if (p?.highest_delve && p.highest_delve > 0) {
@@ -96,7 +59,6 @@ export function WeeklyProgressGranular({
     }
   }, [vaultData]);
 
-  // Auto-clear save status after 2 seconds
   useEffect(() => {
     if (saveStatus) {
       const timer = setTimeout(() => setSaveStatus(null), 2000);
@@ -111,7 +73,6 @@ export function WeeklyProgressGranular({
     try {
       await progressApi.post(`/users/me/characters/${characterId}/vault`, {
         week_number: currentWeek,
-        m_plus_runs: mplusRuns.map((r) => r.keyLevel).filter((k) => k > 0),
         delve_runs: delveRuns.map((r) => r.tier).filter((t) => t > 0),
       });
 
@@ -129,151 +90,71 @@ export function WeeklyProgressGranular({
 
   return (
     <SectionCard
-      title="Weekly Progress"
-      subtitle="Raid and M+ data auto-filled on sync. Delves are manual."
+      title="Delve Runs"
+      subtitle="Add each run and enter the delve tier (1-11)"
     >
-      {/* Remove number input spinners */}
       <style>{`
         .wpg-input::-webkit-inner-spin-button,
         .wpg-input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
         .wpg-input { -moz-appearance: textfield; }
       `}</style>
 
-      {/* 3-column grid */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: '1fr 1fr 1fr',
-        gap: '24px',
-        alignItems: 'start',
-        marginBottom: '20px',
-      }}>
-
-        {/* Column 1: Raid Bosses Killed (auto-filled from Blizzard API) */}
-        <div>
-          <h3 style={columnHeadingStyle}>Raid Bosses Killed</h3>
-          <p style={{ fontSize: '11px', color: 'rgba(255,255,255,0.35)', margin: '-8px 0 10px 0' }}>
-            Auto-filled on sync
-          </p>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-            {[
-              { label: 'LFR', value: raidLfr },
-              { label: 'Normal', value: raidNormal },
-              { label: 'Heroic', value: raidHeroic },
-              { label: 'Mythic', value: raidMythic },
-            ].map(({ label, value }) => (
-              <div key={label} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <label style={{ ...labelStyle, marginBottom: 0, minWidth: '52px' }}>{label}</label>
-                <span style={{
-                  fontSize: '14px',
-                  fontWeight: 600,
-                  color: value > 0 ? 'rgba(255,255,255,0.8)' : 'rgba(255,255,255,0.3)',
-                  minWidth: '64px',
-                  textAlign: 'center',
-                }}>
-                  {value}
+      <div style={{ marginBottom: '16px' }}>
+        {delveRuns.length > 0 && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginBottom: '10px' }}>
+            {delveRuns.map((run, index) => (
+              <div key={index} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <span style={{ fontSize: '12px', color: 'rgba(255,255,255,0.4)', minWidth: '48px' }}>
+                  Run {index + 1}
                 </span>
+                <input
+                  type="number"
+                  className="wpg-input"
+                  min={1}
+                  max={11}
+                  placeholder="Tier"
+                  value={run.tier || ''}
+                  onChange={(e) =>
+                    setDelveRuns((prev) =>
+                      prev.map((r, i) =>
+                        i === index ? { tier: Math.min(11, Math.max(0, parseInt(e.target.value, 10) || 0)) } : r
+                      )
+                    )
+                  }
+                  onFocus={(e) => e.target.select()}
+                  style={inputStyle}
+                />
+                <button
+                  type="button"
+                  onClick={() => setDelveRuns((prev) => prev.filter((_, i) => i !== index))}
+                  style={{
+                    background: 'none', border: 'none', cursor: 'pointer', padding: '4px',
+                    display: 'flex', alignItems: 'center', color: 'rgba(255,255,255,0.3)', transition: 'color 0.15s',
+                  }}
+                  onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.color = 'rgba(255,100,100,0.8)'; }}
+                  onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.color = 'rgba(255,255,255,0.3)'; }}
+                  aria-label={`Remove delve ${index + 1}`}
+                >
+                  <Icon name="x-mark" size={12} />
+                </button>
               </div>
             ))}
           </div>
-        </div>
+        )}
 
-        {/* Column 2: M+ Dungeons (auto-filled from Raider.IO) */}
-        <div>
-          <h3 style={columnHeadingStyle}>M+ Dungeons</h3>
-          <p style={{ fontSize: '11px', color: 'rgba(255,255,255,0.35)', margin: '-8px 0 10px 0' }}>
-            Auto-filled on sync
+        {delveRuns.length < 8 && (
+          <Button variant="primary" size="sm" onClick={() => setDelveRuns((prev) => [...prev, { tier: 0 }])} style={btnStyle}>
+            Add Run
+          </Button>
+        )}
+
+        {delveRuns.length === 0 && (
+          <p style={{ fontSize: '12px', color: 'rgba(255,255,255,0.3)', margin: '8px 0 0 0' }}>
+            No runs yet.
           </p>
-
-          {mplusRuns.length > 0 ? (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-              {mplusRuns.map((run, index) => (
-                <div key={index} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <span style={{ fontSize: '12px', color: 'rgba(255,255,255,0.4)', minWidth: '48px' }}>
-                    Run {index + 1}
-                  </span>
-                  <span style={{
-                    fontSize: '14px',
-                    fontWeight: 600,
-                    color: 'rgba(255,255,255,0.8)',
-                    minWidth: '64px',
-                    textAlign: 'center',
-                  }}>
-                    +{run.keyLevel}
-                  </span>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <p style={{ fontSize: '12px', color: 'rgba(255,255,255,0.3)', margin: '8px 0 0 0' }}>
-              No runs this week.
-            </p>
-          )}
-        </div>
-
-        {/* Column 3: Delves (manual input) */}
-        <div>
-          <h3 style={columnHeadingStyle}>Delves</h3>
-          <p style={{ fontSize: '11px', color: 'rgba(255,255,255,0.35)', margin: '-8px 0 10px 0' }}>
-            Add each run and enter the delve tier (1-11)
-          </p>
-
-          {delveRuns.length > 0 && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginBottom: '10px' }}>
-              {delveRuns.map((run, index) => (
-                <div key={index} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <span style={{ fontSize: '12px', color: 'rgba(255,255,255,0.4)', minWidth: '48px' }}>
-                    Run {index + 1}
-                  </span>
-                  <input
-                    type="number"
-                    className="wpg-input"
-                    min={1}
-                    max={11}
-                    placeholder="Tier"
-                    value={run.tier || ''}
-                    onChange={(e) =>
-                      setDelveRuns((prev) =>
-                        prev.map((r, i) =>
-                          i === index ? { tier: Math.min(11, Math.max(0, parseInt(e.target.value, 10) || 0)) } : r
-                        )
-                      )
-                    }
-                    onFocus={(e) => e.target.select()}
-                    style={inputStyle}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setDelveRuns((prev) => prev.filter((_, i) => i !== index))}
-                    style={{
-                      background: 'none', border: 'none', cursor: 'pointer', padding: '4px',
-                      display: 'flex', alignItems: 'center', color: 'rgba(255,255,255,0.3)', transition: 'color 0.15s',
-                    }}
-                    onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.color = 'rgba(255,100,100,0.8)'; }}
-                    onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.color = 'rgba(255,255,255,0.3)'; }}
-                    aria-label={`Remove delve ${index + 1}`}
-                  >
-                    <Icon name="x-mark" size={12} />
-                  </button>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {delveRuns.length < 8 && (
-            <Button variant="primary" size="sm" onClick={() => setDelveRuns((prev) => [...prev, { tier: 0 }])} style={btnStyle}>
-              Add Run
-            </Button>
-          )}
-
-          {delveRuns.length === 0 && (
-            <p style={{ fontSize: '12px', color: 'rgba(255,255,255,0.3)', margin: '8px 0 0 0' }}>
-              No runs yet.
-            </p>
-          )}
-        </div>
+        )}
       </div>
 
-      {/* Save Button — only needed for delve manual input */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
         <Button
           variant="primary"
