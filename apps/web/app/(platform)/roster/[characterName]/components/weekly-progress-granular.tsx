@@ -53,6 +53,7 @@ export function WeeklyProgressGranular({
   const [raidNormal, setRaidNormal] = useState<number>(progress?.raid_normal ?? 0);
   const [raidHeroic, setRaidHeroic] = useState<number>(progress?.raid_heroic ?? 0);
   const [raidMythic, setRaidMythic] = useState<number>(progress?.raid_mythic ?? 0);
+  // Raid fields are read-only (auto-filled on sync) — state is only for display
 
   const [mplusRuns, setMplusRuns] = useState<Array<{ keyLevel: number }>>(() => {
     if (progress?.m_plus_runs && progress.m_plus_runs.length > 0) {
@@ -126,10 +127,6 @@ export function WeeklyProgressGranular({
     try {
       await progressApi.post(`/users/me/characters/${characterId}/vault`, {
         week_number: currentWeek,
-        raid_lfr: raidLfr,
-        raid_normal: raidNormal,
-        raid_heroic: raidHeroic,
-        raid_mythic: raidMythic,
         m_plus_runs: mplusRuns.map((r) => r.keyLevel).filter((k) => k > 0),
         delve_runs: delveRuns.map((r) => r.tier).filter((t) => t > 0),
       });
@@ -167,27 +164,30 @@ export function WeeklyProgressGranular({
         marginBottom: '20px',
       }}>
 
-        {/* Column 1: Raid Bosses Killed */}
+        {/* Column 1: Raid Bosses Killed (auto-filled from sync) */}
         <div>
           <h3 style={columnHeadingStyle}>Raid Bosses Killed</h3>
+          <p style={{ fontSize: '11px', color: 'rgba(255,255,255,0.35)', margin: '-8px 0 10px 0' }}>
+            Auto-filled on sync
+          </p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
             {[
-              { label: 'LFR', value: raidLfr, set: setRaidLfr },
-              { label: 'Normal', value: raidNormal, set: setRaidNormal },
-              { label: 'Heroic', value: raidHeroic, set: setRaidHeroic },
-              { label: 'Mythic', value: raidMythic, set: setRaidMythic },
-            ].map(({ label, value, set }) => (
+              { label: 'LFR', value: raidLfr },
+              { label: 'Normal', value: raidNormal },
+              { label: 'Heroic', value: raidHeroic },
+              { label: 'Mythic', value: raidMythic },
+            ].map(({ label, value }) => (
               <div key={label} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <label style={{ ...labelStyle, marginBottom: 0, minWidth: '52px' }}>{label}</label>
-                <input
-                  type="number"
-                  className="wpg-input"
-                  min={0}
-                  value={value}
-                  onChange={(e) => set(Math.max(0, parseInt(e.target.value, 10) || 0))}
-                  onFocus={(e) => e.target.select()}
-                  style={inputStyle}
-                />
+                <span style={{
+                  fontSize: '14px',
+                  fontWeight: 600,
+                  color: value > 0 ? 'rgba(255,255,255,0.8)' : 'rgba(255,255,255,0.3)',
+                  minWidth: '64px',
+                  textAlign: 'center',
+                }}>
+                  {value}
+                </span>
               </div>
             ))}
           </div>

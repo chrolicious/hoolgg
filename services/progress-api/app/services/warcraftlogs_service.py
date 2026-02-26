@@ -208,3 +208,168 @@ class WarcraftLogsService:
                 ),
             },
         }
+
+    def get_character_parses(
+        self, character_name: str, realm_slug: str, region: str = "us"
+    ) -> Optional[Dict[str, Any]]:
+        """
+        Fetch per-boss parse percentiles for a character from the current raid tier.
+
+        Returns dict keyed by boss name:
+        {"Boss1": {"best_parse": 95.2, "median_parse": 88.1, "kills": 5, "spec": "Fury"}, ...}
+        """
+        access_token = self._get_access_token()
+        if not access_token:
+            return None
+
+        graphql_endpoint = "https://www.warcraftlogs.com/api/v2/client"
+
+        query = """
+        query CharacterParses($name: String!, $serverSlug: String!, $serverRegion: String!) {
+          characterData {
+            character(name: $name, serverSlug: $serverSlug, serverRegion: $serverRegion) {
+              encounterRankings
+            }
+          }
+        }
+        """
+
+        variables = {
+            "name": character_name,
+            "serverSlug": realm_slug,
+            "serverRegion": region.upper(),
+        }
+
+        headers = {"Authorization": f"Bearer {access_token}"}
+
+        try:
+            response = requests.post(
+                graphql_endpoint,
+                json={"query": query, "variables": variables},
+                headers=headers,
+                timeout=15,
+            )
+            response.raise_for_status()
+
+            data = response.json()
+            if "errors" in data:
+                logger.error(f"WCL GraphQL errors: {data['errors']}")
+                return None
+
+            character_data = (
+                data.get("data", {})
+                .get("characterData", {})
+                .get("character", {})
+            )
+
+            if not character_data:
+                logger.warning(f"No WCL data for {character_name}-{realm_slug}")
+                return None
+
+            return self._parse_encounter_rankings(character_data.get("encounterRankings"))
+
+        except requests.RequestException as e:
+            logger.error(f"Failed to fetch WCL parses: {e}")
+            return None
+
+    def get_character_kills_in_range(
+        self, character_name: str, realm_slug: str, region: str = "us",
+        start_time: int = 0, end_time: int = 0,
+    ) -> Optional[List[Dict[str, Any]]]:
+        """
+        Fetch raid kills for a character within a specific time range (for weekly attribution).
+
+        Args:
+            start_time: Unix timestamp (seconds) for range start (weekly reset)
+            end_time: Unix timestamp (seconds) for range end (now)
+
+        Returns list of kills:
+        [{"boss": "Boss1", "difficulty": "heroic", "timestamp": 1234567890, "parse": 85.2}, ...]
+        """
+        access_token = self._get_access_token()
+        if not access_token:
+            return None
+
+        graphql_endpoint = "https://www.warcraftlogs.com/api/v2/client"
+
+        start_ms = start_time * 1000
+        end_ms = end_time * 1000
+
+        query = """
+        query CharacterKills($name: String!, $serverSlug: String!, $serverRegion: String!, $startTime: Float!, $endTime: Float!) {
+          characterData {
+            character(name: $name, serverSlug: $serverSlug, serverRegion: $serverRegion) {
+              normal: encounterRankings(difficulty: 3, timeRange: { startTime: $startTime, endTime: $endTime })
+              heroic: encounterRankings(difficulty: 4, timeRange: { startTime: $startTime, endTime: $endTime })
+              mythic: encounterRankings(difficulty: 5, timeRange: { startTime: $startTime, endTime: $endTime })
+            }
+          }
+        }
+        """
+
+        variables = {
+            "name": character_name,
+            "serverSlug": realm_slug,
+            "serverRegion": region.upper(),
+            "startTime": float(start_ms),
+            "endTime": float(end_ms),
+        }
+
+        headers = {"Authorization": f"Bearer {access_token}"}
+
+        try:
+            response = requests.post(
+                graphql_endpoint,
+                json={"query": query, "variables": variables},
+                headers=headers,
+                timeout=15,
+            )
+            response.raise_for_status()
+
+            data = response.json()
+            if "errors" in data:
+                logger.error(f"WCL GraphQL errors: {data['errors']}")
+                return None
+
+            character_data = (
+                data.get("data", {})
+                .get("characterData", {})
+                .get("character", {})
+            )
+
+            if not character_data:
+                return []
+
+            kills = []
+            for diff_name in ["normal", "heroic", "mythic"]:
+                rankings = character_data.get(diff_name)
+                if rankings and isinstance(rankings, list):
+                    for ranking in rankings:
+                        kills.append({
+                            "boss": ranking.get("encounter", {}).get("name", "Unknown"),
+                            "difficulty": diff_name,
+                            "timestamp": ranking.get("startTime", 0) // 1000,
+                            "parse": ranking.get("rankPercent", 0),
+                        })
+
+            return kills
+
+        except requests.RequestException as e:
+            logger.error(f"Failed to fetch WCL kills: {e}")
+            return None
+
+    def _parse_encounter_rankings(self, rankings_data) -> Optional[Dict[str, Any]]:
+        """Parse encounterRankings into a simplified per-boss dict."""
+        if not rankings_data:
+            return None
+
+        result = {}
+        if isinstance(rankings_data, list):
+            for ranking in rankings_data:
+                boss_name = ranking.get("encounter", {}).get("name", "Unknown")
+                result[boss_name] = {
+                    "best_parse": ranking.get("rankPercent"),
+                    "kills": ranking.get("totalKills", 0),
+                    "spec": ranking.get("spec"),
+                }
+        return result if result else None

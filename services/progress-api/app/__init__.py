@@ -81,4 +81,12 @@ def create_app() -> Flask:
     app.register_blueprint(reference.bp)
     app.register_blueprint(personal_roster.bp)
 
+    # Start background scheduler (only in non-testing mode)
+    if not app.config.get("TESTING"):
+        from app.services.scheduler import init_scheduler, shutdown_scheduler
+        init_scheduler(app)
+
+        import atexit
+        atexit.register(shutdown_scheduler)
+
     return app
