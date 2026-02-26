@@ -57,7 +57,7 @@ def parse_encounter_snapshot(encounter_data: Dict[str, Any]) -> Dict[str, Any]:
                 if not diff_key:
                     continue
 
-                encounters = mode.get("encounters", [])
+                encounters = mode.get("progress", {}).get("encounters", [])
                 for encounter in encounters:
                     boss_name = encounter.get("encounter", {}).get("name", "Unknown")
                     completed_count = encounter.get("completed_count", 0)
