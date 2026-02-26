@@ -26,6 +26,7 @@ export function WeeklyTasksSection({
   const [weeklyTasks, setWeeklyTasks] = useState<TaskItem[]>(tasksData.weekly);
   const [dailyTasks, setDailyTasks] = useState<TaskItem[]>(tasksData.daily);
   const [weekName, setWeekName] = useState(tasksData.week_name);
+  const [tips, setTips] = useState<string[]>(tasksData.tips || []);
   const [activeWeek, setActiveWeek] = useState(tasksData.current_week);
   const [isLoadingWeek, setIsLoadingWeek] = useState(false);
 
@@ -40,6 +41,7 @@ export function WeeklyTasksSection({
         setWeeklyTasks(data.weekly);
         setDailyTasks(data.daily);
         setWeekName(data.week_name);
+        setTips(data.tips || []);
         setActiveWeek(week);
       } catch (err) {
         console.error('Failed to fetch tasks for week:', err);
@@ -61,6 +63,7 @@ export function WeeklyTasksSection({
     setWeeklyTasks(tasksData.weekly);
     setDailyTasks(tasksData.daily);
     setWeekName(tasksData.week_name);
+    setTips(tasksData.tips || []);
     setActiveWeek(tasksData.current_week);
   }, [tasksData]);
 
@@ -345,7 +348,7 @@ export function WeeklyTasksSection({
           )}
 
           {/* Tips — informational, not trackable */}
-          {tasksData.tips && tasksData.tips.length > 0 && (
+          {tips.length > 0 && (
             <>
               <div
                 style={{
@@ -361,7 +364,7 @@ export function WeeklyTasksSection({
                 Tips
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-                {tasksData.tips.map((tip, i) => (
+                {tips.map((tip, i) => (
                   <div
                     key={i}
                     style={{
