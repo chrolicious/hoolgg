@@ -196,19 +196,22 @@ export function WeeklyProgressGranular({
         {/* Column 2: M+ Dungeons */}
         <div>
           <h3 style={columnHeadingStyle}>M+ Dungeons</h3>
+          <p style={{ fontSize: '11px', color: 'rgba(255,255,255,0.35)', margin: '-8px 0 10px 0' }}>
+            Add each run and enter the key level
+          </p>
 
           {mplusRuns.length > 0 && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginBottom: '10px' }}>
               {mplusRuns.map((run, index) => (
                 <div key={index} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <span style={{ fontSize: '12px', color: 'rgba(255,255,255,0.4)', minWidth: '36px' }}>
-                    #{index + 1}
+                  <span style={{ fontSize: '12px', color: 'rgba(255,255,255,0.4)', minWidth: '48px' }}>
+                    Run {index + 1}
                   </span>
                   <input
                     type="number"
                     className="wpg-input"
                     min={0}
-                    placeholder="Key"
+                    placeholder="Key lvl"
                     value={run.keyLevel || ''}
                     onChange={(e) =>
                       updateRunKeyLevel(index, Math.max(0, parseInt(e.target.value, 10) || 0))
@@ -256,13 +259,16 @@ export function WeeklyProgressGranular({
         {/* Column 3: Delves */}
         <div>
           <h3 style={columnHeadingStyle}>Delves</h3>
+          <p style={{ fontSize: '11px', color: 'rgba(255,255,255,0.35)', margin: '-8px 0 10px 0' }}>
+            Add each run and enter the delve tier (1-11)
+          </p>
 
           {delveRuns.length > 0 && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginBottom: '10px' }}>
               {delveRuns.map((run, index) => (
                 <div key={index} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <span style={{ fontSize: '12px', color: 'rgba(255,255,255,0.4)', minWidth: '36px' }}>
-                    #{index + 1}
+                  <span style={{ fontSize: '12px', color: 'rgba(255,255,255,0.4)', minWidth: '48px' }}>
+                    Run {index + 1}
                   </span>
                   <input
                     type="number"

@@ -17,7 +17,17 @@ export function AddCharacterCard({ onCharacterAdded }: AddCharacterCardProps) {
 
   const [characterName, setCharacterName] = useState('');
   const [realm, setRealm] = useState('');
-  const [region, setRegion] = useState('us');
+  const [region, setRegion] = useState(() => {
+    try {
+      const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      if (tz.startsWith('Europe/') || tz.startsWith('Africa/')) return 'eu';
+      if (tz.startsWith('Asia/Seoul') || tz === 'Asia/Seoul') return 'kr';
+      if (tz.startsWith('Asia/Taipei') || tz === 'Asia/Taipei') return 'tw';
+      return 'us';
+    } catch {
+      return 'us';
+    }
+  });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -97,7 +107,7 @@ export function AddCharacterCard({ onCharacterAdded }: AddCharacterCardProps) {
             inset: 0,
           }}
         >
-          <Icon name="plus" size={32} className="starIcon" style={{ color: '#8b5cf6', transition: 'all 0.2s' }} />
+          <Icon name="plus" size={32} className="starIcon" style={{ color: '#3B82F6', transition: 'all 0.2s' }} />
           <span style={{ fontSize: '14px', fontWeight: 600, color: 'rgba(255,255,255,0.4)' }}>
             Add New Character
           </span>
@@ -153,9 +163,9 @@ export function AddCharacterCard({ onCharacterAdded }: AddCharacterCardProps) {
                       onClick={() => setRegion(r)}
                       style={{
                         flex: 1,
-                        background: region === r ? 'rgba(139,92,246,0.2)' : 'rgba(255,255,255,0.05)',
-                        border: region === r ? '1px solid rgba(139,92,246,0.5)' : '1px solid rgba(255,255,255,0.1)',
-                        color: region === r ? '#c4b5fd' : 'rgba(255,255,255,0.5)',
+                        background: region === r ? 'rgba(59,130,246,0.2)' : 'rgba(255,255,255,0.05)',
+                        border: region === r ? '1px solid rgba(59,130,246,0.5)' : '1px solid rgba(255,255,255,0.1)',
+                        color: region === r ? '#93c5fd' : 'rgba(255,255,255,0.5)',
                         padding: '8px 0',
                         borderRadius: '6px',
                         fontSize: '12px',
@@ -197,7 +207,7 @@ export function AddCharacterCard({ onCharacterAdded }: AddCharacterCardProps) {
                 <Button type="button" onClick={handleCancel} disabled={isSubmitting} variant="secondary" size="md" style={{ flex: 1 }}>
                   Cancel
                 </Button>
-                <Button type="submit" disabled={isSubmitting || !realm || !characterName} variant="purple" size="md" style={{ flex: 1 }}>
+                <Button type="submit" disabled={isSubmitting || !realm || !characterName} variant="blue" size="md" style={{ flex: 1 }}>
                   {isSubmitting ? 'Syncing...' : 'Add Character'}
                 </Button>
               </div>

@@ -505,9 +505,9 @@ export default function RosterPage() {
                 display: 'flex', alignItems: 'center', gap: '5px',
                 padding: '6px 12px', borderRadius: '9999px',
                 fontSize: '12px', fontWeight: 600,
-                border: sortBy === key ? '1px solid rgba(139,92,246,0.5)' : '1px solid rgba(255,255,255,0.1)',
-                background: sortBy === key ? 'rgba(139,92,246,0.15)' : 'rgba(255,255,255,0.05)',
-                color: sortBy === key ? '#c4b5fd' : 'rgba(255,255,255,0.5)',
+                border: sortBy === key ? '1px solid rgba(59,130,246,0.5)' : '1px solid rgba(255,255,255,0.1)',
+                background: sortBy === key ? 'rgba(59,130,246,0.15)' : 'rgba(255,255,255,0.05)',
+                color: sortBy === key ? '#93c5fd' : 'rgba(255,255,255,0.5)',
                 cursor: 'pointer',
                 transition: 'all 0.15s ease',
               }}

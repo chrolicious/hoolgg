@@ -33,7 +33,7 @@ function LoginContent() {
           Personal WoW Roster Tracker. Sign in with your Battle.net account to get started.
         </p>
       </div>
-      <Button variant="purple" size="lg" onClick={login}>
+      <Button variant="blue" size="lg" onClick={login}>
         Login with Battle.net
       </Button>
     </div>
