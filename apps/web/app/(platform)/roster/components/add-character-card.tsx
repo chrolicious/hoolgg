@@ -3,7 +3,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Badge, Icon, Button, Checkbox } from '@hool/design-system';
-import { guildApi, progressApi, ApiError } from '../../../lib/api';
+import { progressApi, ApiError } from '../../../lib/api';
 import cardStyles from './character-card.module.css';
 
 interface BnetCharacter {
@@ -78,7 +78,7 @@ export function AddCharacterCard({ onCharacterAdded, existingCharacters = [] }: 
 
     (async () => {
       try {
-        const data = await guildApi.get<{ characters: BnetCharacter[] }>('/auth/me/characters');
+        const data = await progressApi.get<{ characters: BnetCharacter[] }>('/auth/me/characters');
         if (!cancelled) {
           // Filter to max-level characters, sort by level desc then name
           const chars = (data.characters || [])
