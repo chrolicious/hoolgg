@@ -292,16 +292,15 @@ class WarcraftLogsService:
 
         graphql_endpoint = "https://www.warcraftlogs.com/api/v2/client"
 
-        start_ms = start_time * 1000
-        end_ms = end_time * 1000
-
+        # WCL encounterRankings uses 'timeframe' enum (Historical/Today), not arbitrary time ranges.
+        # We query current-tier rankings and filter by startTime on our side.
         query = """
-        query CharacterKills($name: String!, $serverSlug: String!, $serverRegion: String!, $startTime: Float!, $endTime: Float!) {
+        query CharacterKills($name: String!, $serverSlug: String!, $serverRegion: String!) {
           characterData {
             character(name: $name, serverSlug: $serverSlug, serverRegion: $serverRegion) {
-              normal: encounterRankings(difficulty: 3, timeRange: { startTime: $startTime, endTime: $endTime })
-              heroic: encounterRankings(difficulty: 4, timeRange: { startTime: $startTime, endTime: $endTime })
-              mythic: encounterRankings(difficulty: 5, timeRange: { startTime: $startTime, endTime: $endTime })
+              normal: encounterRankings(difficulty: 3)
+              heroic: encounterRankings(difficulty: 4)
+              mythic: encounterRankings(difficulty: 5)
             }
           }
         }
@@ -311,8 +310,6 @@ class WarcraftLogsService:
             "name": character_name,
             "serverSlug": realm_slug,
             "serverRegion": region.upper(),
-            "startTime": float(start_ms),
-            "endTime": float(end_ms),
         }
 
         headers = {"Authorization": f"Bearer {access_token}"}
@@ -340,17 +337,23 @@ class WarcraftLogsService:
             if not character_data:
                 return []
 
+            # WCL encounterRankings returns per-encounter summary, not individual kill logs.
+            # Each entry has totalKills and rankPercent but no per-kill timestamps.
+            # We count unique bosses with kills as an approximation.
             kills = []
+            start_ms = start_time * 1000
             for diff_name in ["normal", "heroic", "mythic"]:
                 rankings = character_data.get(diff_name)
                 if rankings and isinstance(rankings, list):
                     for ranking in rankings:
-                        kills.append({
-                            "boss": ranking.get("encounter", {}).get("name", "Unknown"),
-                            "difficulty": diff_name,
-                            "timestamp": ranking.get("startTime", 0) // 1000,
-                            "parse": ranking.get("rankPercent", 0),
-                        })
+                        total_kills = ranking.get("totalKills", 0)
+                        if total_kills > 0:
+                            kills.append({
+                                "boss": ranking.get("encounter", {}).get("name", "Unknown"),
+                                "difficulty": diff_name,
+                                "kills": total_kills,
+                                "parse": ranking.get("rankPercent", 0),
+                            })
 
             return kills
 
