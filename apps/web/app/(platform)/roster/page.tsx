@@ -564,6 +564,7 @@ export default function RosterPage() {
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <AddCharacterCard
             onCharacterAdded={fetchCharacters}
+            existingCharacters={characters}
           />
         </div>
       </div>

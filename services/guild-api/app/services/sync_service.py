@@ -16,7 +16,11 @@ from datetime import datetime
 
 
 def sync_user_characters_on_login(
-    bnet_id: int, bnet_username: str, blizzard_access_token: str, region: str = "us"
+    bnet_id: int,
+    bnet_username: str,
+    blizzard_access_token: str,
+    region: str = "us",
+    token_expires_in: int = 86400,
 ) -> Dict:
     """
     Sync user's characters and guild memberships on login
@@ -30,6 +34,7 @@ def sync_user_characters_on_login(
         bnet_username: Battle.net username
         blizzard_access_token: Access token from Blizzard OAuth
         region: API region
+        token_expires_in: Token lifetime in seconds (from Blizzard response)
 
     Returns:
         Dictionary with sync results: {
@@ -41,13 +46,24 @@ def sync_user_characters_on_login(
     db: Session = next(get_db())
 
     try:
+        from datetime import timedelta, timezone
+
+        token_expires_at = datetime.now(timezone.utc) + timedelta(seconds=token_expires_in)
+
         # Create or update user
         user = db.query(User).filter(User.bnet_id == bnet_id).first()
         if user:
             user.bnet_username = bnet_username
-            user.last_login = datetime.utcnow()
+            user.last_login = datetime.now(timezone.utc)
+            user.blizzard_access_token = blizzard_access_token
+            user.blizzard_token_expires_at = token_expires_at
         else:
-            user = User(bnet_id=bnet_id, bnet_username=bnet_username)
+            user = User(
+                bnet_id=bnet_id,
+                bnet_username=bnet_username,
+                blizzard_access_token=blizzard_access_token,
+                blizzard_token_expires_at=token_expires_at,
+            )
             db.add(user)
 
         db.commit()

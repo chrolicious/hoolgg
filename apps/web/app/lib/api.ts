@@ -92,6 +92,12 @@ async function request<T>(
     const refreshed = await attemptRefresh();
     if (refreshed) {
       res = await doFetch();
+    } else {
+      // Refresh failed — session is dead, redirect to login
+      if (typeof window !== 'undefined' && !window.location.pathname.startsWith('/auth/')) {
+        window.location.href = '/auth/login';
+        return undefined as T; // Won't reach here, but satisfies TS
+      }
     }
   }
 
