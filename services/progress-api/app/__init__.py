@@ -3,6 +3,7 @@
 from flask import Flask
 from flask_cors import CORS
 import os
+import logging
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -11,6 +12,12 @@ load_dotenv()
 def create_app() -> Flask:
     """Application factory pattern"""
     app = Flask(__name__)
+
+    # Configure logging so scheduler/sync messages are visible
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s [%(name)s] %(levelname)s: %(message)s",
+    )
 
     # Configuration
     app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "dev-secret-key")
@@ -82,11 +89,15 @@ def create_app() -> Flask:
     app.register_blueprint(personal_roster.bp)
 
     # Start background scheduler (only in non-testing mode)
+    # Guard against Flask debug reloader: only start in the child process
+    # (WERKZEUG_RUN_MAIN is set to 'true' in the reloader child)
     if not app.config.get("TESTING"):
-        from app.services.scheduler import init_scheduler, shutdown_scheduler
-        init_scheduler(app)
+        is_reloader_child = os.environ.get("WERKZEUG_RUN_MAIN") == "true"
+        if is_reloader_child or not app.debug:
+            from app.services.scheduler import init_scheduler, shutdown_scheduler
+            init_scheduler(app)
 
-        import atexit
-        atexit.register(shutdown_scheduler)
+            import atexit
+            atexit.register(shutdown_scheduler)
 
     return app
