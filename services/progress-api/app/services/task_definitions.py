@@ -38,7 +38,7 @@ WEEKLY_TASKS: Dict[int, Dict[str, Any]] = {
         ],
         "daily": [],
         "tips": [
-            "Do NOT spend any crests unless instructed",
+            "Do NOT spend crests yet — you'll need them for crafting in Week 2",
             "Do NOT upgrade M0 gear — save crests for later",
         ],
     },
@@ -54,7 +54,7 @@ WEEKLY_TASKS: Dict[int, Dict[str, Any]] = {
         ],
         "daily": [],
         "tips": [
-            "Do NOT spend any crests unless instructed",
+            "Do NOT spend crests yet — save Veteran Dawncrests for crafting 246 pieces this week",
             "Only craft if you plan to raid on Mar 17",
         ],
     },
@@ -72,8 +72,8 @@ WEEKLY_TASKS: Dict[int, Dict[str, Any]] = {
         ],
         "daily": [],
         "tips": [
-            "Do NOT spend Heroic or Mythic crests this week",
-            "Do NOT upgrade PvP neck/ring — save crests",
+            "Do NOT spend Heroic or Mythic crests — save them for Week 3 weapon craft and upgrades",
+            "Do NOT upgrade PvP neck/ring — save crests for bigger upgrades later",
         ],
     },
     2: {
@@ -91,7 +91,7 @@ WEEKLY_TASKS: Dict[int, Dict[str, Any]] = {
         ],
         "daily": [],
         "tips": [
-            "Do NOT spend Heroic or Mythic crests this week",
+            "Do NOT spend Heroic or Mythic crests — save for Week 3 weapon craft (80 Mythic Crests)",
             "Only craft Mythic Embellished if recommended by your class discord",
         ],
     },
