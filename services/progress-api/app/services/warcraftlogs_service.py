@@ -209,8 +209,8 @@ class WarcraftLogsService:
             },
         }
 
-    # WCL zone ID for the current raid tier (Liberation of Undermine)
-    CURRENT_ZONE_ID = 42
+    # WCL zone ID for the current raid tier (Manaforge Omega)
+    CURRENT_ZONE_ID = 44
 
     def get_character_parses(
         self, character_name: str, realm_slug: str, region: str = "us"

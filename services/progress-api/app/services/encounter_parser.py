@@ -6,9 +6,9 @@ from datetime import datetime, timezone, date, timedelta
 
 logger = logging.getLogger(__name__)
 
-# Current raid instance name (Midnight Season 1)
+# Current raid instance name (The War Within Season 3)
 # Update this when new raids release
-CURRENT_RAID_INSTANCE = "Liberation of Undermine"
+CURRENT_RAID_INSTANCE = "Manaforge Omega"
 
 
 def parse_encounter_snapshot(encounter_data: Dict[str, Any]) -> Dict[str, Any]:
