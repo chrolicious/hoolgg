@@ -30,7 +30,7 @@ function LoginContent() {
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.5rem', maxWidth: 400, textAlign: 'center' }}>
         <h1 style={{ fontSize: '2.5rem', fontWeight: 800, color: '#ffffff', margin: 0 }}>hool.gg</h1>
         <p style={{ fontSize: '1rem', color: 'rgba(255, 255, 255, 0.5)', margin: 0, lineHeight: 1.6 }}>
-          Personal WoW Roster Tracker. Sign in with your Battle.net account to get started.
+          Guild Management Dashboard for WoW. Sign in with your Battle.net account to get started.
         </p>
       </div>
       <Button variant="blue" size="lg" onClick={login}>

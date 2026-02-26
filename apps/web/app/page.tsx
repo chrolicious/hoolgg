@@ -37,7 +37,7 @@ export default function Home() {
           fontSize: '1.25rem', color: 'rgba(255, 255, 255, 0.6)', maxWidth: '520px',
           lineHeight: 1.6, margin: 0,
         }}>
-          Guild operations dashboard for WoW. Track your roster, find recruits across platforms, and keep your raid team on the same page.
+          Guild Management Dashboard for WoW. Track your roster, find recruits across platforms, and keep your raid team on the same page.
         </p>
 
         <Button variant="blue" size="lg" onClick={login}>
