@@ -104,22 +104,6 @@ export function WeeklyProgressGranular({
     }
   }, [saveStatus]);
 
-  const addRun = () => {
-    if (mplusRuns.length < 8) {
-      setMplusRuns((prev) => [...prev, { keyLevel: 0 }]);
-    }
-  };
-
-  const removeRun = (index: number) => {
-    setMplusRuns((prev) => prev.filter((_, i) => i !== index));
-  };
-
-  const updateRunKeyLevel = (index: number, value: number) => {
-    setMplusRuns((prev) =>
-      prev.map((run, i) => (i === index ? { keyLevel: value } : run))
-    );
-  };
-
   const handleSave = async () => {
     setIsSaving(true);
     setSaveStatus(null);
@@ -146,7 +130,7 @@ export function WeeklyProgressGranular({
   return (
     <SectionCard
       title="Weekly Progress"
-      subtitle="Input your weekly raid, M+ and delve data"
+      subtitle="Raid and M+ data auto-filled on sync. Delves are manual."
     >
       {/* Remove number input spinners */}
       <style>{`
@@ -164,7 +148,7 @@ export function WeeklyProgressGranular({
         marginBottom: '20px',
       }}>
 
-        {/* Column 1: Raid Bosses Killed (auto-filled from sync) */}
+        {/* Column 1: Raid Bosses Killed (auto-filled from Blizzard API) */}
         <div>
           <h3 style={columnHeadingStyle}>Raid Bosses Killed</h3>
           <p style={{ fontSize: '11px', color: 'rgba(255,255,255,0.35)', margin: '-8px 0 10px 0' }}>
@@ -193,70 +177,40 @@ export function WeeklyProgressGranular({
           </div>
         </div>
 
-        {/* Column 2: M+ Dungeons */}
+        {/* Column 2: M+ Dungeons (auto-filled from Raider.IO) */}
         <div>
           <h3 style={columnHeadingStyle}>M+ Dungeons</h3>
           <p style={{ fontSize: '11px', color: 'rgba(255,255,255,0.35)', margin: '-8px 0 10px 0' }}>
-            Add each run and enter the key level
+            Auto-filled on sync
           </p>
 
-          {mplusRuns.length > 0 && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginBottom: '10px' }}>
+          {mplusRuns.length > 0 ? (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
               {mplusRuns.map((run, index) => (
-                <div key={index} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <div key={index} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <span style={{ fontSize: '12px', color: 'rgba(255,255,255,0.4)', minWidth: '48px' }}>
                     Run {index + 1}
                   </span>
-                  <input
-                    type="number"
-                    className="wpg-input"
-                    min={0}
-                    placeholder="Key lvl"
-                    value={run.keyLevel || ''}
-                    onChange={(e) =>
-                      updateRunKeyLevel(index, Math.max(0, parseInt(e.target.value, 10) || 0))
-                    }
-                    onFocus={(e) => e.target.select()}
-                    style={inputStyle}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => removeRun(index)}
-                    style={{
-                      background: 'none',
-                      border: 'none',
-                      cursor: 'pointer',
-                      padding: '4px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      color: 'rgba(255,255,255,0.3)',
-                      transition: 'color 0.15s',
-                    }}
-                    onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.color = 'rgba(255,100,100,0.8)'; }}
-                    onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.color = 'rgba(255,255,255,0.3)'; }}
-                    aria-label={`Remove run ${index + 1}`}
-                  >
-                    <Icon name="x-mark" size={12} />
-                  </button>
+                  <span style={{
+                    fontSize: '14px',
+                    fontWeight: 600,
+                    color: 'rgba(255,255,255,0.8)',
+                    minWidth: '64px',
+                    textAlign: 'center',
+                  }}>
+                    +{run.keyLevel}
+                  </span>
                 </div>
               ))}
             </div>
-          )}
-
-          {mplusRuns.length < 8 && (
-            <Button variant="primary" size="sm" onClick={addRun} style={btnStyle}>
-              Add Run
-            </Button>
-          )}
-
-          {mplusRuns.length === 0 && (
+          ) : (
             <p style={{ fontSize: '12px', color: 'rgba(255,255,255,0.3)', margin: '8px 0 0 0' }}>
-              No runs yet.
+              No runs this week.
             </p>
           )}
         </div>
 
-        {/* Column 3: Delves */}
+        {/* Column 3: Delves (manual input) */}
         <div>
           <h3 style={columnHeadingStyle}>Delves</h3>
           <p style={{ fontSize: '11px', color: 'rgba(255,255,255,0.35)', margin: '-8px 0 10px 0' }}>
@@ -319,7 +273,7 @@ export function WeeklyProgressGranular({
         </div>
       </div>
 
-      {/* Save Button and Status */}
+      {/* Save Button — only needed for delve manual input */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
         <Button
           variant="primary"
@@ -328,12 +282,12 @@ export function WeeklyProgressGranular({
           disabled={isSaving}
           style={btnStyle}
         >
-          {isSaving ? 'Saving...' : 'Save Progress'}
+          {isSaving ? 'Saving...' : 'Save Delves'}
         </Button>
 
         {saveStatus === 'saved' && (
           <span style={{ fontSize: '13px', color: '#4ade80', fontWeight: 500 }}>
-            Progress saved successfully
+            Saved successfully
           </span>
         )}
         {saveStatus === 'error' && (
