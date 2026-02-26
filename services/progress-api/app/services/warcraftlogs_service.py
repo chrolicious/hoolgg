@@ -209,6 +209,9 @@ class WarcraftLogsService:
             },
         }
 
+    # WCL zone ID for the current raid tier (Liberation of Undermine)
+    CURRENT_ZONE_ID = 42
+
     def get_character_parses(
         self, character_name: str, realm_slug: str, region: str = "us"
     ) -> Optional[Dict[str, Any]]:
@@ -225,10 +228,11 @@ class WarcraftLogsService:
         graphql_endpoint = "https://www.warcraftlogs.com/api/v2/client"
 
         query = """
-        query CharacterParses($name: String!, $serverSlug: String!, $serverRegion: String!) {
+        query CharacterParses($name: String!, $serverSlug: String!, $serverRegion: String!, $zoneID: Int!) {
           characterData {
             character(name: $name, serverSlug: $serverSlug, serverRegion: $serverRegion) {
-              encounterRankings
+              heroic: zoneRankings(zoneID: $zoneID, difficulty: 4)
+              mythic: zoneRankings(zoneID: $zoneID, difficulty: 5)
             }
           }
         }
@@ -238,6 +242,7 @@ class WarcraftLogsService:
             "name": character_name,
             "serverSlug": realm_slug,
             "serverRegion": region.upper(),
+            "zoneID": self.CURRENT_ZONE_ID,
         }
 
         headers = {"Authorization": f"Bearer {access_token}"}
@@ -266,7 +271,7 @@ class WarcraftLogsService:
                 logger.warning(f"No WCL data for {character_name}-{realm_slug}")
                 return None
 
-            return self._parse_encounter_rankings(character_data.get("encounterRankings"))
+            return self._parse_zone_rankings(character_data)
 
         except requests.RequestException as e:
             logger.error(f"Failed to fetch WCL parses: {e}")
@@ -277,14 +282,15 @@ class WarcraftLogsService:
         start_time: int = 0, end_time: int = 0,
     ) -> Optional[List[Dict[str, Any]]]:
         """
-        Fetch raid kills for a character within a specific time range (for weekly attribution).
+        Fetch raid kills for a character from the current tier.
 
-        Args:
-            start_time: Unix timestamp (seconds) for range start (weekly reset)
-            end_time: Unix timestamp (seconds) for range end (now)
+        Uses zoneRankings to get total kills per boss per difficulty.
+        Note: WCL doesn't support arbitrary time ranges on zoneRankings,
+        so this returns all-time kills for the current tier. The Blizzard
+        encounters API is the primary source for weekly kill tracking.
 
         Returns list of kills:
-        [{"boss": "Boss1", "difficulty": "heroic", "timestamp": 1234567890, "parse": 85.2}, ...]
+        [{"boss": "Boss1", "difficulty": "heroic", "kills": 6, "parse": 85.2}, ...]
         """
         access_token = self._get_access_token()
         if not access_token:
@@ -292,15 +298,13 @@ class WarcraftLogsService:
 
         graphql_endpoint = "https://www.warcraftlogs.com/api/v2/client"
 
-        # WCL encounterRankings uses 'timeframe' enum (Historical/Today), not arbitrary time ranges.
-        # We query current-tier rankings and filter by startTime on our side.
         query = """
-        query CharacterKills($name: String!, $serverSlug: String!, $serverRegion: String!) {
+        query CharacterKills($name: String!, $serverSlug: String!, $serverRegion: String!, $zoneID: Int!) {
           characterData {
             character(name: $name, serverSlug: $serverSlug, serverRegion: $serverRegion) {
-              normal: encounterRankings(difficulty: 3)
-              heroic: encounterRankings(difficulty: 4)
-              mythic: encounterRankings(difficulty: 5)
+              normal: zoneRankings(zoneID: $zoneID, difficulty: 3)
+              heroic: zoneRankings(zoneID: $zoneID, difficulty: 4)
+              mythic: zoneRankings(zoneID: $zoneID, difficulty: 5)
             }
           }
         }
@@ -310,6 +314,7 @@ class WarcraftLogsService:
             "name": character_name,
             "serverSlug": realm_slug,
             "serverRegion": region.upper(),
+            "zoneID": self.CURRENT_ZONE_ID,
         }
 
         headers = {"Authorization": f"Bearer {access_token}"}
@@ -337,23 +342,21 @@ class WarcraftLogsService:
             if not character_data:
                 return []
 
-            # WCL encounterRankings returns per-encounter summary, not individual kill logs.
-            # Each entry has totalKills and rankPercent but no per-kill timestamps.
-            # We count unique bosses with kills as an approximation.
             kills = []
-            start_ms = start_time * 1000
             for diff_name in ["normal", "heroic", "mythic"]:
-                rankings = character_data.get(diff_name)
-                if rankings and isinstance(rankings, list):
-                    for ranking in rankings:
-                        total_kills = ranking.get("totalKills", 0)
-                        if total_kills > 0:
-                            kills.append({
-                                "boss": ranking.get("encounter", {}).get("name", "Unknown"),
-                                "difficulty": diff_name,
-                                "kills": total_kills,
-                                "parse": ranking.get("rankPercent", 0),
-                            })
+                zone_data = character_data.get(diff_name)
+                if not zone_data or not isinstance(zone_data, dict):
+                    continue
+                rankings = zone_data.get("rankings", [])
+                for ranking in rankings:
+                    total_kills = ranking.get("totalKills", 0)
+                    if total_kills > 0:
+                        kills.append({
+                            "boss": ranking.get("encounter", {}).get("name", "Unknown"),
+                            "difficulty": diff_name,
+                            "kills": total_kills,
+                            "parse": ranking.get("rankPercent", 0),
+                        })
 
             return kills
 
@@ -361,18 +364,23 @@ class WarcraftLogsService:
             logger.error(f"Failed to fetch WCL kills: {e}")
             return None
 
-    def _parse_encounter_rankings(self, rankings_data) -> Optional[Dict[str, Any]]:
-        """Parse encounterRankings into a simplified per-boss dict."""
-        if not rankings_data:
-            return None
-
+    def _parse_zone_rankings(self, character_data: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        """Parse zoneRankings response into a simplified per-boss dict."""
         result = {}
-        if isinstance(rankings_data, list):
-            for ranking in rankings_data:
+
+        for diff_name in ["heroic", "mythic"]:
+            zone_data = character_data.get(diff_name)
+            if not zone_data or not isinstance(zone_data, dict):
+                continue
+            rankings = zone_data.get("rankings", [])
+            for ranking in rankings:
                 boss_name = ranking.get("encounter", {}).get("name", "Unknown")
-                result[boss_name] = {
+                key = f"{boss_name} ({diff_name.title()})"
+                result[key] = {
                     "best_parse": ranking.get("rankPercent"),
+                    "median_parse": ranking.get("medianPercent"),
                     "kills": ranking.get("totalKills", 0),
-                    "spec": ranking.get("spec"),
+                    "spec": ranking.get("bestSpec") or ranking.get("spec"),
                 }
+
         return result if result else None
