@@ -110,39 +110,25 @@ def _get_blizzard_raid_kills(char, current_week, region, now, db):
 
 
 def _get_wcl_raid_kills(char, region, now):
-    """Fetch WarcraftLogs kills for this reset week."""
+    """Fetch WarcraftLogs parse data (not used for kill counting).
+
+    WCL zoneRankings returns all-time data, not per-week kills.
+    Blizzard encounters (snapshot/diff) is the authoritative source
+    for weekly kill counts. WCL is only used here to store parse
+    percentiles for the character detail UI.
+    """
     # Check cache TTL
     if char.last_warcraftlogs_sync and now - char.last_warcraftlogs_sync < WARCRAFTLOGS_CACHE_TTL:
         return None
 
     wcl = WarcraftLogsService()
-    reset_ts = get_week_reset_timestamp(region)
-    now_ts = int(now.timestamp())
-
-    kills_data = wcl.get_character_kills_in_range(
-        char.character_name, char.realm, region,
-        start_time=reset_ts, end_time=now_ts,
-    )
-
     char.last_warcraftlogs_sync = now
 
-    if not kills_data:
-        return None
-
-    # Count unique bosses killed per difficulty
-    result = {"raid_lfr": 0, "raid_normal": 0, "raid_heroic": 0, "raid_mythic": 0}
-    seen = {"normal": set(), "heroic": set(), "mythic": set()}
-
-    for kill in kills_data:
-        diff = kill.get("difficulty", "")
-        boss = kill.get("boss", "")
-        if diff in seen and boss not in seen[diff]:
-            seen[diff].add(boss)
-            result[f"raid_{diff}"] += 1
-
-    # Also store parse data for future UI
+    # Store parse data for future UI display
     wcl_parses = wcl.get_character_parses(char.character_name, char.realm, region)
     if wcl_parses:
         char.warcraftlogs_data = wcl_parses
 
-    return result
+    # Don't return kill counts — WCL zoneRankings is all-time, not weekly.
+    # Blizzard encounters API handles weekly kill tracking via snapshot/diff.
+    return None
