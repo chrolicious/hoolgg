@@ -443,18 +443,31 @@ def sync_my_character_gear(cid: int):
                 if recent_runs:
                     vault_entry.m_plus_runs = recent_runs
 
-                # Auto-fill raid vault slots from Blizzard + WarcraftLogs
-                try:
-                    from app.services.vault_autofill import auto_fill_raid_vault
-                    auto_fill_raid_vault(
-                        char=char,
-                        vault_entry=vault_entry,
-                        current_week=current_week,
-                        region=region,
-                        db=db,
-                    )
-                except Exception as e:
-                    logger.warning(f"Raid vault auto-fill failed (non-fatal): {e}")
+        # Auto-fill raid vault slots from Blizzard + WarcraftLogs (always runs on sync)
+        current_week = calculate_current_week(region)
+        vault_entry = db.query(GreatVaultEntry).filter(
+            GreatVaultEntry.character_id == char.id,
+            GreatVaultEntry.week_number == current_week
+        ).first()
+
+        if not vault_entry:
+            vault_entry = GreatVaultEntry(
+                character_id=char.id,
+                week_number=current_week,
+            )
+            db.add(vault_entry)
+
+        try:
+            from app.services.vault_autofill import auto_fill_raid_vault
+            auto_fill_raid_vault(
+                char=char,
+                vault_entry=vault_entry,
+                current_week=current_week,
+                region=region,
+                db=db,
+            )
+        except Exception as e:
+            logger.warning(f"Raid vault auto-fill failed (non-fatal): {e}")
 
         if gear_data:
             from app.services.gear_parser import create_empty_gear
@@ -575,18 +588,31 @@ def sync_all_my_characters(cid: int):
                         if recent_runs:
                             vault_entry.m_plus_runs = recent_runs
 
-                        # Auto-fill raid vault slots from Blizzard + WarcraftLogs
-                        try:
-                            from app.services.vault_autofill import auto_fill_raid_vault
-                            auto_fill_raid_vault(
-                                char=char,
-                                vault_entry=vault_entry,
-                                current_week=current_week,
-                                region=region,
-                                db=db,
-                            )
-                        except Exception as e:
-                            logger.warning(f"Raid vault auto-fill failed for {char.character_name} (non-fatal): {e}")
+                # Auto-fill raid vault slots from Blizzard + WarcraftLogs (always runs)
+                current_week = calculate_current_week(region)
+                vault_entry = db.query(GreatVaultEntry).filter(
+                    GreatVaultEntry.character_id == char.id,
+                    GreatVaultEntry.week_number == current_week
+                ).first()
+
+                if not vault_entry:
+                    vault_entry = GreatVaultEntry(
+                        character_id=char.id,
+                        week_number=current_week,
+                    )
+                    db.add(vault_entry)
+
+                try:
+                    from app.services.vault_autofill import auto_fill_raid_vault
+                    auto_fill_raid_vault(
+                        char=char,
+                        vault_entry=vault_entry,
+                        current_week=current_week,
+                        region=region,
+                        db=db,
+                    )
+                except Exception as e:
+                    logger.warning(f"Raid vault auto-fill failed for {char.character_name} (non-fatal): {e}")
 
                 if gear_data:
                     from app.services.gear_parser import parse_equipment_response, calculate_avg_ilvl, create_empty_gear
