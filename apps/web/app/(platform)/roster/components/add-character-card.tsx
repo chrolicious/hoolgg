@@ -374,7 +374,7 @@ export function AddCharacterCard({ onCharacterAdded, existingCharacters = [] }: 
                                       }}
                                     >
                                       {/* Checkbox or tracked indicator */}
-                                      <div style={{ flexShrink: 0 }}>
+                                      <div style={{ flexShrink: 0 }} onClick={(e) => e.stopPropagation()}>
                                         {tracked ? (
                                           <div style={{
                                             width: 18, height: 18, borderRadius: '4px',
