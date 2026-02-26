@@ -79,7 +79,7 @@ WEEKLY_TASKS: Dict[int, Dict[str, Any]] = {
     2: {
         "name": "Season 1 Week 2 — Mythic & M+ Opens (Mar 24)",
         "weekly": [
-            {"id": "craft_mythic", "label": "Craft Mythic Embellished item (1 spark) if recommended by class discord", "done": False},
+            {"id": "craft_mythic", "label": "Craft Mythic Embellished item (1 spark)", "done": False},
             {"id": "lfr_tier", "label": "Do LFR for tier pieces", "done": False},
             {"id": "world_boss", "label": "Kill World Boss", "done": False},
             {"id": "delves", "label": "Do Bountiful Delves with coffer keys", "done": False},
@@ -92,6 +92,7 @@ WEEKLY_TASKS: Dict[int, Dict[str, Any]] = {
         "daily": [],
         "tips": [
             "Do NOT spend Heroic or Mythic crests this week",
+            "Only craft Mythic Embellished if recommended by your class discord",
         ],
     },
     3: {
@@ -115,12 +116,14 @@ WEEKLY_TASKS: Dict[int, Dict[str, Any]] = {
         "weekly": [
             {"id": "vault", "label": "Open Vault for 272+ Myth item", "done": False},
             {"id": "farm_m10", "label": "Farm +10s for vault slots and crests", "done": False},
-            {"id": "heroic_crests", "label": "Heroic: Upgrade 2x 4/6->6/6 276 (80 Heroic Crests). Save 20.", "done": False},
+            {"id": "heroic_crests", "label": "Heroic: Upgrade 2x 4/6->6/6 276 (80 Heroic Crests)", "done": False},
             {"id": "myth_vault", "label": "Mythic: Upgrade 1/6 Mythic vault to 6/6 289 (80 Mythic crests)", "done": False},
             {"id": "myth_raid", "label": "Mythic: Upgrade raid drop 2/6->6/6 289 (80 Mythic crests)", "done": False},
         ],
         "daily": [],
-        "tips": [],
+        "tips": [
+            "Save 20 Heroic Crests for next week's upgrades",
+        ],
     },
     5: {
         "name": "Season 1 Week 5 (Apr 14)",
@@ -128,23 +131,27 @@ WEEKLY_TASKS: Dict[int, Dict[str, Any]] = {
             {"id": "vault", "label": "Open Vault for 272+ Myth item", "done": False},
             {"id": "farm_m10", "label": "Farm +10s for vault slots and crests", "done": False},
             {"id": "craft_second", "label": "Craft 2nd item 5/6 285 Mythic (80 Mythic crests)", "done": False},
-            {"id": "heroic_crests", "label": "Heroic: Upgrade 2x 4/6->6/6 276 (80 Heroic Crests). Save 20.", "done": False},
+            {"id": "heroic_crests", "label": "Heroic: Upgrade 2x 4/6->6/6 276 (80 Heroic Crests)", "done": False},
             {"id": "myth_vault", "label": "Mythic: Upgrade 1/6 Mythic vault to 6/6 289 (80 Mythic crests)", "done": False},
         ],
         "daily": [],
-        "tips": [],
+        "tips": [
+            "Save 20 Heroic Crests for next week — it's your last Heroic week",
+        ],
     },
     6: {
         "name": "Season 1 Week 6 — Done with Heroic (Apr 21)",
         "weekly": [
             {"id": "vault", "label": "Open Vault for 272+ Myth item", "done": False},
             {"id": "farm_m12", "label": "Farm +12s for vault slots and crests", "done": False},
-            {"id": "heroic_final", "label": "Heroic: Upgrade 1x 4/6->6/6 276 (40 Heroic Crests) — DONE with Heroic", "done": False},
+            {"id": "heroic_final", "label": "Heroic: Upgrade 1x 4/6->6/6 276 (40 Heroic Crests)", "done": False},
             {"id": "myth_vault", "label": "Mythic: Upgrade 1/6 Mythic vault to 6/6 289 (80 Mythic crests)", "done": False},
             {"id": "myth_raid", "label": "Mythic: Upgrade raid drop 2/6->5/6 285 (60 Mythic crests)", "done": False},
         ],
         "daily": [],
-        "tips": [],
+        "tips": [
+            "Last week of Heroic crest spending — after this, focus only on Mythic",
+        ],
     },
     7: {
         "name": "Season 1 Week 7+ (Apr 28 on)",
@@ -152,11 +159,11 @@ WEEKLY_TASKS: Dict[int, Dict[str, Any]] = {
             {"id": "vault", "label": "Open Vault and optimize picks", "done": False},
             {"id": "farm_m12", "label": "Farm +12s for vault slots and crests", "done": False},
             {"id": "upgrade_mythic", "label": "Upgrade Mythic items as you get them (prioritize to 6/6 289)", "done": False},
-            {"id": "plan_oh", "label": "Plan Off-Hand craft for 6/6 main hand w/ embellishment", "done": False},
         ],
         "daily": [],
         "tips": [
             "Do not craft in any slot if you can get >1/6 Mythic from vault",
+            "Plan Off-Hand craft for 6/6 main hand with embellishment",
         ],
     },
 }
