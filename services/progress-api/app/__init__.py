@@ -89,11 +89,13 @@ def create_app() -> Flask:
     app.register_blueprint(personal_roster.bp)
 
     # Start background scheduler (only in non-testing mode)
-    # Guard against Flask debug reloader: only start in the child process
-    # (WERKZEUG_RUN_MAIN is set to 'true' in the reloader child)
+    # In debug mode, Flask reloader starts the app twice. WERKZEUG_RUN_MAIN
+    # is only set in the reloader child process. In production (no reloader),
+    # WERKZEUG_RUN_MAIN is never set, so we also check FLASK_ENV.
     if not app.config.get("TESTING"):
         is_reloader_child = os.environ.get("WERKZEUG_RUN_MAIN") == "true"
-        if is_reloader_child or not app.debug:
+        is_production = os.getenv("FLASK_ENV") != "development"
+        if is_reloader_child or is_production:
             from app.services.scheduler import init_scheduler, shutdown_scheduler
             init_scheduler(app)
 
