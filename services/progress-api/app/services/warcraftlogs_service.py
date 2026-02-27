@@ -81,9 +81,9 @@ class WarcraftLogsService:
 
         # GraphQL query for realm rankings
         query = """
-        query RealmRankings($realm: String!, $region: String!) {
+        query RealmRankings($realm: String!, $region: String!, $zoneID: Int!) {
           worldData {
-            zone(id: 1273) {
+            zone(id: $zoneID) {
               rankings(
                 realm: $realm
                 region: $region
@@ -107,7 +107,7 @@ class WarcraftLogsService:
         }
         """
 
-        variables = {"realm": realm_slug, "region": region.upper()}
+        variables = {"realm": realm_slug, "region": region.upper(), "zoneID": self.CURRENT_ZONE_ID}
 
         headers = {"Authorization": f"Bearer {access_token}"}
 
@@ -209,7 +209,9 @@ class WarcraftLogsService:
             },
         }
 
-    # WCL zone ID for the current raid tier (Manaforge Omega)
+    # WCL zone ID for the current raid tier (Midnight S1)
+    # Update when WarcraftLogs adds the Midnight raid zones
+    # 44 was Manaforge Omega (TWW S3) — placeholder until Midnight zones are known
     CURRENT_ZONE_ID = 44
 
     def get_character_parses(

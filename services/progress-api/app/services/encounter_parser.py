@@ -6,9 +6,14 @@ from datetime import datetime, timezone, date, timedelta
 
 logger = logging.getLogger(__name__)
 
-# Current raid instance name (The War Within Season 3)
-# Update this when new raids release
-CURRENT_RAID_INSTANCE = "Manaforge Omega"
+# Current raid instance names (Midnight Season 1)
+# S1 has 3 raids that open in stages: Voidspire + Dreamrift (Week 1), March on Quel'danas (Week 3)
+# Update these names when the Blizzard API exposes the actual instance names
+CURRENT_RAID_INSTANCES = [
+    "Voidspire",
+    "Dreamrift",
+    "March on Quel'danas",
+]
 
 
 def parse_encounter_snapshot(encounter_data: Dict[str, Any]) -> Dict[str, Any]:
@@ -39,8 +44,8 @@ def parse_encounter_snapshot(encounter_data: Dict[str, Any]) -> Dict[str, Any]:
         for instance in instances:
             instance_name = instance.get("instance", {}).get("name", "")
 
-            # Only process current raid
-            if instance_name != CURRENT_RAID_INSTANCE:
+            # Only process current raid instances
+            if instance_name not in CURRENT_RAID_INSTANCES:
                 continue
 
             modes = instance.get("modes", [])
