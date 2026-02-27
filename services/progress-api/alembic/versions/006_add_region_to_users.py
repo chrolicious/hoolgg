@@ -7,8 +7,8 @@ Revises: 005
 from alembic import op
 import sqlalchemy as sa
 
-revision = "006"
-down_revision = "005"
+revision = "006_add_region"
+down_revision = "005_vault_autofill"
 branch_labels = None
 depends_on = None
 
