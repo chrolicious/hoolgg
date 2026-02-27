@@ -24,8 +24,6 @@ WEEKLY_TASKS: Dict[int, Dict[str, Any]] = {
         ],
         "daily": [],
         "tips": [
-            "Darkmoon Faire opens Sunday — use the 10% XP/Renown bonus",
-            "Hold final renown turn-in quests until DMF buff is active",
             "Level with Warmode enabled for bonus XP",
         ],
     },
@@ -41,7 +39,6 @@ WEEKLY_TASKS: Dict[int, Dict[str, Any]] = {
         "daily": [],
         "tips": [
             "Do NOT spend crests yet — save for crafting in Week 2",
-            "Use DMF 10% renown buff if Faire is still up",
         ],
     },
     0: {
