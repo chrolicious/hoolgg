@@ -4,6 +4,7 @@ import logging
 from datetime import datetime, timezone, timedelta
 
 from apscheduler.schedulers.background import BackgroundScheduler
+from sqlalchemy.exc import IntegrityError
 
 logger = logging.getLogger(__name__)
 
@@ -109,8 +110,17 @@ def _sync_single_character(char, db):
         ).first()
 
         if not vault_entry:
-            vault_entry = GreatVaultEntry(character_id=char.id, week_number=current_week)
-            db.add(vault_entry)
+            nested = db.begin_nested()
+            try:
+                vault_entry = GreatVaultEntry(character_id=char.id, week_number=current_week)
+                db.add(vault_entry)
+                nested.commit()
+            except IntegrityError:
+                nested.rollback()
+                vault_entry = db.query(GreatVaultEntry).filter(
+                    GreatVaultEntry.character_id == char.id,
+                    GreatVaultEntry.week_number == current_week,
+                ).first()
 
         vault_entry.m_plus_runs = recent_runs
 
