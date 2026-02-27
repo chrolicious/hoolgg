@@ -94,12 +94,22 @@ def get_vault(cid: int):
             }
             calculated_slots = calculate_vault_slots(vault_data)
 
+        # Determine last vault sync time (most recent of encounters or RIO sync)
+        last_synced = None
+        if character.last_encounters_sync and character.last_raiderio_sync:
+            last_synced = max(character.last_encounters_sync, character.last_raiderio_sync).isoformat()
+        elif character.last_encounters_sync:
+            last_synced = character.last_encounters_sync.isoformat()
+        elif character.last_raiderio_sync:
+            last_synced = character.last_raiderio_sync.isoformat()
+
         return jsonify({
             "character_id": cid,
             "character_name": character.character_name,
             "current_week": current_week,
             "progress": vault_data,
             "calculated_slots": calculated_slots,
+            "last_synced": last_synced,
         }), 200
 
     finally:

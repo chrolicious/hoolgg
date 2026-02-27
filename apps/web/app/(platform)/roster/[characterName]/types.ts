@@ -113,6 +113,23 @@ export interface VaultResponse {
   current_week: number;
   progress: VaultProgress;
   calculated_slots: VaultCalculatedSlots;
+  last_synced: string | null;
+}
+
+// ─── WCL Parses (from GET /users/me/characters/{cid}/parses) ───
+
+export interface WclBossParse {
+  best_parse: number | null;
+  median_parse: number | null;
+  kills: number;
+  spec: string | null;
+}
+
+export interface ParsesResponse {
+  character_id: number;
+  character_name: string;
+  parses: Record<string, WclBossParse>;
+  last_synced: string | null;
 }
 
 // ─── Crests (from GET /guilds/{gid}/characters/{cid}/crests) ───

@@ -66,6 +66,7 @@ def create_app() -> Flask:
         bis,
         crests,
         gear,
+        parses,
         professions,
         talents,
         tasks,
@@ -80,6 +81,7 @@ def create_app() -> Flask:
     app.register_blueprint(bis.bp)
     app.register_blueprint(crests.bp)
     app.register_blueprint(gear.bp)
+    app.register_blueprint(parses.bp)
     app.register_blueprint(professions.bp)
     app.register_blueprint(talents.bp)
     app.register_blueprint(tasks.bp)
