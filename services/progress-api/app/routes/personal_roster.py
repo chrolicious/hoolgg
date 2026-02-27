@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 from typing import Dict
 from sqlalchemy import func as sa_func
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm.attributes import flag_modified
 from app.models import get_db
 from app.models.character_progress import CharacterProgress
@@ -15,6 +16,29 @@ import logging
 
 bp = Blueprint("personal_roster", __name__, url_prefix="/users/me")
 logger = logging.getLogger(__name__)
+
+
+def _get_or_create_vault_entry(db, character_id, week_number):
+    """Get or create a GreatVaultEntry, handling race conditions with savepoints."""
+    entry = db.query(GreatVaultEntry).filter(
+        GreatVaultEntry.character_id == character_id,
+        GreatVaultEntry.week_number == week_number,
+    ).first()
+    if entry:
+        return entry
+
+    nested = db.begin_nested()
+    try:
+        entry = GreatVaultEntry(character_id=character_id, week_number=week_number)
+        db.add(entry)
+        nested.commit()
+    except IntegrityError:
+        nested.rollback()
+        entry = db.query(GreatVaultEntry).filter(
+            GreatVaultEntry.character_id == character_id,
+            GreatVaultEntry.week_number == week_number,
+        ).first()
+    return entry
 
 def get_current_user_from_token():
     import os
@@ -428,33 +452,12 @@ def sync_my_character_gear(cid: int):
 
                 # Update this week's Great Vault entry with M+ runs
                 current_week = calculate_current_week(region)
-                vault_entry = db.query(GreatVaultEntry).filter(
-                    GreatVaultEntry.character_id == char.id,
-                    GreatVaultEntry.week_number == current_week
-                ).first()
-
-                if not vault_entry:
-                    vault_entry = GreatVaultEntry(
-                        character_id=char.id,
-                        week_number=current_week,
-                    )
-                    db.add(vault_entry)
-
+                vault_entry = _get_or_create_vault_entry(db, char.id, current_week)
                 vault_entry.m_plus_runs = recent_runs
 
         # Auto-fill raid vault slots from Blizzard + WarcraftLogs (always runs on sync)
         current_week = calculate_current_week(region)
-        vault_entry = db.query(GreatVaultEntry).filter(
-            GreatVaultEntry.character_id == char.id,
-            GreatVaultEntry.week_number == current_week
-        ).first()
-
-        if not vault_entry:
-            vault_entry = GreatVaultEntry(
-                character_id=char.id,
-                week_number=current_week,
-            )
-            db.add(vault_entry)
+        vault_entry = _get_or_create_vault_entry(db, char.id, current_week)
 
         try:
             from app.services.vault_autofill import auto_fill_raid_vault
@@ -572,33 +575,12 @@ def sync_all_my_characters(cid: int):
 
                         # Update this week's Great Vault entry with M+ runs
                         current_week = calculate_current_week(region)
-                        vault_entry = db.query(GreatVaultEntry).filter(
-                            GreatVaultEntry.character_id == char.id,
-                            GreatVaultEntry.week_number == current_week
-                        ).first()
-
-                        if not vault_entry:
-                            vault_entry = GreatVaultEntry(
-                                character_id=char.id,
-                                week_number=current_week,
-                            )
-                            db.add(vault_entry)
-
+                        vault_entry = _get_or_create_vault_entry(db, char.id, current_week)
                         vault_entry.m_plus_runs = recent_runs
 
                 # Auto-fill raid vault slots from Blizzard + WarcraftLogs (always runs)
                 current_week = calculate_current_week(region)
-                vault_entry = db.query(GreatVaultEntry).filter(
-                    GreatVaultEntry.character_id == char.id,
-                    GreatVaultEntry.week_number == current_week
-                ).first()
-
-                if not vault_entry:
-                    vault_entry = GreatVaultEntry(
-                        character_id=char.id,
-                        week_number=current_week,
-                    )
-                    db.add(vault_entry)
+                vault_entry = _get_or_create_vault_entry(db, char.id, current_week)
 
                 try:
                     from app.services.vault_autofill import auto_fill_raid_vault
