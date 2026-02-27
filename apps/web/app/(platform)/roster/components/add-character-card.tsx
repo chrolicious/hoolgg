@@ -80,9 +80,9 @@ export function AddCharacterCard({ onCharacterAdded, existingCharacters = [] }: 
       try {
         const data = await progressApi.get<{ characters: BnetCharacter[] }>('/auth/me/characters');
         if (!cancelled) {
-          // Filter to max-level characters, sort by level desc then name
+          // Filter to endgame characters (70+), sort by level desc then name
           const chars = (data.characters || [])
-            .filter(c => c.level >= 90)
+            .filter(c => c.level >= 70)
             .sort((a, b) => b.level - a.level || a.name.localeCompare(b.name));
           setBnetCharacters(chars);
         }
@@ -332,7 +332,7 @@ export function AddCharacterCard({ onCharacterAdded, existingCharacters = [] }: 
                     <div style={{ flex: 1, overflowY: 'auto', padding: '12px 24px' }}>
                       {filteredCharacters.length === 0 ? (
                         <p style={{ textAlign: 'center', color: 'rgba(255,255,255,0.4)', fontSize: 13, padding: '20px 0' }}>
-                          {search ? 'No characters match your search' : 'No max-level characters found'}
+                          {search ? 'No characters match your search' : 'No characters found (level 70+)'}
                         </p>
                       ) : (
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
