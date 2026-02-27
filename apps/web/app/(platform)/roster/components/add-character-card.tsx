@@ -82,7 +82,7 @@ export function AddCharacterCard({ onCharacterAdded, existingCharacters = [] }: 
         if (!cancelled) {
           // Filter to max-level characters, sort by level desc then name
           const chars = (data.characters || [])
-            .filter(c => c.level >= 80)
+            .filter(c => c.level >= 90)
             .sort((a, b) => b.level - a.level || a.name.localeCompare(b.name));
           setBnetCharacters(chars);
         }
