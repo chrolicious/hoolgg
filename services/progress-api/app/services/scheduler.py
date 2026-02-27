@@ -112,8 +112,7 @@ def _sync_single_character(char, db):
             vault_entry = GreatVaultEntry(character_id=char.id, week_number=current_week)
             db.add(vault_entry)
 
-        if recent_runs:
-            vault_entry.m_plus_runs = recent_runs
+        vault_entry.m_plus_runs = recent_runs
 
         try:
             auto_fill_raid_vault(char, vault_entry, current_week, region, db)

@@ -440,8 +440,7 @@ def sync_my_character_gear(cid: int):
                     )
                     db.add(vault_entry)
 
-                if recent_runs:
-                    vault_entry.m_plus_runs = recent_runs
+                vault_entry.m_plus_runs = recent_runs
 
         # Auto-fill raid vault slots from Blizzard + WarcraftLogs (always runs on sync)
         current_week = calculate_current_week(region)
@@ -585,8 +584,7 @@ def sync_all_my_characters(cid: int):
                             )
                             db.add(vault_entry)
 
-                        if recent_runs:
-                            vault_entry.m_plus_runs = recent_runs
+                        vault_entry.m_plus_runs = recent_runs
 
                 # Auto-fill raid vault slots from Blizzard + WarcraftLogs (always runs)
                 current_week = calculate_current_week(region)
