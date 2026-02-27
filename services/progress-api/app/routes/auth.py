@@ -121,6 +121,9 @@ def callback():
         current_app.logger.error(f"Failed to fetch user info: {e}")
         return jsonify({"error": "Failed to fetch user info"}), 500
 
+    # Detect user's region by probing regional profile endpoints
+    detected_region = _detect_user_region(blizzard_access_token)
+
     # Create or update user in database (store Blizzard token for character fetching)
     from datetime import timedelta, timezone
     token_expires_at = datetime.now(timezone.utc) + timedelta(seconds=blizzard_token_expires_in)
@@ -133,12 +136,15 @@ def callback():
             user.last_login = datetime.now(timezone.utc)
             user.blizzard_access_token = blizzard_access_token
             user.blizzard_token_expires_at = token_expires_at
+            if detected_region:
+                user.region = detected_region
         else:
             user = User(
                 bnet_id=bnet_id,
                 bnet_username=bnet_username,
                 blizzard_access_token=blizzard_access_token,
                 blizzard_token_expires_at=token_expires_at,
+                region=detected_region,
             )
             db.add(user)
         db.commit()
@@ -332,7 +338,7 @@ def get_my_bnet_characters():
                 "code": "BLIZZARD_TOKEN_EXPIRED",
             }), 401
 
-        region = current_app.config.get("BLIZZARD_REGION", "us")
+        region = user.region or current_app.config.get("BLIZZARD_REGION", "us")
         characters = _fetch_user_characters(user.blizzard_access_token, region)
 
         return jsonify({"characters": characters}), 200
@@ -376,3 +382,34 @@ def _fetch_user_characters(blizzard_token: str, region: str = "us"):
             })
 
     return characters
+
+
+def _detect_user_region(blizzard_token: str) -> str:
+    """Detect user's WoW region by probing regional profile endpoints.
+
+    Tries US and EU first (most common), then KR and TW.
+    Returns the region with characters, or 'us' as fallback.
+    """
+    headers = {"Authorization": f"Bearer {blizzard_token}"}
+
+    for region in ["us", "eu", "kr", "tw"]:
+        try:
+            url = f"https://{region}.api.blizzard.com/profile/user/wow"
+            resp = requests.get(
+                url, headers=headers,
+                params={"namespace": f"profile-{region}"},
+                timeout=5,
+            )
+            if resp.status_code == 200:
+                data = resp.json()
+                total = sum(
+                    len(a.get("characters", []))
+                    for a in data.get("wow_accounts", [])
+                )
+                if total > 0:
+                    current_app.logger.info(f"Detected region: {region} ({total} characters)")
+                    return region
+        except requests.RequestException:
+            continue
+
+    return "us"

@@ -14,6 +14,7 @@ class User(Base):
     bnet_username = Column(String(255), nullable=False)
     blizzard_access_token = Column(Text, nullable=True)
     blizzard_token_expires_at = Column(DateTime(timezone=True), nullable=True)
+    region = Column(String(4), nullable=True)  # us, eu, kr, tw
     last_login = Column(DateTime(timezone=True), server_default=func.now())
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(
