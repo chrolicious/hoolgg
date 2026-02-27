@@ -39,6 +39,13 @@ class CharacterProgress(Base):
     raid_progress = Column(JSON, nullable=True)
     last_raiderio_sync = Column(DateTime(timezone=True), nullable=True)
 
+    # Raid encounter tracking (for vault auto-fill)
+    raid_snapshot = Column(JSON, nullable=True)  # Blizzard completed_count baseline per boss
+    raid_snapshot_week = Column(Integer, nullable=True)  # Week number of the snapshot
+    warcraftlogs_data = Column(JSON, nullable=True)  # Per-boss parse %, kill times
+    last_warcraftlogs_sync = Column(DateTime(timezone=True), nullable=True)
+    last_encounters_sync = Column(DateTime(timezone=True), nullable=True)
+
     # Metadata
     last_updated = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
     created_at = Column(DateTime(timezone=True), server_default=func.now())
@@ -75,6 +82,9 @@ class CharacterProgress(Base):
             "mythic_plus_score": self.mythic_plus_score,
             "raid_progress": self.raid_progress,
             "last_raiderio_sync": self.last_raiderio_sync.isoformat() if self.last_raiderio_sync else None,
+            "raid_snapshot_week": self.raid_snapshot_week,
+            "last_warcraftlogs_sync": self.last_warcraftlogs_sync.isoformat() if self.last_warcraftlogs_sync else None,
+            "last_encounters_sync": self.last_encounters_sync.isoformat() if self.last_encounters_sync else None,
             "last_updated": self.last_updated.isoformat() if self.last_updated else None,
             "created_at": self.created_at.isoformat() if self.created_at else None,
             "last_gear_sync": self.last_gear_sync.isoformat() if self.last_gear_sync else None,

@@ -9,34 +9,14 @@ export default function Home() {
   const router = useRouter();
 
   useEffect(() => {
-    if (isLoading) return;
-    if (isAuthenticated) {
-      router.replace('/roster');
-    } else {
-      router.replace('/auth/login');
+    if (!isLoading) {
+      router.replace(isAuthenticated ? '/roster' : '/auth/login');
     }
   }, [isLoading, isAuthenticated, router]);
 
   return (
-    <div
-      style={{
-        minHeight: '100vh',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: '#0e0b12',
-      }}
-    >
-      <div
-        style={{
-          width: 32,
-          height: 32,
-          border: '3px solid rgba(255, 255, 255, 0.1)',
-          borderTopColor: 'rgba(255, 255, 255, 0.6)',
-          borderRadius: '50%',
-          animation: 'spin 0.8s linear infinite',
-        }}
-      />
+    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#0e0b12' }}>
+      <div style={{ width: 32, height: 32, border: '3px solid rgba(255, 255, 255, 0.1)', borderTopColor: 'rgba(255, 255, 255, 0.6)', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
     </div>
   );
 }

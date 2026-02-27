@@ -97,6 +97,7 @@ def callback():
         token_response.raise_for_status()
         token_json = token_response.json()
         blizzard_access_token = token_json["access_token"]
+        blizzard_token_expires_in = token_json.get("expires_in", 86400)
     except requests.RequestException as e:
         current_app.logger.error(f"Failed to exchange code for token: {e}")
         return jsonify({"error": "Failed to obtain access token"}), 500
@@ -120,15 +121,25 @@ def callback():
         current_app.logger.error(f"Failed to fetch user info: {e}")
         return jsonify({"error": "Failed to fetch user info"}), 500
 
-    # Create or update user in database
+    # Create or update user in database (store Blizzard token for character fetching)
+    from datetime import timedelta, timezone
+    token_expires_at = datetime.now(timezone.utc) + timedelta(seconds=blizzard_token_expires_in)
+
     db = next(get_db())
     try:
         user = db.query(User).filter(User.bnet_id == bnet_id).first()
         if user:
             user.bnet_username = bnet_username
-            user.last_login = datetime.utcnow()
+            user.last_login = datetime.now(timezone.utc)
+            user.blizzard_access_token = blizzard_access_token
+            user.blizzard_token_expires_at = token_expires_at
         else:
-            user = User(bnet_id=bnet_id, bnet_username=bnet_username)
+            user = User(
+                bnet_id=bnet_id,
+                bnet_username=bnet_username,
+                blizzard_access_token=blizzard_access_token,
+                blizzard_token_expires_at=token_expires_at,
+            )
             db.add(user)
         db.commit()
     except Exception as e:
@@ -287,3 +298,81 @@ def get_me():
         })
     finally:
         db.close()
+
+
+@bp.route("/me/characters", methods=["GET"])
+def get_my_bnet_characters():
+    """
+    Fetch all WoW characters from Battle.net using the stored access token.
+
+    Returns the full character list from the user's Battle.net account.
+    If the stored token has expired, returns 401 with a re-auth hint.
+    """
+    access_token = request.cookies.get("access_token")
+    if not access_token:
+        return jsonify({"error": "Not authenticated"}), 401
+
+    payload = verify_token(access_token, token_type="access")
+    if not payload:
+        return jsonify({"error": "Invalid or expired token"}), 401
+
+    bnet_id = payload.get("bnet_id")
+    if not bnet_id:
+        return jsonify({"error": "Invalid token payload"}), 401
+
+    db = next(get_db())
+    try:
+        user = db.query(User).filter(User.bnet_id == bnet_id).first()
+        if not user:
+            return jsonify({"error": "User not found"}), 404
+
+        if not user.has_valid_blizzard_token():
+            return jsonify({
+                "error": "Blizzard token expired",
+                "code": "BLIZZARD_TOKEN_EXPIRED",
+            }), 401
+
+        region = current_app.config.get("BLIZZARD_REGION", "us")
+        characters = _fetch_user_characters(user.blizzard_access_token, region)
+
+        return jsonify({"characters": characters}), 200
+
+    except Exception as e:
+        current_app.logger.error(f"Failed to fetch characters for {bnet_id}: {e}")
+        return jsonify({"error": "Failed to fetch characters from Blizzard"}), 502
+
+    finally:
+        db.close()
+
+
+def _fetch_user_characters(blizzard_token: str, region: str = "us"):
+    """Fetch all WoW characters using a user's OAuth token (not client_credentials)."""
+    region_urls = {
+        "us": "https://us.api.blizzard.com",
+        "eu": "https://eu.api.blizzard.com",
+        "kr": "https://kr.api.blizzard.com",
+        "tw": "https://tw.api.blizzard.com",
+    }
+    api_base = region_urls.get(region.lower(), "https://us.api.blizzard.com")
+    url = f"{api_base}/profile/user/wow"
+
+    headers = {"Authorization": f"Bearer {blizzard_token}"}
+    params = {"namespace": f"profile-{region}", "locale": "en_US"}
+
+    response = requests.get(url, headers=headers, params=params, timeout=10)
+    response.raise_for_status()
+    data = response.json()
+
+    characters = []
+    for account in data.get("wow_accounts", []):
+        for character in account.get("characters", []):
+            characters.append({
+                "name": character.get("name"),
+                "realm": character.get("realm", {}).get("slug"),
+                "level": character.get("level"),
+                "playable_class": character.get("playable_class", {}).get("name"),
+                "playable_race": character.get("playable_race", {}).get("name"),
+                "faction": character.get("faction", {}).get("name"),
+            })
+
+    return characters

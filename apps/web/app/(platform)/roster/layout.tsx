@@ -98,7 +98,7 @@ function NavItem({ href, icon, label, active, collapsed, onClick }: NavItemProps
             width: 5,
             height: 5,
             borderRadius: '50%',
-            background: '#8b5cf6',
+            background: '#3B82F6',
           }}
         />
       )}

@@ -94,12 +94,22 @@ def get_vault(cid: int):
             }
             calculated_slots = calculate_vault_slots(vault_data)
 
+        # Determine last vault sync time (most recent of encounters or RIO sync)
+        last_synced = None
+        if character.last_encounters_sync and character.last_raiderio_sync:
+            last_synced = max(character.last_encounters_sync, character.last_raiderio_sync).isoformat()
+        elif character.last_encounters_sync:
+            last_synced = character.last_encounters_sync.isoformat()
+        elif character.last_raiderio_sync:
+            last_synced = character.last_raiderio_sync.isoformat()
+
         return jsonify({
             "character_id": cid,
             "character_name": character.character_name,
             "current_week": current_week,
             "progress": vault_data,
             "calculated_slots": calculated_slots,
+            "last_synced": last_synced,
         }), 200
 
     finally:
@@ -163,11 +173,9 @@ def update_vault(cid: int):
         )
 
         if entry:
-            # Update existing fields
-            updatable = [
-                "raid_lfr", "raid_normal", "raid_heroic", "raid_mythic",
-                "m_plus_runs", "highest_delve", "delve_runs", "world_vault",
-            ]
+            # Only delve fields are manually updatable;
+            # raid and M+ are auto-filled via sync
+            updatable = ["highest_delve", "delve_runs"]
             for field in updatable:
                 if field in data:
                     setattr(entry, field, data[field])
@@ -175,14 +183,8 @@ def update_vault(cid: int):
             entry = GreatVaultEntry(
                 character_id=cid,
                 week_number=week_number,
-                raid_lfr=data.get("raid_lfr", 0),
-                raid_normal=data.get("raid_normal", 0),
-                raid_heroic=data.get("raid_heroic", 0),
-                raid_mythic=data.get("raid_mythic", 0),
-                m_plus_runs=data.get("m_plus_runs"),
                 highest_delve=data.get("highest_delve", 0),
                 delve_runs=data.get("delve_runs"),
-                world_vault=data.get("world_vault"),
             )
             db.add(entry)
 

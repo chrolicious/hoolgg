@@ -95,6 +95,7 @@ def callback():
         token_response.raise_for_status()
         token_json = token_response.json()
         blizzard_access_token = token_json["access_token"]
+        blizzard_token_expires_in = token_json.get("expires_in", 86400)
     except requests.RequestException as e:
         current_app.logger.error(f"Failed to exchange code for token: {e}")
         return jsonify({"error": "Failed to obtain access token"}), 500
@@ -121,7 +122,8 @@ def callback():
     # Sync user's characters and guild memberships
     region = current_app.config["BLIZZARD_REGION"]
     sync_result = sync_user_characters_on_login(
-        bnet_id, bnet_username, blizzard_access_token, region
+        bnet_id, bnet_username, blizzard_access_token, region,
+        token_expires_in=blizzard_token_expires_in,
     )
 
     # Generate JWT tokens
@@ -237,15 +239,53 @@ def get_me():
     """
     bnet_id = request.user["bnet_id"]
     db = next(get_db())
-    
+
     try:
         user = db.query(User).filter(User.bnet_id == bnet_id).first()
         if not user:
             return jsonify({"error": "User not found"}), 404
-            
+
         return jsonify({
             "bnet_id": user.bnet_id,
             "username": user.bnet_username
         })
+    finally:
+        db.close()
+
+
+@bp.route("/me/characters", methods=["GET"])
+@require_auth
+def get_my_bnet_characters():
+    """
+    Fetch all WoW characters from Battle.net using the stored access token.
+
+    Returns the full character list from the user's Battle.net account.
+    If the stored token has expired, returns 401 with a re-auth hint.
+    """
+    from app.services.blizzard_service import fetch_user_characters, BlizzardAPIError
+
+    bnet_id = request.user["bnet_id"]
+    db = next(get_db())
+
+    try:
+        user = db.query(User).filter(User.bnet_id == bnet_id).first()
+        if not user:
+            return jsonify({"error": "User not found"}), 404
+
+        if not user.has_valid_blizzard_token():
+            return jsonify({
+                "error": "Blizzard token expired",
+                "code": "BLIZZARD_TOKEN_EXPIRED",
+            }), 401
+
+        region = current_app.config["BLIZZARD_REGION"]
+        characters = fetch_user_characters(user.blizzard_access_token, region)
+
+        return jsonify({"characters": characters}), 200
+
+    except BlizzardAPIError as e:
+        current_app.logger.error(f"Failed to fetch characters for {bnet_id}: {e}")
+        return jsonify({"error": "Failed to fetch characters from Blizzard"}), 502
+
     finally:
         db.close()

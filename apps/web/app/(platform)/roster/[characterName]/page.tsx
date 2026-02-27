@@ -19,6 +19,7 @@ import type {
   BisResponse,
   ProfessionsResponse,
   TalentsResponse,
+  ParsesResponse,
 } from './types';
 
 // Section components
@@ -27,6 +28,7 @@ import { SeasonTimeline } from './components/season-timeline';
 import { WeeklyTasksSection } from './components/weekly-tasks-section';
 import { VaultAndCrests } from './components/vault-and-crests';
 import { EquipmentGrid } from './components/equipment-grid';
+import { RaidParses } from './components/raid-parses';
 import { BisTracker } from './components/bis-tracker';
 import { ProfessionsSection } from './components/professions-section';
 import { TalentBuildsSection } from './components/talent-builds-section';
@@ -43,6 +45,7 @@ interface SectionData {
   bis: BisResponse | null;
   professions: ProfessionsResponse | null;
   talents: TalentsResponse | null;
+  parses: ParsesResponse | null;
 }
 
 interface SectionErrors {
@@ -109,6 +112,7 @@ export default function CharacterDetailPage() {
     bis: null,
     professions: null,
     talents: null,
+    parses: null,
   });
   const [sectionErrors, setSectionErrors] = useState<SectionErrors>({
     season: null,
@@ -183,6 +187,7 @@ export default function CharacterDetailPage() {
       bisResult,
       professionsResult,
       talentsResult,
+      parsesResult,
     ] = await Promise.allSettled([
       progressApi.get<SeasonResponse>(`/users/me/season`), // Global or user-specific season
       progressApi.get<TasksResponse>(`/users/me/characters/${cid}/tasks`),
@@ -193,10 +198,11 @@ export default function CharacterDetailPage() {
       progressApi.get<BisResponse>(`/users/me/characters/${cid}/bis`),
       progressApi.get<ProfessionsResponse>(`/users/me/characters/${cid}/professions`),
       progressApi.get<TalentsResponse>(`/users/me/characters/${cid}/talents`),
+      progressApi.get<ParsesResponse>(`/users/me/characters/${cid}/parses`),
     ]);
 
     // Log failures for debugging
-    const results = { seasonResult, tasksResult, tasksSummaryResult, vaultResult, crestsResult, gearResult, bisResult, professionsResult, talentsResult };
+    const results = { seasonResult, tasksResult, tasksSummaryResult, vaultResult, crestsResult, gearResult, bisResult, professionsResult, talentsResult, parsesResult };
     for (const [name, result] of Object.entries(results)) {
       if (result.status === 'rejected') {
         console.error(`[CharacterDetail] ${name} failed:`, result.reason);
@@ -213,6 +219,7 @@ export default function CharacterDetailPage() {
       bis: bisResult.status === 'fulfilled' ? bisResult.value : null,
       professions: professionsResult.status === 'fulfilled' ? professionsResult.value : null,
       talents: talentsResult.status === 'fulfilled' ? talentsResult.value : null,
+      parses: parsesResult.status === 'fulfilled' ? parsesResult.value : null,
     });
 
     setSectionErrors({
@@ -423,14 +430,17 @@ export default function CharacterDetailPage() {
               renderUrl={character.render_url}
             />
 
-            {/* 7. BiS Tracker */}
+            {/* 7. Raid Performance (WCL Parses) */}
+            <RaidParses parsesData={sections.parses} />
+
+            {/* 8. BiS Tracker */}
             <BisTracker
               bisData={sections.bis}
               characterId={character.id}
               classColor={classColor}
             />
 
-            {/* 8. Professions */}
+            {/* 9. Professions */}
             <ProfessionsSection
               professionsData={sections.professions}
               characterId={character.id}
@@ -438,7 +448,7 @@ export default function CharacterDetailPage() {
               classColor={classColor}
             />
 
-            {/* 9. Talent Builds */}
+            {/* 10. Talent Builds */}
             <TalentBuildsSection
               talentsData={sections.talents}
               characterId={character.id}

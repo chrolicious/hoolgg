@@ -4,6 +4,7 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import type { VaultResponse, VaultSlot, CrestsResponse } from '../types';
 import { SectionCard } from './section-card';
 import { progressApi } from '../../../../lib/api';
+import { formatRelativeTime } from '../utils';
 
 interface VaultAndCrestsProps {
   vaultData: VaultResponse | null;
@@ -81,7 +82,7 @@ function GreatVault({ vaultData }: { vaultData: VaultResponse | null }) {
   const slots = vaultData?.calculated_slots ?? null;
 
   return (
-    <SectionCard title="Great Vault">
+    <SectionCard title="Great Vault" subtitle={vaultData?.last_synced ? `Synced ${formatRelativeTime(vaultData.last_synced)}` : undefined}>
       {/* Column headers */}
       <div
         style={{
