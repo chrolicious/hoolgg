@@ -3,9 +3,11 @@
 import { useState } from 'react';
 import { SectionCard } from './section-card';
 import type { ParsesResponse } from '../types';
+import { progressApi } from '../../../../lib/api';
 
 interface RaidParsesProps {
   parsesData: ParsesResponse | null;
+  characterId: number;
 }
 
 const SEASONS = [
@@ -23,14 +25,22 @@ function getParseColor(percentile: number | null): string {
   return '#9d9d9d';                        // gray
 }
 
-export function RaidParses({ parsesData }: RaidParsesProps) {
-  const [activeSeason, setActiveSeason] = useState<'mn_s1' | 'tww_s3'>('mn_s1');
+export function RaidParses({ parsesData, characterId }: RaidParsesProps) {
+  const [data, setData] = useState<ParsesResponse | null>(parsesData);
+  const [syncing, setSyncing] = useState(false);
 
-  const seasons = parsesData?.seasons ?? {};
+  const seasons = data?.seasons ?? {};
+
+  // Default to first season that has data, preferring mn_s1 when available
+  const defaultSeason = ((['mn_s1', 'tww_s3'] as const).find(
+    (k) => seasons[k] && Object.keys(seasons[k]!).length > 0
+  ) ?? 'mn_s1');
+
+  const [activeSeason, setActiveSeason] = useState<'mn_s1' | 'tww_s3'>(defaultSeason);
+
   const parses = seasons[activeSeason] ?? {};
   const entries = Object.entries(parses);
 
-  // Split by difficulty: heroic first, then mythic
   const heroicEntries = entries
     .filter(([key]) => key.includes('(Heroic)'))
     .sort(([a], [b]) => a.localeCompare(b));
@@ -42,10 +52,30 @@ export function RaidParses({ parsesData }: RaidParsesProps) {
     (s) => s && Object.keys(s).length > 0
   );
 
+  async function handleSync() {
+    setSyncing(true);
+    try {
+      const result = await progressApi.post<ParsesResponse>(
+        `/users/me/characters/${characterId}/parses/sync`
+      );
+      setData(result);
+      // Switch to whichever season got data
+      const newSeasons = result?.seasons ?? {};
+      const firstWithData = (['mn_s1', 'tww_s3'] as const).find(
+        (k) => newSeasons[k] && Object.keys(newSeasons[k]!).length > 0
+      );
+      if (firstWithData) setActiveSeason(firstWithData);
+    } catch (e) {
+      console.error('WCL sync failed:', e);
+    } finally {
+      setSyncing(false);
+    }
+  }
+
   return (
     <SectionCard title="Raid Performance" subtitle="Per-boss parse percentiles from WarcraftLogs">
-      {/* Season tabs */}
-      <div style={{ display: 'flex', gap: '4px', marginBottom: '12px' }}>
+      {/* Season tabs + sync button */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '4px', marginBottom: '12px' }}>
         {SEASONS.map(({ key, label }) => {
           const isActive = activeSeason === key;
           const hasData = seasons[key] && Object.keys(seasons[key]!).length > 0;
@@ -70,29 +100,47 @@ export function RaidParses({ parsesData }: RaidParsesProps) {
             </button>
           );
         })}
+        <button
+          onClick={handleSync}
+          disabled={syncing}
+          style={{
+            marginLeft: 'auto',
+            padding: '3px 10px',
+            fontSize: '11px',
+            fontWeight: 600,
+            borderRadius: '4px',
+            border: '1px solid rgba(255,255,255,0.1)',
+            background: 'transparent',
+            color: syncing ? 'rgba(255,255,255,0.2)' : 'rgba(255,255,255,0.35)',
+            cursor: syncing ? 'default' : 'pointer',
+            letterSpacing: '0.04em',
+          }}
+        >
+          {syncing ? 'Syncing…' : 'Sync'}
+        </button>
       </div>
 
       {entries.length === 0 ? (
         <p style={{ fontSize: '12px', color: 'rgba(255,255,255,0.3)', margin: 0 }}>
           {hasAnyData
-            ? 'No data for this season yet. Sync to fetch from WarcraftLogs.'
-            : 'No parse data available. Sync the character to fetch data from WarcraftLogs.'}
+            ? 'No data for this season yet. Click Sync to fetch from WarcraftLogs.'
+            : 'No parse data available. Click Sync to fetch from WarcraftLogs.'}
         </p>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
           {heroicEntries.length > 0 && (
             <>
               <DifficultyDivider label="Heroic" />
-              {heroicEntries.map(([key, data]) => (
-                <ParseRow key={key} bossKey={key} data={data} />
+              {heroicEntries.map(([key, d]) => (
+                <ParseRow key={key} bossKey={key} data={d} />
               ))}
             </>
           )}
           {mythicEntries.length > 0 && (
             <>
               <DifficultyDivider label="Mythic" />
-              {mythicEntries.map(([key, data]) => (
-                <ParseRow key={key} bossKey={key} data={data} />
+              {mythicEntries.map(([key, d]) => (
+                <ParseRow key={key} bossKey={key} data={d} />
               ))}
             </>
           )}
@@ -135,13 +183,10 @@ function ParseRow({
   const pct = data.best_parse;
   const color = getParseColor(pct);
   const barWidth = pct !== null ? Math.max(pct, 2) : 0;
-
-  // Strip difficulty suffix for display: "Vaelgor & Ezzorak (Heroic)" → "Vaelgor & Ezzorak"
   const bossName = bossKey.replace(/\s*\((Heroic|Mythic)\)$/, '');
 
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-      {/* Boss name */}
       <span style={{
         fontSize: '12px',
         color: 'rgba(255,255,255,0.7)',
@@ -154,7 +199,6 @@ function ParseRow({
         {bossName}
       </span>
 
-      {/* Parse bar */}
       <div style={{
         flex: 1,
         height: '16px',
@@ -173,7 +217,6 @@ function ParseRow({
         }} />
       </div>
 
-      {/* Percentile number */}
       <span style={{
         fontSize: '13px',
         fontWeight: 700,
@@ -184,7 +227,6 @@ function ParseRow({
         {pct !== null ? Math.round(pct) : '\u2014'}
       </span>
 
-      {/* Kill count */}
       <span style={{
         fontSize: '10px',
         color: 'rgba(255,255,255,0.3)',
