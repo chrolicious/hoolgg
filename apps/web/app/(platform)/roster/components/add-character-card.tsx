@@ -38,12 +38,10 @@ export function AddCharacterCard({ onCharacterAdded }: AddCharacterCardProps) {
       });
 
       if (newChar && newChar.id) {
-        // Automatically sync the character so the class, ilvl, and raider.io stats populate instantly
-        try {
-          await progressApi.post(`/users/me/characters/${newChar.id}/gear/sync`);
-        } catch (syncErr) {
+        // Fire-and-forget — don't block the dialog close
+        progressApi.post(`/users/me/characters/${newChar.id}/gear/sync`).catch((syncErr) => {
           console.error('Initial sync failed, but character was added', syncErr);
-        }
+        });
       }
 
       setShowForm(false);

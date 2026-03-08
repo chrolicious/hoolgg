@@ -177,6 +177,12 @@ export default function RosterLayoutInner({ children }: { children: React.ReactN
         ...characterNavItems,
       ],
     },
+    {
+      header: 'REFERENCE',
+      items: [
+        { href: `${basePath}/cheatsheet`, icon: 'layout-list', label: 'S1 Cheat Sheet', alwaysShow: true },
+      ],
+    },
   ];
 
   const isActivePath = (href: string) => {
