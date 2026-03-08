@@ -109,6 +109,7 @@ def get_tasks(cid: int):
             "week_name": task_defs.get("name", ""),
             "weekly": weekly_tasks,
             "daily": daily_tasks,
+            "tips": task_defs.get("tips", []),
         }), 200
 
     finally:

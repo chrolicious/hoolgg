@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 from typing import Dict
 from sqlalchemy import func as sa_func
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm.attributes import flag_modified
 from app.models import get_db
 from app.models.character_progress import CharacterProgress
@@ -15,6 +16,29 @@ import logging
 
 bp = Blueprint("personal_roster", __name__, url_prefix="/users/me")
 logger = logging.getLogger(__name__)
+
+
+def _get_or_create_vault_entry(db, character_id, week_number):
+    """Get or create a GreatVaultEntry, handling race conditions with savepoints."""
+    entry = db.query(GreatVaultEntry).filter(
+        GreatVaultEntry.character_id == character_id,
+        GreatVaultEntry.week_number == week_number,
+    ).first()
+    if entry:
+        return entry
+
+    nested = db.begin_nested()
+    try:
+        entry = GreatVaultEntry(character_id=character_id, week_number=week_number)
+        db.add(entry)
+        nested.commit()
+    except IntegrityError:
+        nested.rollback()
+        entry = db.query(GreatVaultEntry).filter(
+            GreatVaultEntry.character_id == character_id,
+            GreatVaultEntry.week_number == week_number,
+        ).first()
+    return entry
 
 def get_current_user_from_token():
     import os
@@ -222,6 +246,84 @@ def add_my_character():
     finally:
         db.close()
 
+@bp.route("/characters/batch", methods=["POST"])
+def batch_add_characters():
+    """Add multiple characters at once from Battle.net character picker"""
+    bnet_id = get_current_user_from_token()
+    if not bnet_id:
+        return jsonify({"error": "Not authenticated"}), 401
+
+    data = request.get_json()
+    if not data:
+        return jsonify({"error": "No data provided"}), 400
+
+    characters_to_add = data.get("characters", [])
+    if not characters_to_add:
+        return jsonify({"error": "No characters provided"}), 400
+
+    db = next(get_db())
+    try:
+        # Get current max display_order
+        max_order = (
+            db.query(sa_func.max(CharacterProgress.display_order))
+            .filter(CharacterProgress.user_bnet_id == bnet_id)
+            .scalar()
+        ) or 0
+
+        # Get existing characters to skip duplicates
+        existing = (
+            db.query(CharacterProgress.character_name, CharacterProgress.realm)
+            .filter(CharacterProgress.user_bnet_id == bnet_id)
+            .all()
+        )
+        existing_set = {(name.lower(), realm.lower()) for name, realm in existing}
+
+        added = []
+        skipped = []
+
+        for char_data in characters_to_add:
+            name = char_data.get("name")
+            realm = char_data.get("realm")
+            region = char_data.get("region", "us")
+            class_name = char_data.get("class_name")
+
+            if not name or not realm:
+                continue
+
+            if (name.lower(), realm.lower()) in existing_set:
+                skipped.append({"name": name, "realm": realm, "reason": "already_exists"})
+                continue
+
+            max_order += 1
+            character = CharacterProgress(
+                character_name=name,
+                realm=realm,
+                region=region,
+                class_name=class_name,
+                guild_id=None,
+                user_bnet_id=bnet_id,
+                display_order=max_order,
+            )
+            db.add(character)
+            db.flush()  # Get the ID
+            added.append(character.to_dict())
+            existing_set.add((name.lower(), realm.lower()))
+
+        db.commit()
+
+        return jsonify({
+            "added": added,
+            "skipped": skipped,
+        }), 201
+
+    except Exception as e:
+        db.rollback()
+        logger.error(f"Failed to batch add characters: {e}")
+        return jsonify({"error": "Failed to add characters"}), 500
+    finally:
+        db.close()
+
+
 @bp.route("/characters/<int:cid>", methods=["DELETE"])
 def delete_my_character(cid: int):
     bnet_id = get_current_user_from_token()
@@ -349,21 +451,25 @@ def sync_my_character_gear(cid: int):
                 rio_icons = extract_raiderio_gear_icons(rio_data)
 
                 # Update this week's Great Vault entry with M+ runs
-                if recent_runs:
-                    current_week = calculate_current_week(region)
-                    vault_entry = db.query(GreatVaultEntry).filter(
-                        GreatVaultEntry.character_id == char.id,
-                        GreatVaultEntry.week_number == current_week
-                    ).first()
+                current_week = calculate_current_week(region)
+                vault_entry = _get_or_create_vault_entry(db, char.id, current_week)
+                vault_entry.m_plus_runs = recent_runs
 
-                    if not vault_entry:
-                        vault_entry = GreatVaultEntry(
-                            character_id=char.id,
-                            week_number=current_week,
-                        )
-                        db.add(vault_entry)
+        # Auto-fill raid vault slots from Blizzard + WarcraftLogs (always runs on sync)
+        current_week = calculate_current_week(region)
+        vault_entry = _get_or_create_vault_entry(db, char.id, current_week)
 
-                    vault_entry.m_plus_runs = recent_runs
+        try:
+            from app.services.vault_autofill import auto_fill_raid_vault
+            auto_fill_raid_vault(
+                char=char,
+                vault_entry=vault_entry,
+                current_week=current_week,
+                region=region,
+                db=db,
+            )
+        except Exception as e:
+            logger.warning(f"Raid vault auto-fill failed (non-fatal): {e}")
 
         if gear_data:
             from app.services.gear_parser import create_empty_gear
@@ -468,21 +574,25 @@ def sync_all_my_characters(cid: int):
                         rio_icons = extract_raiderio_gear_icons(rio_data)
 
                         # Update this week's Great Vault entry with M+ runs
-                        if recent_runs:
-                            current_week = calculate_current_week(region)
-                            vault_entry = db.query(GreatVaultEntry).filter(
-                                GreatVaultEntry.character_id == char.id,
-                                GreatVaultEntry.week_number == current_week
-                            ).first()
+                        current_week = calculate_current_week(region)
+                        vault_entry = _get_or_create_vault_entry(db, char.id, current_week)
+                        vault_entry.m_plus_runs = recent_runs
 
-                            if not vault_entry:
-                                vault_entry = GreatVaultEntry(
-                                    character_id=char.id,
-                                    week_number=current_week,
-                                )
-                                db.add(vault_entry)
+                # Auto-fill raid vault slots from Blizzard + WarcraftLogs (always runs)
+                current_week = calculate_current_week(region)
+                vault_entry = _get_or_create_vault_entry(db, char.id, current_week)
 
-                            vault_entry.m_plus_runs = recent_runs
+                try:
+                    from app.services.vault_autofill import auto_fill_raid_vault
+                    auto_fill_raid_vault(
+                        char=char,
+                        vault_entry=vault_entry,
+                        current_week=current_week,
+                        region=region,
+                        db=db,
+                    )
+                except Exception as e:
+                    logger.warning(f"Raid vault auto-fill failed for {char.character_name} (non-fatal): {e}")
 
                 if gear_data:
                     from app.services.gear_parser import parse_equipment_response, calculate_avg_ilvl, create_empty_gear

@@ -3,6 +3,7 @@
 from flask import Flask
 from flask_cors import CORS
 import os
+import logging
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -11,6 +12,12 @@ load_dotenv()
 def create_app() -> Flask:
     """Application factory pattern"""
     app = Flask(__name__)
+
+    # Configure logging so scheduler/sync messages are visible
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s [%(name)s] %(levelname)s: %(message)s",
+    )
 
     # Configuration
     app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "dev-secret-key")
@@ -59,6 +66,7 @@ def create_app() -> Flask:
         bis,
         crests,
         gear,
+        parses,
         professions,
         talents,
         tasks,
@@ -73,6 +81,7 @@ def create_app() -> Flask:
     app.register_blueprint(bis.bp)
     app.register_blueprint(crests.bp)
     app.register_blueprint(gear.bp)
+    app.register_blueprint(parses.bp)
     app.register_blueprint(professions.bp)
     app.register_blueprint(talents.bp)
     app.register_blueprint(tasks.bp)
@@ -80,5 +89,19 @@ def create_app() -> Flask:
     app.register_blueprint(season.bp)
     app.register_blueprint(reference.bp)
     app.register_blueprint(personal_roster.bp)
+
+    # Start background scheduler (only in non-testing mode)
+    # In debug mode, Flask reloader starts the app twice. WERKZEUG_RUN_MAIN
+    # is only set in the reloader child process. In production (no reloader),
+    # WERKZEUG_RUN_MAIN is never set, so we also check FLASK_ENV.
+    if not app.config.get("TESTING"):
+        is_reloader_child = os.environ.get("WERKZEUG_RUN_MAIN") == "true"
+        is_production = os.getenv("FLASK_ENV") != "development"
+        if is_reloader_child or is_production:
+            from app.services.scheduler import init_scheduler, shutdown_scheduler
+            init_scheduler(app)
+
+            import atexit
+            atexit.register(shutdown_scheduler)
 
     return app

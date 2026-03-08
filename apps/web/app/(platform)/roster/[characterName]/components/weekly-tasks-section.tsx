@@ -26,6 +26,7 @@ export function WeeklyTasksSection({
   const [weeklyTasks, setWeeklyTasks] = useState<TaskItem[]>(tasksData.weekly);
   const [dailyTasks, setDailyTasks] = useState<TaskItem[]>(tasksData.daily);
   const [weekName, setWeekName] = useState(tasksData.week_name);
+  const [tips, setTips] = useState<string[]>(tasksData.tips || []);
   const [activeWeek, setActiveWeek] = useState(tasksData.current_week);
   const [isLoadingWeek, setIsLoadingWeek] = useState(false);
 
@@ -40,6 +41,7 @@ export function WeeklyTasksSection({
         setWeeklyTasks(data.weekly);
         setDailyTasks(data.daily);
         setWeekName(data.week_name);
+        setTips(data.tips || []);
         setActiveWeek(week);
       } catch (err) {
         console.error('Failed to fetch tasks for week:', err);
@@ -61,6 +63,7 @@ export function WeeklyTasksSection({
     setWeeklyTasks(tasksData.weekly);
     setDailyTasks(tasksData.daily);
     setWeekName(tasksData.week_name);
+    setTips(tasksData.tips || []);
     setActiveWeek(tasksData.current_week);
   }, [tasksData]);
 
@@ -338,6 +341,46 @@ export function WeeklyTasksSection({
                         {formatTimestamp(task.completed_at)}
                       </span>
                     )}
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+
+          {/* Tips — informational, not trackable */}
+          {tips.length > 0 && (
+            <>
+              <div
+                style={{
+                  fontSize: 13,
+                  fontWeight: 600,
+                  color: 'rgba(255, 255, 255, 0.5)',
+                  marginTop: 20,
+                  marginBottom: 10,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.05em',
+                }}
+              >
+                Tips
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                {tips.map((tip, i) => (
+                  <div
+                    key={i}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'flex-start',
+                      gap: 8,
+                      padding: '8px 10px',
+                      borderRadius: 6,
+                      backgroundColor: 'rgba(59, 130, 246, 0.08)',
+                      border: '1px solid rgba(59, 130, 246, 0.15)',
+                    }}
+                  >
+                    <Icon name="alert-circle" size={14} style={{ color: '#60a5fa', flexShrink: 0, marginTop: 1 }} />
+                    <span style={{ fontSize: 13, color: 'rgba(255, 255, 255, 0.6)', lineHeight: 1.4 }}>
+                      {tip}
+                    </span>
                   </div>
                 ))}
               </div>

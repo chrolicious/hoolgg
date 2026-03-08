@@ -3,7 +3,7 @@
 Handles season-week date mapping, current week calculation based on region,
 and weekly ilvl target / crest cap lookups.
 
-Based on Larias' Raider's Guide for Midnight (updated Feb 18).
+Based on Larias' Raider's Guide for Midnight (updated Feb 25).
 """
 
 import logging
@@ -58,20 +58,20 @@ WEEKLY_TARGETS: Dict[int, int] = {
 
 
 # Cumulative crest budget targets per week (from guide)
-# Format: {week: {"heroic": cumulative_spent, "gilded": cumulative_spent}}
+# Format: {week: {"heroic": cumulative_spent, "mythic": cumulative_spent}}
 CREST_BUDGET: Dict[int, Dict[str, int]] = {
-    -2: {"heroic": 0, "gilded": 0},
-    -1: {"heroic": 0, "gilded": 0},
-    0: {"heroic": 0, "gilded": 0},
-    1: {"heroic": 0, "gilded": 0},
-    2: {"heroic": 0, "gilded": 0},
-    3: {"heroic": 300, "gilded": 120},
-    4: {"heroic": 400, "gilded": 280},
-    5: {"heroic": 480, "gilded": 400},
-    6: {"heroic": 600, "gilded": 490},
-    7: {"heroic": 680, "gilded": 580},
-    8: {"heroic": 780, "gilded": 680},
-    9: {"heroic": 780, "gilded": 780},
+    -2: {"heroic": 0, "mythic": 0},
+    -1: {"heroic": 0, "mythic": 0},
+    0: {"heroic": 0, "mythic": 0},
+    1: {"heroic": 0, "mythic": 0},
+    2: {"heroic": 220, "mythic": 0},       # 11x 3/6->4/6 upgrades
+    3: {"heroic": 320, "mythic": 160},      # +2x 4/6->6/6 Hero, +1x Mythic 6/6
+    4: {"heroic": 420, "mythic": 320},      # +2x Hero, +2x Mythic
+    5: {"heroic": 520, "mythic": 480},      # +2x Hero, +craft+upgrade
+    6: {"heroic": 560, "mythic": 620},      # +1x Hero (done), +Mythic
+    7: {"heroic": 560, "mythic": 700},      # Heroic done, Mythic ongoing
+    8: {"heroic": 560, "mythic": 780},
+    9: {"heroic": 560, "mythic": 860},
 }
 
 

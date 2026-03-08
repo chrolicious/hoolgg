@@ -98,7 +98,7 @@ function NavItem({ href, icon, label, active, collapsed, onClick }: NavItemProps
             width: 5,
             height: 5,
             borderRadius: '50%',
-            background: '#8b5cf6',
+            background: '#3B82F6',
           }}
         />
       )}
@@ -175,6 +175,12 @@ export default function RosterLayoutInner({ children }: { children: React.ReactN
       items: [
         { href: `${basePath}`, icon: 'users', label: 'Overview', alwaysShow: true },
         ...characterNavItems,
+      ],
+    },
+    {
+      header: 'REFERENCE',
+      items: [
+        { href: `${basePath}/cheatsheet`, icon: 'layout-list', label: 'S1 Cheat Sheet', alwaysShow: true },
       ],
     },
   ];
