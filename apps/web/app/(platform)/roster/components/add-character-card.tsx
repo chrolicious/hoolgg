@@ -158,27 +158,14 @@ export function AddCharacterCard({ onCharacterAdded, existingCharacters = [] }: 
         })),
       });
 
-      // Sync each newly added character (in parallel, show per-char progress)
+      // Fire-and-forget sync — close dialog immediately, sync in background per character
       const addedChars = result.added || [];
       if (addedChars.length > 0) {
-        const syncNames = new Set(addedChars.map(c => c.character_name));
-        setSyncingNames(syncNames);
-
-        await Promise.allSettled(
-          addedChars.map(async (c) => {
-            try {
-              await progressApi.post(`/users/me/characters/${c.id}/gear/sync`);
-            } catch (err) {
-              console.error(`Sync failed for ${c.character_name}:`, err);
-            } finally {
-              setSyncingNames(prev => {
-                const next = new Set(prev);
-                next.delete(c.character_name);
-                return next;
-              });
-            }
-          })
-        );
+        addedChars.forEach((c) => {
+          progressApi.post(`/users/me/characters/${c.id}/gear/sync`).catch((err) => {
+            console.error(`Sync failed for ${c.character_name}:`, err);
+          });
+        });
       }
 
       setShowPicker(false);

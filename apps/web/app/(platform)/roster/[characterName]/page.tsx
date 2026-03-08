@@ -431,7 +431,7 @@ export default function CharacterDetailPage() {
             />
 
             {/* 7. Raid Performance (WCL Parses) */}
-            <RaidParses parsesData={sections.parses} />
+            <RaidParses parsesData={sections.parses} characterId={character.id} />
 
             {/* 8. BiS Tracker */}
             <BisTracker
