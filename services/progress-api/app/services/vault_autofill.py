@@ -122,12 +122,12 @@ def _get_wcl_raid_kills(char, region, now):
         return None
 
     wcl = WarcraftLogsService()
-    char.last_warcraftlogs_sync = now
 
     # Store parse data for future UI display
     wcl_parses = wcl.get_character_parses(char.character_name, char.realm, region)
     if wcl_parses:
         char.warcraftlogs_data = wcl_parses
+        char.last_warcraftlogs_sync = now  # Only mark synced on success
 
     # Don't return kill counts — WCL zoneRankings is all-time, not weekly.
     # Blizzard encounters API handles weekly kill tracking via snapshot/diff.
