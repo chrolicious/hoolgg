@@ -210,9 +210,8 @@ class WarcraftLogsService:
         }
 
     # WCL zone ID for the current raid tier (Midnight S1)
-    # Update when WarcraftLogs adds the Midnight raid zones
-    # 44 was Manaforge Omega (TWW S3) — placeholder until Midnight zones are known
-    CURRENT_ZONE_ID = 44
+    # Zone 48 = Voidspire (VS) + Dreamrift (DR) + March on Quel'Danas (MQD)
+    CURRENT_ZONE_ID = 48
 
     def get_character_parses(
         self, character_name: str, realm_slug: str, region: str = "us"
