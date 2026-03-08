@@ -54,8 +54,11 @@ export function RaidParses({ parsesData }: RaidParsesProps) {
               <span style={{
                 fontSize: '12px',
                 color: 'rgba(255,255,255,0.7)',
-                minWidth: '180px',
+                width: '180px',
                 flexShrink: 0,
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
               }}>
                 {key}
               </span>
