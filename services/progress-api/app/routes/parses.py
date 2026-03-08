@@ -55,17 +55,25 @@ def get_parses(cid: int):
         if not character:
             return jsonify({"error": "Character not found"}), 404
 
-        parses = character.warcraftlogs_data if character.warcraftlogs_data else {}
+        raw = character.warcraftlogs_data or {}
         last_synced = (
             character.last_warcraftlogs_sync.isoformat()
             if character.last_warcraftlogs_sync
             else None
         )
 
+        # Detect legacy flat format (pre-multi-season) and migrate shape
+        # Old format: {"Boss (Heroic)": {...}, ...}
+        # New format: {"tww_s3": {...}, "mn_s1": {...}}
+        if raw and not any(k in raw for k in ("tww_s3", "mn_s1")):
+            seasons = {"tww_s3": raw}
+        else:
+            seasons = raw
+
         return jsonify({
             "character_id": cid,
             "character_name": character.character_name,
-            "parses": parses,
+            "seasons": seasons,
             "last_synced": last_synced,
         }), 200
 
