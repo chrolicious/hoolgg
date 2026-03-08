@@ -58,6 +58,7 @@ interface CharacterCardProps {
   characterId: number;
   characterName: string;
   realm: string;
+  region: string;
   avatarUrl?: string;
   className: string;
   spec: string;
@@ -90,11 +91,14 @@ interface CharacterCardProps {
   onDelete?: () => void;
 }
 
-function getDaysUntilReset(): number {
+function getDaysUntilReset(region: string): number {
   const now = new Date();
   const dayOfWeek = now.getUTCDay();
-  const tuesday = 2;
-  let daysUntil = tuesday - dayOfWeek;
+
+  // US/TW reset on Tuesday (2), EU/KR reset on Wednesday (3)
+  const resetDay = (region === 'eu' || region === 'kr') ? 3 : 2;
+
+  let daysUntil = resetDay - dayOfWeek;
   if (daysUntil <= 0) daysUntil += 7;
   return daysUntil;
 }
@@ -133,6 +137,7 @@ export function CharacterCard({
   characterId,
   characterName,
   realm,
+  region,
   avatarUrl,
   className,
   spec,
@@ -163,7 +168,7 @@ export function CharacterCard({
   const ilvlDelta = safeIlvl - targetIlvl;
   const isDeltaPositive = ilvlDelta >= 0;
   const weeklyProgressPercent = weeklyTasksTotal > 0 ? (weeklyTasksCompleted / weeklyTasksTotal) * 100 : 0;
-  const daysUntilReset = getDaysUntilReset();
+  const daysUntilReset = getDaysUntilReset(region);
 
   useEffect(() => {
     if (deleteError) {

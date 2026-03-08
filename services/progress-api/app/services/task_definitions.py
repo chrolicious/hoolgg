@@ -1,7 +1,7 @@
 """Task definitions for weekly roster progression tracking.
 
 Contains the full WEEKLY_TASKS dict with all week definitions (weeks -2 to 7+).
-Each week has: name, weekly tasks list, daily tasks list.
+Each week has: name, weekly tasks list, daily tasks list, tips list.
 Each task has: id, label, done (default False).
 
 Based on Larias' Raider's Guide for Midnight (updated Mar 2026).
@@ -29,6 +29,9 @@ WEEKLY_TASKS: Dict[int, Dict[str, Any]] = {
             {"id": "champion_note", "label": "NOTE: Only Singularity AND Eversong champion items available in early access — others unlock Monday after launch", "done": False},
         ],
         "daily": [],
+        "tips": [
+            "Level with Warmode enabled for bonus XP",
+        ],
     },
     -1: {
         "name": "Pre-Season Week 1 (Mar 3) — M0s",
@@ -55,6 +58,9 @@ WEEKLY_TASKS: Dict[int, Dict[str, Any]] = {
             {"id": "hotfix_note", "label": "NOTE (Mar 5 hotfix): Completing 237 ilvl in every slot unlocks achievement that reduces crest upgrade cost by 50% account-wide — check guide", "done": False},
         ],
         "daily": [],
+        "tips": [
+            "Do NOT spend crests yet — save for crafting in Week 2",
+        ],
     },
     0: {
         "name": "Pre-Season Week 2 (Mar 10) — M0s",
@@ -76,6 +82,10 @@ WEEKLY_TASKS: Dict[int, Dict[str, Any]] = {
             {"id": "craft_if_raiding", "label": "If you raid Tuesday Mar 17: craft 2x 246 ilvl pieces before reset — check guide for details", "done": False},
         ],
         "daily": [],
+        "tips": [
+            "Only craft before reset if you plan to raid on Tuesday Mar 17",
+            "If not raiding Tuesday, hold crafting until next week",
+        ],
     },
     1: {
         "name": "Season 1 Week 1 — Heroic Week (Mar 17)",
@@ -96,6 +106,11 @@ WEEKLY_TASKS: Dict[int, Dict[str, Any]] = {
             {"id": "crest_tracking", "label": "Track crests: target 0/100 Heroic, 0/100 Mythic held going into raid", "done": False},
         ],
         "daily": [],
+        "tips": [
+            "Do NOT spend Heroic or Mythic crests — save for Week 2 upgrades and Week 3 weapon craft",
+            "Low-tier crests (Adventurer/Veteran/Champion) become worthless next week — spend them now",
+            "Priority: get 4-piece tier set ASAP (unlocks catalyst charges for all content)",
+        ],
     },
     2: {
         "name": "Season 1 Week 2 — Mythic Week & M+ Opens (Mar 24)",
@@ -109,12 +124,19 @@ WEEKLY_TASKS: Dict[int, Dict[str, Any]] = {
             {"id": "delves_t11", "label": "Do at least 1x T11 Bountiful Delve to get Cracked Keystone Quest (20 free Hero/Myth crests)", "done": False},
             {"id": "spend_low_crests", "label": "Continue spending ALL Adventurer, Veteran, and Champion crests upgrading everything", "done": False},
             {"id": "farm_mplus", "label": "Farm +10s for 266 gear in every slot", "done": False},
-            {"id": "upgrade_before_mythic", "label": "Before Mythic raid: upgrade 11x 3/6 Hero items once each (220 Heroic Crests)", "done": False},
+            {"id": "craft_mythic", "label": "Craft Mythic Embellished item or 2H weapon (1 spark, 80 Mythic Crests) — check class Discord", "done": False},
+            {"id": "upgrade_before_mythic", "label": "Before Mythic raid: upgrade 11x 3/6 Hero items once each to 4/6 269 (220 Heroic Crests)", "done": False},
             {"id": "myth_track_note", "label": "Mythic: if you got a Myth track item from vault/raid, skip to next week's upgrade advice for it", "done": False},
+            {"id": "raid_clear", "label": "Full clear Normal/Heroic/Mythic raids", "done": False},
             {"id": "crest_tracking", "label": "Track crests: target 220/220 Heroic spent, 0/220 Mythic held — never hold Mythic crests", "done": False},
             {"id": "ending_ilvl", "label": "Target ending item level: 4×266, 11×269", "done": False},
         ],
         "daily": [],
+        "tips": [
+            "Spend Heroic crests now on 3/6 -> 4/6 upgrades (220 total for 11 items)",
+            "Do NOT hold Mythic crests — upgrade raid mythic items if you got any",
+            "Check your class Discord for which crafting path (2H weapon vs armor + embellishments)",
+        ],
     },
     3: {
         "name": "Season 1 Week 3 — Final Raid Opens (Mar 31)",
@@ -122,6 +144,8 @@ WEEKLY_TASKS: Dict[int, Dict[str, Any]] = {
             {"id": "vault", "label": "Open Vault for 272+ Myth item — upgrade AFTER crafting", "done": False},
             {"id": "lfr_tier", "label": "If no 4-set: do LFR for tier pieces — check guide for why", "done": False},
             {"id": "farm_m10", "label": "Farm +10s for vault slots and crests", "done": False},
+            {"id": "craft_weapon", "label": "Craft 2nd Embellished item or 2H Weapon if not done last week — check class Discord", "done": False},
+            {"id": "raid_reclear", "label": "Reclear all raids (Voidspire + Dreamrift + March on Quel'Thalas)", "done": False},
             {"id": "heroic_crests", "label": "Heroic: upgrade 2x of your 4/6 269 items to 6/6 276 (80 Heroic Crests)", "done": False},
             {"id": "myth_upgrade", "label": "Mythic: if vault item was 1/6, upgrade its heroic counterpart to 6/6 heroic first (20 Heroic Crests), then upgrade 1/6 272 Myth to 6/6 289 (80 Myth Crests)", "done": False},
             {"id": "myth_second_item", "label": "Mythic: if you got a 2nd Myth track item, skip to next week's upgrade advice for it", "done": False},
@@ -129,12 +153,18 @@ WEEKLY_TASKS: Dict[int, Dict[str, Any]] = {
             {"id": "ending_ilvl", "label": "Target ending item level: 3×266, 8×269, 2×276h, 1×285 (crafted), 1×289", "done": False},
         ],
         "daily": [],
+        "tips": [
+            "Upgrade vault items AFTER crafting to optimize crest spending",
+            "If vault Mythic is 1/6: upgrade Heroic counterpart to 6/6 first (converts 20 Hero -> free 2/6 Mythic)",
+            "Omnitoken now available from March on Quel'Thalas",
+        ],
     },
     4: {
         "name": "Season 1 Week 4 (Apr 7)",
         "weekly": [
-            {"id": "vault", "label": "Open Vault for 272+ Myth item", "done": False},
+            {"id": "vault", "label": "Open Vault for 272+ Myth track item", "done": False},
             {"id": "farm_m10", "label": "Farm +10s for vault slots and crests", "done": False},
+            {"id": "raid_reclear", "label": "Reclear all raids", "done": False},
             {"id": "heroic_crests", "label": "Heroic: upgrade 2x of your 4/6 269 items to 6/6 276 (80 Heroic Crests)", "done": False},
             {"id": "myth_vault", "label": "Mythic: if vault item was 1/6, upgrade heroic counterpart to 6/6 first (20 Heroic Crests), then upgrade 1/6 272 Myth to 6/6 289 (80 Myth Crests)", "done": False},
             {"id": "myth_raid", "label": "Mythic: upgrade raid drop from 2/6 275 Myth to 6/6 289 (80 Myth Crests)", "done": False},
@@ -142,12 +172,16 @@ WEEKLY_TASKS: Dict[int, Dict[str, Any]] = {
             {"id": "ending_ilvl", "label": "Target ending item level: 2×266, 5×269, 4×276h, 1×285 (crafted), 3×289", "done": False},
         ],
         "daily": [],
+        "tips": [
+            "Keep spending Heroic crests on 4/6 -> 6/6 upgrades each week",
+        ],
     },
     5: {
         "name": "Season 1 Week 5 (Apr 14)",
         "weekly": [
-            {"id": "vault", "label": "Open Vault for 272+ Myth item", "done": False},
+            {"id": "vault", "label": "Open Vault for 272+ Myth track item", "done": False},
             {"id": "farm_m10", "label": "Farm +10s for vault slots and crests", "done": False},
+            {"id": "raid_reclear", "label": "Reclear all raids", "done": False},
             {"id": "craft_next", "label": "Craft next item — check guide for which slot to prioritize", "done": False},
             {"id": "heroic_crests", "label": "Heroic: upgrade 2x of your 4/6 269 items to 6/6 276 (80 Heroic Crests)", "done": False},
             {"id": "myth_vault", "label": "Mythic: if vault item was 1/6, upgrade heroic counterpart to 6/6 first (20 Heroic Crests), then upgrade 1/6 272 Myth to 6/6 289 (80 Myth Crests)", "done": False},
@@ -155,33 +189,44 @@ WEEKLY_TASKS: Dict[int, Dict[str, Any]] = {
             {"id": "ending_ilvl", "label": "Target ending item level: 1×266, 2×269, 6×276h, 2×285 (crafted), 4×289", "done": False},
         ],
         "daily": [],
+        "tips": [
+            "Next week is your last Heroic crest week — plan final upgrades",
+        ],
     },
     6: {
         "name": "Season 1 Week 6 — Done with Heroic Crests (Apr 21)",
         "weekly": [
-            {"id": "vault", "label": "Open Vault for 272+ Myth item", "done": False},
-            {"id": "farm_m10", "label": "Farm +10s for vault slots and crests", "done": False},
+            {"id": "vault", "label": "Open Vault for 272+ Myth track item", "done": False},
+            {"id": "farm_m12", "label": "Farm +12s for better vault slots and crests", "done": False},
+            {"id": "raid_reclear", "label": "Reclear all raids", "done": False},
             {"id": "heroic_final", "label": "Heroic: upgrade your last 4/6 269 item to 6/6 276 (40 Heroic Crests) — DONE with Heroic crests after this", "done": False},
             {"id": "myth_vault", "label": "Mythic: upgrade vault/raid Myth items to 6/6 289 (80 Myth Crests each)", "done": False},
         ],
         "daily": [],
+        "tips": [
+            "Last week of Heroic crest spending — after this, focus only on Mythic",
+            "Move up to +12s for better vault reward quality",
+        ],
     },
     7: {
         "name": "Season 1 Week 7+ (Apr 28+)",
         "weekly": [
             {"id": "vault", "label": "Open Vault — do NOT craft if you can get a vault item higher than 1/6 Myth", "done": False},
+            {"id": "farm_m12", "label": "Farm +12s or higher for vault slots and crests", "done": False},
+            {"id": "raid_reclear", "label": "Reclear all raids", "done": False},
             {"id": "upgrade_mythic", "label": "Upgrade Mythic items as you get them — prefer jumping to 6/6 289", "done": False},
             {"id": "plan_oh", "label": "Plan for possible 1H + crafted Off-Hand swap if applicable", "done": False},
-            {"id": "farm_m10", "label": "Farm +10s or higher for vault slots and crests", "done": False},
         ],
         "daily": [],
+        "tips": [
+            "Do not craft in any slot if you can get >1/6 Mythic from vault",
+            "Optional: craft off-hand while keeping weapon embellishment",
+        ],
     },
 }
 
 def get_task_definitions(week: int) -> Dict[str, Any]:
-    """
-    Get task definitions for a specific week.
-    """
+    """Get task definitions for a specific week."""
     if week in WEEKLY_TASKS:
         return WEEKLY_TASKS[week]
     if week >= 7:
@@ -190,12 +235,10 @@ def get_task_definitions(week: int) -> Dict[str, Any]:
         return WEEKLY_TASKS[-2]
 
     logger.warning(f"No task definition found for week {week}, using default")
-    return {"name": "Unknown Week", "weekly": [], "daily": []}
+    return {"name": "Unknown Week", "weekly": [], "daily": [], "tips": []}
 
 def get_all_task_ids(week: int) -> List[str]:
-    """
-    Get all task IDs for a specific week.
-    """
+    """Get all task IDs for a specific week."""
     tasks = get_task_definitions(week)
     ids = [t["id"] for t in tasks.get("weekly", [])]
     ids.extend(t["id"] for t in tasks.get("daily", []))

@@ -6,7 +6,7 @@ import { SectionCard } from './section-card';
 
 interface EquipmentGridProps {
   gearData: GearResponse | null;
-  avatarUrl?: string | null;
+  renderUrl?: string | null;
 }
 
 const LEFT_SLOTS = ['head', 'neck', 'shoulder', 'back', 'chest', 'wrist'] as const;
@@ -253,19 +253,13 @@ function SlotCard({ slotKey, item, alignRight = false }: SlotCardProps) {
   );
 }
 
-/** Derive Blizzard's full-body transparent render from the avatar URL.
- *  avatar.jpg  → main-raw.jpg (full body, transparent background)
- *  Falls back to the original avatarUrl if the pattern doesn't match. */
-function getCharacterRenderUrl(avatarUrl: string | null | undefined): string | null {
-  if (!avatarUrl) return null;
-  if (avatarUrl.includes('/avatar.jpg')) {
-    return avatarUrl.replace('/avatar.jpg', '/main-raw.jpg');
-  }
-  return avatarUrl;
-}
-
-export function EquipmentGrid({ gearData, avatarUrl }: EquipmentGridProps) {
+export function EquipmentGrid({ gearData, renderUrl }: EquipmentGridProps) {
   const [renderError, setRenderError] = useState(false);
+
+  // Responsive character model width
+  // Uses min() to prevent layout breaks on smaller viewports
+  const CHARACTER_MODEL_WIDTH = 560;
+  const CHARACTER_MODEL_MAX_WIDTH = 'min(560px, 40vw)';
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -274,12 +268,12 @@ export function EquipmentGrid({ gearData, avatarUrl }: EquipmentGridProps) {
     return () => clearTimeout(timer);
   }, [gearData]);
 
-  // Reset render error if avatarUrl changes (e.g. after sync)
+  // Reset render error if renderUrl changes (e.g. after sync)
   useEffect(() => {
     setRenderError(false);
-  }, [avatarUrl]);
+  }, [renderUrl]);
 
-  const renderUrl = !renderError ? getCharacterRenderUrl(avatarUrl) : null;
+  const characterRender = !renderError ? renderUrl : null;
 
   const parsedGear = gearData?.parsed_gear ?? {};
   const avgIlvl = gearData?.avg_ilvl ?? 0;
@@ -299,7 +293,7 @@ export function EquipmentGrid({ gearData, avatarUrl }: EquipmentGridProps) {
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: '1fr 420px 1fr',
+          gridTemplateColumns: `1fr ${CHARACTER_MODEL_MAX_WIDTH} 1fr`,
           gap: '8px',
           alignItems: 'start',
         }}
@@ -323,6 +317,8 @@ export function EquipmentGrid({ gearData, avatarUrl }: EquipmentGridProps) {
             flexDirection: 'column',
             alignItems: 'center',
             gap: '8px',
+            overflow: 'hidden',
+            marginTop: '-150px',
           }}
         >
           <div
@@ -336,16 +332,41 @@ export function EquipmentGrid({ gearData, avatarUrl }: EquipmentGridProps) {
               position: 'relative',
             }}
           >
-            {renderUrl ? (
+            {/* SVG filter for character outline effect */}
+            <svg style={{ position: 'absolute', width: 0, height: 0 }}>
+              <defs>
+                <filter id="character-outline-filter" colorInterpolationFilters="sRGB">
+                  {/* Black outline - dilate alpha channel by 3px */}
+                  <feMorphology operator="dilate" radius="3" in="SourceAlpha" result="dilated-black" />
+                  <feFlood floodColor="black" result="black" />
+                  <feComposite in="black" in2="dilated-black" operator="in" result="black-outline" />
+
+                  {/* White outline - dilate alpha channel by 5px */}
+                  <feMorphology operator="dilate" radius="5" in="SourceAlpha" result="dilated-white" />
+                  <feFlood floodColor="white" result="white" />
+                  <feComposite in="white" in2="dilated-white" operator="in" result="white-outline" />
+
+                  {/* Stack layers: white outline (bottom), black outline (middle), original image (top) */}
+                  <feMerge>
+                    <feMergeNode in="white-outline" />
+                    <feMergeNode in="black-outline" />
+                    <feMergeNode in="SourceGraphic" />
+                  </feMerge>
+                </filter>
+              </defs>
+            </svg>
+
+            {characterRender ? (
               <img
-                src={renderUrl}
+                src={characterRender}
                 alt="Character"
                 style={{
                   width: '100%',
                   height: '100%',
                   objectFit: 'cover',
-                  objectPosition: '50% 5%',
+                  objectPosition: '50% -5%',
                   display: 'block',
+                  filter: 'url(#character-outline-filter)',
                 }}
                 onError={() => setRenderError(true)}
               />
@@ -409,7 +430,7 @@ export function EquipmentGrid({ gearData, avatarUrl }: EquipmentGridProps) {
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: '1fr 420px 1fr',
+          gridTemplateColumns: `1fr ${CHARACTER_MODEL_MAX_WIDTH} 1fr`,
           gap: '8px',
           marginTop: '8px',
         }}

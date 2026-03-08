@@ -13,6 +13,7 @@ export interface CharacterRoster {
   role: 'Tank' | 'Healer' | 'DPS' | null;
   level: number | null;
   avatar_url: string | null;
+  render_url: string | null;
   user_bnet_id: number | null;
   display_order: number | null;
   current_ilvl: number | null;
@@ -60,6 +61,7 @@ export interface TasksResponse {
   week_name: string;
   weekly: TaskItem[];
   daily: TaskItem[];
+  tips: string[];
 }
 
 // ─── Task Summary (from GET /guilds/{gid}/characters/{cid}/tasks/summary) ───
@@ -100,7 +102,8 @@ export interface VaultProgress {
   raid_heroic: number;
   raid_mythic: number;
   m_plus_runs: number[];
-  highest_delve: number;
+  highest_delve: number; // Legacy field
+  delve_runs?: number[]; // New field - array of delve tiers
   world_vault: unknown;
 }
 
@@ -110,6 +113,23 @@ export interface VaultResponse {
   current_week: number;
   progress: VaultProgress;
   calculated_slots: VaultCalculatedSlots;
+  last_synced: string | null;
+}
+
+// ─── WCL Parses (from GET /users/me/characters/{cid}/parses) ───
+
+export interface WclBossParse {
+  best_parse: number | null;
+  median_parse: number | null;
+  kills: number;
+  spec: string | null;
+}
+
+export interface ParsesResponse {
+  character_id: number;
+  character_name: string;
+  parses: Record<string, WclBossParse>;
+  last_synced: string | null;
 }
 
 // ─── Crests (from GET /guilds/{gid}/characters/{cid}/crests) ───

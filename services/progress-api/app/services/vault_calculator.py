@@ -175,7 +175,19 @@ def calculate_vault_slots(vault_entry: Dict[str, Any]) -> Dict[str, Any]:
         result["dungeon_slots"].append(slot)
 
     # --- World slot (Delves) ---
-    highest_delve = vault_entry.get("highest_delve", 0) or 0
+    # Use delve_runs if available, fall back to legacy highest_delve
+    delve_runs = vault_entry.get("delve_runs") or []
+    highest_delve = 0
+
+    if delve_runs:
+        # Filter valid delve tiers and find the highest
+        valid_delves = [d for d in delve_runs if isinstance(d, (int, float)) and d > 0]
+        if valid_delves:
+            highest_delve = int(max(valid_delves))
+    else:
+        # Fall back to legacy highest_delve field
+        highest_delve = vault_entry.get("highest_delve", 0) or 0
+
     world_slot = {"unlocked": False, "ilvl": 0, "source": "delve"}
 
     if highest_delve > 0:

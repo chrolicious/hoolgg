@@ -3,6 +3,7 @@
 from flask import Flask
 from flask_cors import CORS
 import os
+import logging
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -11,6 +12,12 @@ load_dotenv()
 def create_app() -> Flask:
     """Application factory pattern"""
     app = Flask(__name__)
+
+    # Configure logging so scheduler/sync messages are visible
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s [%(name)s] %(levelname)s: %(message)s",
+    )
 
     # Configuration
     app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "dev-secret-key")
@@ -27,6 +34,11 @@ def create_app() -> Flask:
     app.config["BLIZZARD_CLIENT_SECRET"] = os.getenv("BLIZZARD_CLIENT_SECRET")
     app.config["BLIZZARD_REGION"] = os.getenv("BLIZZARD_REGION", "us")
     app.config["BLIZZARD_API_TIMEOUT"] = int(os.getenv("BLIZZARD_API_TIMEOUT", "10"))
+    app.config["BLIZZARD_REDIRECT_URI"] = os.getenv("BLIZZARD_REDIRECT_URI", "http://localhost:3000/auth/callback")
+
+    # Cookie domain for cross-subdomain auth (e.g., .hool.gg)
+    # Leave empty for localhost development
+    app.config["COOKIE_DOMAIN"] = os.getenv("COOKIE_DOMAIN")
 
     # WarcraftLogs API
     app.config["WARCRAFTLOGS_CLIENT_ID"] = os.getenv("WARCRAFTLOGS_CLIENT_ID")
@@ -50,9 +62,11 @@ def create_app() -> Flask:
     # Register blueprints
     from app.routes import (
         health,
+        auth,
         bis,
         crests,
         gear,
+        parses,
         professions,
         talents,
         tasks,
@@ -63,9 +77,11 @@ def create_app() -> Flask:
     )
 
     app.register_blueprint(health.bp)
+    app.register_blueprint(auth.bp)
     app.register_blueprint(bis.bp)
     app.register_blueprint(crests.bp)
     app.register_blueprint(gear.bp)
+    app.register_blueprint(parses.bp)
     app.register_blueprint(professions.bp)
     app.register_blueprint(talents.bp)
     app.register_blueprint(tasks.bp)
@@ -73,5 +89,19 @@ def create_app() -> Flask:
     app.register_blueprint(season.bp)
     app.register_blueprint(reference.bp)
     app.register_blueprint(personal_roster.bp)
+
+    # Start background scheduler (only in non-testing mode)
+    # In debug mode, Flask reloader starts the app twice. WERKZEUG_RUN_MAIN
+    # is only set in the reloader child process. In production (no reloader),
+    # WERKZEUG_RUN_MAIN is never set, so we also check FLASK_ENV.
+    if not app.config.get("TESTING"):
+        is_reloader_child = os.environ.get("WERKZEUG_RUN_MAIN") == "true"
+        is_production = os.getenv("FLASK_ENV") != "development"
+        if is_reloader_child or is_production:
+            from app.services.scheduler import init_scheduler, shutdown_scheduler
+            init_scheduler(app)
+
+            import atexit
+            atexit.register(shutdown_scheduler)
 
     return app

@@ -1,4 +1,5 @@
 from . import health
+from . import auth
 from . import bis
 from . import crests
 from . import gear
@@ -12,6 +13,7 @@ from . import personal_roster
 
 __all__ = [
     "health",
+    "auth",
     "bis",
     "crests",
     "gear",

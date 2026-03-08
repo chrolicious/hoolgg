@@ -19,6 +19,7 @@ interface CharacterData {
   id: number;
   character_name: string;
   realm: string;
+  region: string;
   class_name: string;
   spec: string;
   role: 'Tank' | 'Healer' | 'DPS';
@@ -200,6 +201,7 @@ function DraggableCard({
         characterId={char.id}
         characterName={char.character_name}
         realm={char.realm}
+        region={char.region}
         avatarUrl={char.avatar_url ?? undefined}
         className={char.class_name}
         spec={char.spec}
@@ -315,6 +317,7 @@ export default function RosterPage() {
             id: c.id,
             character_name: c.character_name,
             realm: c.realm,
+            region: c.region ?? 'us',
             class_name: c.class_name ?? '',
             spec: c.spec ?? '',
             role: c.role ?? 'DPS',
@@ -502,9 +505,9 @@ export default function RosterPage() {
                 display: 'flex', alignItems: 'center', gap: '5px',
                 padding: '6px 12px', borderRadius: '9999px',
                 fontSize: '12px', fontWeight: 600,
-                border: sortBy === key ? '1px solid rgba(139,92,246,0.5)' : '1px solid rgba(255,255,255,0.1)',
-                background: sortBy === key ? 'rgba(139,92,246,0.15)' : 'rgba(255,255,255,0.05)',
-                color: sortBy === key ? '#c4b5fd' : 'rgba(255,255,255,0.5)',
+                border: sortBy === key ? '1px solid rgba(59,130,246,0.5)' : '1px solid rgba(255,255,255,0.1)',
+                background: sortBy === key ? 'rgba(59,130,246,0.15)' : 'rgba(255,255,255,0.05)',
+                color: sortBy === key ? '#93c5fd' : 'rgba(255,255,255,0.5)',
                 cursor: 'pointer',
                 transition: 'all 0.15s ease',
               }}
@@ -561,6 +564,7 @@ export default function RosterPage() {
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <AddCharacterCard
             onCharacterAdded={fetchCharacters}
+            existingCharacters={characters}
           />
         </div>
       </div>

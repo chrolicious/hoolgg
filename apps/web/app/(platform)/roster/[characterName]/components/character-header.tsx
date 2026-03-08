@@ -160,11 +160,10 @@ export function CharacterHeader({
           {/* ── Left Column ── */}
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', minWidth: '140px' }}>
             <Avatar
-              src={character.avatar_url ?? undefined}
+              src={getBustUrl(character.avatar_url)}
               fallback={character.character_name.substring(0, 2).toUpperCase()}
               alt={character.character_name}
               size="xl"
-              objectPosition="50% 8%"
             />
 
             <h2 style={{ color: '#fff', fontSize: '18px', fontWeight: 700, margin: '8px 0 4px 0', textShadow: '0 1px 3px rgba(0,0,0,0.8)' }}>
@@ -287,7 +286,7 @@ export function CharacterHeader({
                 ].map(({ label, value, total, color, textColor }) => (
                   <div key={label} style={{
                     textAlign: 'center', padding: '6px 4px', borderRadius: '6px',
-                    backgroundColor: value > 0 ? `${color}0.2)` : 'rgba(0,0,0,0.35)',
+                    backgroundColor: 'rgba(0,0,0,0.35)',
                     border: `1px solid ${value > 0 ? `${color}0.35)` : 'rgba(255,255,255,0.08)'}`,
                   }}>
                     <div style={{ fontSize: '8px', color: 'rgba(255,255,255,0.5)', marginBottom: '2px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>

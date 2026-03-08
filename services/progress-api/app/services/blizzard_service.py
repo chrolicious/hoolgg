@@ -224,6 +224,60 @@ class BlizzardService:
             logger.error(f"Failed to fetch character stats: {e}")
             return None
 
+    def get_character_encounters(
+        self, character_name: str, realm_slug: str
+    ) -> Optional[Dict[str, Any]]:
+        """
+        Fetch raid encounter data (boss kills per difficulty) from Blizzard API.
+
+        Returns per-expansion, per-instance, per-encounter data with
+        completed_count and last_kill_timestamp per difficulty.
+
+        Args:
+            character_name: Character name
+            realm_slug: Realm slug
+
+        Returns:
+            Dict with encounter data or None if failed
+        """
+        access_token = self._get_access_token()
+        if not access_token:
+            return None
+
+        api_url = self._get_api_url()
+        namespace = f"profile-{self._get_region()}"
+
+        character_name_lower = character_name.lower()
+        realm_slug_lower = realm_slug.lower()
+
+        endpoint = (
+            f"{api_url}/profile/wow/character/{realm_slug_lower}/"
+            f"{character_name_lower}/encounters/raids"
+        )
+
+        params = {"namespace": namespace, "locale": "en_US"}
+        headers = {"Authorization": f"Bearer {access_token}"}
+        timeout = current_app.config.get("BLIZZARD_API_TIMEOUT", 10)
+
+        try:
+            response = requests.get(endpoint, params=params, headers=headers, timeout=timeout)
+            response.raise_for_status()
+
+            data = response.json()
+            logger.info(f"Successfully fetched encounters for {character_name}-{realm_slug}")
+            return data
+
+        except requests.HTTPError as e:
+            if e.response.status_code == 404:
+                logger.warning(f"Encounters not found for: {character_name}-{realm_slug}")
+            else:
+                logger.error(f"HTTP error fetching encounters: {e.response.status_code}")
+            return None
+
+        except requests.RequestException as e:
+            logger.error(f"Failed to fetch character encounters: {e}")
+            return None
+
     def get_item_icon_url(self, item_id: int) -> Optional[str]:
         """
         Fetch the icon URL for a WoW item from Blizzard's static game data API.
@@ -372,22 +426,19 @@ class BlizzardService:
         else:
             return "DPS"
 
-    def _fetch_media_avatar(self, media_href: str) -> Optional[str]:
+    def _fetch_media_assets(self, media_href: str) -> tuple[Optional[str], Optional[str]]:
         """
-        Fetch the character avatar URL from the media endpoint.
-
-        The profile response contains a media.href that points to a
-        character-media endpoint with the actual render/avatar URLs.
+        Fetch both avatar and render URLs from the media endpoint.
 
         Args:
             media_href: Full URL to the character-media endpoint
 
         Returns:
-            Avatar URL string or None
+            Tuple of (avatar_url, render_url) - either can be None
         """
         access_token = self._get_access_token()
         if not access_token:
-            return None
+            return None, None
 
         headers = {"Authorization": f"Bearer {access_token}"}
         timeout = current_app.config.get("BLIZZARD_API_TIMEOUT", 10)
@@ -397,20 +448,21 @@ class BlizzardService:
             response.raise_for_status()
             data = response.json()
 
-            # Prefer full-body transparent render; fall back to bust portrait
             assets = data.get("assets", [])
             asset_map = {a.get("key"): a.get("value") for a in assets}
-            for key in ("main-raw", "main", "avatar"):
-                if asset_map.get(key):
-                    return asset_map[key]
 
-            # Last resort: legacy render_url field
-            render_url = data.get("render_url")
-            if render_url:
-                return render_url
+            # Get avatar (bust portrait)
+            avatar_url = asset_map.get("avatar")
 
-            return None
+            # Get full-body render (prefer main-raw, fallback to main)
+            render_url = asset_map.get("main-raw") or asset_map.get("main")
+
+            # Legacy fallback
+            if not render_url:
+                render_url = data.get("render_url")
+
+            return avatar_url, render_url
 
         except requests.RequestException as e:
-            logger.warning(f"Failed to fetch character avatar: {e}")
-            return None
+            logger.warning(f"Failed to fetch character media: {e}")
+            return None, None

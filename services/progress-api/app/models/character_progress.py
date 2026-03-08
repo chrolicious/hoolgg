@@ -21,7 +21,8 @@ class CharacterProgress(Base):
     spec = Column(String(50), nullable=True)
     role = Column(String(20), nullable=True)  # Tank, Healer, DPS
     level = Column(Integer, nullable=True)
-    avatar_url = Column(String(512), nullable=True)
+    avatar_url = Column(String(512), nullable=True)  # Bust portrait (avatar.jpg)
+    render_url = Column(String(512), nullable=True)  # Full body render (main-raw.jpg)
 
     # Roster tracking
     user_bnet_id = Column(Integer, nullable=True, index=True)
@@ -37,6 +38,13 @@ class CharacterProgress(Base):
     mythic_plus_score = Column(Float, nullable=True)
     raid_progress = Column(JSON, nullable=True)
     last_raiderio_sync = Column(DateTime(timezone=True), nullable=True)
+
+    # Raid encounter tracking (for vault auto-fill)
+    raid_snapshot = Column(JSON, nullable=True)  # Blizzard completed_count baseline per boss
+    raid_snapshot_week = Column(Integer, nullable=True)  # Week number of the snapshot
+    warcraftlogs_data = Column(JSON, nullable=True)  # Per-boss parse %, kill times
+    last_warcraftlogs_sync = Column(DateTime(timezone=True), nullable=True)
+    last_encounters_sync = Column(DateTime(timezone=True), nullable=True)
 
     # Metadata
     last_updated = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
@@ -64,6 +72,7 @@ class CharacterProgress(Base):
             "role": self.role,
             "level": self.level,
             "avatar_url": self.avatar_url,
+            "render_url": self.render_url,
             "user_bnet_id": self.user_bnet_id,
             "display_order": self.display_order,
             "current_ilvl": self.current_ilvl,
@@ -73,6 +82,9 @@ class CharacterProgress(Base):
             "mythic_plus_score": self.mythic_plus_score,
             "raid_progress": self.raid_progress,
             "last_raiderio_sync": self.last_raiderio_sync.isoformat() if self.last_raiderio_sync else None,
+            "raid_snapshot_week": self.raid_snapshot_week,
+            "last_warcraftlogs_sync": self.last_warcraftlogs_sync.isoformat() if self.last_warcraftlogs_sync else None,
+            "last_encounters_sync": self.last_encounters_sync.isoformat() if self.last_encounters_sync else None,
             "last_updated": self.last_updated.isoformat() if self.last_updated else None,
             "created_at": self.created_at.isoformat() if self.created_at else None,
             "last_gear_sync": self.last_gear_sync.isoformat() if self.last_gear_sync else None,
