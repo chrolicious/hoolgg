@@ -128,7 +128,10 @@ export interface WclBossParse {
 export interface ParsesResponse {
   character_id: number;
   character_name: string;
-  parses: Record<string, WclBossParse>;
+  seasons: {
+    tww_s3?: Record<string, WclBossParse>;
+    mn_s1?: Record<string, WclBossParse>;
+  };
   last_synced: string | null;
 }
 

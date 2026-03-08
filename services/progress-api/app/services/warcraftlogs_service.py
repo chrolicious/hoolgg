@@ -209,23 +209,51 @@ class WarcraftLogsService:
             },
         }
 
-    # WCL zone ID for the current raid tier (Midnight S1)
-    # Zone 48 = Voidspire (VS) + Dreamrift (DR) + March on Quel'Danas (MQD)
+    # WCL zone IDs per season
+    # Zone 44 = TWW S3 Manaforge Omega
+    # Zone 48 = MN S1 (Voidspire + Dreamrift + March on Quel'Danas)
+    ZONE_IDS = {
+        "tww_s3": 44,
+        "mn_s1": 48,
+    }
+    # Current live season zone ID (used for realm rankings, kill counts)
     CURRENT_ZONE_ID = 48
 
     def get_character_parses(
         self, character_name: str, realm_slug: str, region: str = "us"
     ) -> Optional[Dict[str, Any]]:
         """
-        Fetch per-boss parse percentiles for a character from the current raid tier.
+        Fetch per-boss parse percentiles for all tracked seasons.
 
-        Returns dict keyed by boss name:
-        {"Boss1": {"best_parse": 95.2, "median_parse": 88.1, "kills": 5, "spec": "Fury"}, ...}
+        Returns dict keyed by season:
+        {
+          "tww_s3": {"Boss1 (Heroic)": {"best_parse": 95.2, ...}, ...},
+          "mn_s1":  {"Boss1 (Heroic)": {"best_parse": 80.1, ...}, ...},
+        }
         """
         access_token = self._get_access_token()
         if not access_token:
             return None
 
+        result: Dict[str, Any] = {}
+        for season_key, zone_id in self.ZONE_IDS.items():
+            season_data = self._fetch_zone_parses(
+                character_name, realm_slug, region, zone_id, access_token
+            )
+            if season_data:
+                result[season_key] = season_data
+
+        return result if result else None
+
+    def _fetch_zone_parses(
+        self,
+        character_name: str,
+        realm_slug: str,
+        region: str,
+        zone_id: int,
+        access_token: str,
+    ) -> Optional[Dict[str, Any]]:
+        """Fetch heroic + mythic parses for a single zone."""
         graphql_endpoint = "https://www.warcraftlogs.com/api/v2/client"
 
         query = """
@@ -243,7 +271,7 @@ class WarcraftLogsService:
             "name": character_name,
             "serverSlug": realm_slug,
             "serverRegion": region.upper(),
-            "zoneID": self.CURRENT_ZONE_ID,
+            "zoneID": zone_id,
         }
 
         headers = {"Authorization": f"Bearer {access_token}"}
@@ -259,7 +287,7 @@ class WarcraftLogsService:
 
             data = response.json()
             if "errors" in data:
-                logger.error(f"WCL GraphQL errors: {data['errors']}")
+                logger.error(f"WCL GraphQL errors (zone {zone_id}): {data['errors']}")
                 return None
 
             character_data = (
@@ -269,13 +297,13 @@ class WarcraftLogsService:
             )
 
             if not character_data:
-                logger.warning(f"No WCL data for {character_name}-{realm_slug}")
+                logger.warning(f"No WCL data for {character_name}-{realm_slug} zone {zone_id}")
                 return None
 
             return self._parse_zone_rankings(character_data)
 
         except requests.RequestException as e:
-            logger.error(f"Failed to fetch WCL parses: {e}")
+            logger.error(f"Failed to fetch WCL parses (zone {zone_id}): {e}")
             return None
 
     def get_character_kills_in_range(
