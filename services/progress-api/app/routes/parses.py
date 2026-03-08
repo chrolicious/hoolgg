@@ -56,6 +56,21 @@ def get_parses(cid: int):
             return jsonify({"error": "Character not found"}), 404
 
         raw = character.warcraftlogs_data or {}
+
+        # Auto-fetch if no data exists yet (self-healing on first load)
+        if not raw:
+            from app.services.warcraftlogs_service import WarcraftLogsService
+            from datetime import datetime, timezone
+            wcl = WarcraftLogsService()
+            wcl_parses = wcl.get_character_parses(
+                character.character_name, character.realm, character.region or "us"
+            )
+            if wcl_parses:
+                character.warcraftlogs_data = wcl_parses
+                character.last_warcraftlogs_sync = datetime.now(timezone.utc)
+                db.commit()
+                raw = wcl_parses
+
         last_synced = (
             character.last_warcraftlogs_sync.isoformat()
             if character.last_warcraftlogs_sync
