@@ -11,8 +11,8 @@ import logging
 bp = Blueprint("crests", __name__, url_prefix="/users/me")
 logger = logging.getLogger(__name__)
 
-# Valid crest types for The War Within / Midnight
-CREST_TYPES = ["Weathered", "Carved", "Runed", "Gilded"]
+# Valid crest types for Midnight S1
+CREST_TYPES = ["Adventurer Dawncrest", "Veteran Dawncrest", "Champion Dawncrest", "Hero Dawncrest", "Myth Dawncrest"]
 
 
 def get_current_user_from_token():

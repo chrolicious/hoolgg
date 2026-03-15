@@ -6,7 +6,7 @@ import { Suspense } from 'react';
 import { Card, Button, Icon } from '@hool/design-system';
 
 const GUILD_API_URL =
-  process.env.NEXT_PUBLIC_GUILD_API_URL || 'http://localhost:5010';
+  process.env.NEXT_PUBLIC_GUILD_API_URL || 'http://localhost:5000';
 
 function CallbackHandler() {
   const router = useRouter();

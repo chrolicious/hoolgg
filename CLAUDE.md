@@ -51,12 +51,60 @@ See `.env.example` for the full list. Key ones:
 
 ## Services (Local Dev)
 
-| Service | Port | URL |
-|---------|------|-----|
-| Next.js | 3000 | http://localhost:3000 |
-| Storybook | 6006 | http://localhost:6006 |
-| Postgres | 5432 | postgresql://hool:hool@localhost:5432/hoolgg |
-| Redis | 6379 | redis://localhost:6379 |
+### Startup sequence
+
+**Step 1 — Docker Desktop must be running first**, then:
+
+```bash
+# From repo root — starts Postgres + Redis
+docker compose up -d
+
+# The guild-api runs in its own Docker Compose project (services/guild-api/)
+cd services/guild-api
+docker compose up -d
+# After first start, connect it to the shared DB network (one-time):
+docker network connect hoolgg_default guild-api-guild-api-1
+```
+
+**Step 2 — Python APIs** (each in its own terminal, run from their directory with venv active):
+
+```bash
+# progress-api
+cd services/progress-api && python run.py          # → :5001
+
+# recruitment-api (if needed)
+cd services/recruitment-api && python run.py       # → :5002
+```
+
+**Step 3 — Next.js**
+
+```bash
+pnpm dev    # → :3000
+```
+
+### Port map
+
+| Service | Host Port | How it runs |
+|---------|-----------|-------------|
+| Next.js | 3000 | `pnpm dev` (Turbopack) |
+| Storybook | 6006 | `pnpm storybook` |
+| **guild-api** | **5000** | Docker (`services/guild-api/docker-compose.yml`) |
+| progress-api | 5001 | Python (`services/progress-api/run.py`) |
+| recruitment-api | 5002 | Python (`services/recruitment-api/run.py`) |
+| Postgres | 5432 | Docker (`docker compose up -d` from root) |
+| Redis | 6379 | Docker (`docker compose up -d` from root) |
+
+> **Note:** guild-api's own `.env` says `PORT=5010` — that is only used when running it outside Docker.
+> Inside Docker it defaults to 5000 (matches docker-compose port mapping). Always use :5000 in other services.
+
+### Network quirk
+
+guild-api runs in a separate Docker Compose project (`guild-api_default` network) from Postgres/Redis (`hoolgg_default`).
+After first launch you must run once:
+```bash
+docker network connect hoolgg_default guild-api-guild-api-1
+```
+This persists until the container is removed.
 
 ## Production
 

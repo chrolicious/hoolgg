@@ -12,7 +12,7 @@ export class ApiError extends Error {
 }
 
 const GUILD_API_URL =
-  process.env.NEXT_PUBLIC_GUILD_API_URL || 'http://localhost:5010';
+  process.env.NEXT_PUBLIC_GUILD_API_URL || 'http://localhost:5000';
 const PROGRESS_API_URL =
   process.env.NEXT_PUBLIC_PROGRESS_API_URL || 'http://localhost:5001';
 const RECRUITMENT_API_URL =

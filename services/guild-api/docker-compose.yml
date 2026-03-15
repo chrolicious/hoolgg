@@ -13,37 +13,11 @@ services:
       - BLIZZARD_CLIENT_SECRET=${BLIZZARD_CLIENT_SECRET}
       - BLIZZARD_REDIRECT_URI=${BLIZZARD_REDIRECT_URI}
       - BLIZZARD_REGION=${BLIZZARD_REGION}
-      - FLASK_ENV=production
-    depends_on:
-      postgres:
-        condition: service_healthy
-      redis:
-        condition: service_started
+      - FLASK_ENV=development
+    networks:
+      - hoolgg_default
     restart: unless-stopped
 
-  postgres:
-    image: postgres:15
-    environment:
-      - POSTGRES_USER=hool
-      - POSTGRES_PASSWORD=hool
-      - POSTGRES_DB=hoolgg
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U hool -d hoolgg"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
-  redis:
-    image: redis:7-alpine
-    ports:
-      - "6379:6379"
-    volumes:
-      - redis_data:/data
-
-volumes:
-  postgres_data:
-  redis_data:
+networks:
+  hoolgg_default:
+    external: true
