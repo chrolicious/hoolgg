@@ -77,7 +77,26 @@
       "Bash(pnpm test:*)",
       "Bash(cat:*)",
       "Bash(ssh:*)",
-      "Bash(git ls-tree:*)"
+      "Bash(git ls-tree:*)",
+      "Bash(git:*)",
+      "WebFetch(domain:www.warcraftlogs.com)",
+      "WebFetch(domain:www.wowhead.com)",
+      "WebFetch(domain:epiccarry.com)",
+      "Bash(gh api:*)",
+      "Bash(cmd:*)",
+      "Bash(powershell:*)",
+      "Bash(find C:\\\\Program Files \\(x86\\)\\\\World of Warcraft\\\\_retail_\\\\Interface\\\\AddOns:*)",
+      "Bash(start cmd:*)",
+      "Bash(dir /b \"C:\\\\Users\\\\Chro\\\\Documents\\\\Dev\\\\hoolgg\\\\services\\\\recruitment-api\")",
+      "Bash(docker ps:*)",
+      "Bash(docker network:*)",
+      "Bash(sleep 6 && powershell -Command \"netstat -ano | findstr 'LISTENING' | findstr ' 3000 \\\\| 5001 '\")",
+      "Bash(docker exec:*)",
+      "Bash(docker restart:*)",
+      "Bash(source:*)",
+      "Bash(TOKEN=\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJibmV0X2lkIjoxMDEyNjAxOTMsImlhdCI6MTc3MzU5MzA3MiwiZXhwIjoxNzczNTkzOTcyLCJ0eXBlIjoiYWNjZXNzIn0.J5gNqZ1HF5FI7RG1-W6OrEb-1XdghyqM9Q7Ehm7WCe0\"\ncurl -s http://localhost:5001/users/me/characters \\\\\n  -H \"Origin: http://localhost:3000\" \\\\\n  -H \"Cookie: access_token=$TOKEN\" \\\\\n  -v 2>&1 | grep -E \"< HTTP|error|character|CORS|Access-Control\")",
+      "Bash(ps aux:*)",
+      "Bash(kill:*)"
     ]
   }
 }

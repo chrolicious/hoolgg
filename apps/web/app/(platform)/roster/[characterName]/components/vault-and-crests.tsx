@@ -27,10 +27,11 @@ const VAULT_ROWS: { label: string; key: 'raid_slots' | 'dungeon_slots' | 'world_
 // ─── Crest configuration ───
 
 const CREST_TYPES = [
-  { key: 'Weathered', label: 'Weathered', bg: 'rgba(148,163,184,0.12)', border: 'rgba(148,163,184,0.25)', text: '#94a3b8' },
-  { key: 'Carved', label: 'Carved', bg: 'rgba(34,197,94,0.12)', border: 'rgba(34,197,94,0.25)', text: '#4ade80' },
-  { key: 'Runed', label: 'Runed', bg: 'rgba(99,102,241,0.12)', border: 'rgba(99,102,241,0.25)', text: '#818cf8' },
-  { key: 'Gilded', label: 'Gilded', bg: 'rgba(234,179,8,0.12)', border: 'rgba(234,179,8,0.25)', text: '#facc15' },
+  { key: 'Adventurer Dawncrest', label: 'Adventurer Dawncrest', bg: 'rgba(148,163,184,0.12)', border: 'rgba(148,163,184,0.25)', text: '#94a3b8' },
+  { key: 'Veteran Dawncrest',    label: 'Veteran Dawncrest',    bg: 'rgba(34,197,94,0.12)',   border: 'rgba(34,197,94,0.25)',   text: '#4ade80' },
+  { key: 'Champion Dawncrest',   label: 'Champion Dawncrest',   bg: 'rgba(96,165,250,0.12)',  border: 'rgba(96,165,250,0.25)',  text: '#60a5fa' },
+  { key: 'Hero Dawncrest',       label: 'Hero Dawncrest',       bg: 'rgba(99,102,241,0.12)',  border: 'rgba(99,102,241,0.25)',  text: '#818cf8' },
+  { key: 'Myth Dawncrest',       label: 'Myth Dawncrest',       bg: 'rgba(234,179,8,0.12)',   border: 'rgba(234,179,8,0.25)',   text: '#facc15' },
 ] as const;
 
 const EMPTY_SLOT: VaultSlot = { unlocked: false, ilvl: 0 };
@@ -173,7 +174,8 @@ function Crests({ crestsData, characterId,  currentWeek, selectedWeek, onCrestsU
   // Cumulative cap increases by 100 each season week (e.g. W1=100, W2=200, W3=300)
   // Computed purely from week number — allows catch-up on missed weeks
   const displayWeek = selectedWeek ?? currentWeek;
-  const cumulativeCap = PER_WEEK_CAP * Math.max(displayWeek, 1);
+  const FIRST_SEASON_WEEK = -2;
+  const cumulativeCap = displayWeek < FIRST_SEASON_WEEK ? 0 : (displayWeek - FIRST_SEASON_WEEK + 1) * PER_WEEK_CAP;
 
   // Local state for each crest type's weekly collected value
   const [localValues, setLocalValues] = useState<Record<string, number>>({});

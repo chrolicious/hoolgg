@@ -1,0 +1,22 @@
+## Interface: 120001, 120000
+## Title: HoolggTracker
+## Notes: Midnight S1 weekly progression tracker — hool.gg
+## Author: hool.gg
+## Version: 1.0.0
+## SavedVariables: HoolggTrackerDB
+
+libs\load_libs.xml
+
+HT_Utils.lua
+HT_DB.lua
+HT_Data.lua
+HT_Week.lua
+HT_Vault.lua
+HT_Crests.lua
+HT_Tasks.lua
+HT_Professions.lua
+HT_Ui.lua
+HT_Minimap.lua
+HT_RightClickMenu.lua
+HT_SlashCommand.lua
+HoolggTracker.lua
